@@ -41,12 +41,19 @@ Authentication is the process of recognizing the user's identity. This is later 
 
 ## Webassembly/WASM for client code execution
 
-We will introduce Webassembly/WASM to run code on the client inside the browser. The same could be done with Javascript, but I despise it deeply and will use Rust compiled to WASM instead.
+We will introduce Webassembly/WASM to run code on the client inside the browser. The same could be done with Javascript, but I despise it deeply and will use Rust compiled to WASM instead.  
+The client WASM will talk to the server with json messages inside POST requests bodies and response bodies.
 
 ## Workspace
 
-Rust has the concept of "workspace" to group more projects together. But it does not work well if there is mix of server projects and WASM projects. Mainly I cannot config the `panic = "abort"` for only the WASM project.  
-I already use `cargo-auto` for all my automation tasks. I will invent a "pseudo workspace" only with automation. I will not use the original cargo workspace functionality.  
+Rust has the concept of "workspace" to group more projects together. But it does not work well if there is a mix of server projects and WASM projects.  
+This is not a standard cargo workspace. It does not have Cargo.toml in the workspace folder.
+Because of one WASM project I cannot use the profile `panic="abort"` on all the members.
+There is no workaround as of 2022-10-20.  
+We can use cargo-auto to automate the tasks for every member individually.
+Then we code the automation_tasks_rs on the workspace level to call all members tasks together.
+The presence of Cargo-auto.toml or Cargo.toml is used by cargo-auto to recognize project folders.
+No config exist for now for Cargo-auto.toml. Maybe one day we will need to add something.
 
 ## Authentication and session cookie
 
@@ -70,8 +77,6 @@ It is not easy to send emails over SMTP anymore because of spam. There is so muc
 
 Save your html files in UTF-8 encoding without the byte-order mark (BOM).
 
-TODO: add <!DOCTYPE html> on html start
-All HTML documents must start with a <!DOCTYPE> declaration.
 The declaration is not an HTML tag. It is an "information" to the browser about what document type to expect.
 
 TODO: random salt, random session_id

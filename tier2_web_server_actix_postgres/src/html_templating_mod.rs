@@ -5,7 +5,15 @@ use crate::APP_MAIN_ROUTE;
 /// struct fields scope and function name are used as the folder and file name for the template
 pub fn read_template(scope: &str, name: &str) -> String {
     let path = format!("{APP_MAIN_ROUTE}/{scope}/{name}.html");
-    std::fs::read_to_string(path).unwrap()
+    let template = std::fs::read_to_string(path).unwrap();
+    // Add DOCTYPE declaration only to complete html5 files.
+    // I want to have the html files without the 'declaration' 
+    // because 'declarations' are not microxml compatible.
+    if template.starts_with("<html>"){
+        format!("<!DOCTYPE html>\n{template}")
+    } else {
+        template
+    }
 }
 
 /// simple replace placeholders with values from Row
