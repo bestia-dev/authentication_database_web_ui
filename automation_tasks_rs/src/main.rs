@@ -5,7 +5,7 @@ use cargo_auto_lib::*;
 
 // the server executable binary is called "webpage_hits_admin"
 // and it is the main url route
-pub const APP_MAIN_ROUTE: &'static str = "webpage_hits_admin";
+const APP_MAIN_ROUTE: &'static str = "webpage_hits_admin";
 
 // ANSI colors for Linux terminal
 // https://github.com/shiena/ansicolor/blob/master/README.md
@@ -36,7 +36,10 @@ fn match_arguments_and_call_tasks(mut args: std::env::Args) {
     // the first argument is the user defined task: (no argument for help), build, release,...
     let arg_1 = args.next();
     match arg_1 {
-        None => print_help(),
+        None => {
+            build_cargo_auto_for_members();
+            print_help();
+        }
         Some(task) => {
             if &task == "completion" {
                 completion();
@@ -62,6 +65,42 @@ fn match_arguments_and_call_tasks(mut args: std::env::Args) {
             }
         }
     }
+}
+
+/// build all automation_tasks_rs for every member and 
+/// delete the unnecessary target files to save disk space
+fn build_cargo_auto_for_members(){
+    let workspace_dir = std::env::current_dir().unwrap();
+    
+
+     // build every member separately. 
+     println!("Processing member: common_code");    
+     std::env::set_current_dir("common_code").unwrap();
+     run_shell_command("cargo auto;");      
+     std::env::set_current_dir(&workspace_dir).unwrap();  
+ 
+     // when I use --exclude tier1_browser_wasm, cargo rebuilds a bunch of dependencies !?!
+     // to debug why cargo rebuilds I used: CARGO_LOG=cargo::core::compiler::fingerprint=info cargo build
+     println!("Processing member tier2_web_server_actix_postgres");    
+     std::env::set_current_dir("tier2_web_server_actix_postgres").unwrap();    
+     run_shell_command("cargo auto;"); 
+     std::env::set_current_dir(&workspace_dir).unwrap();  
+ 
+     // wasm-pack changes something in the folder target, so the next build unnecessarily rebuilds dependencies
+     // I will try to use --release to force wasm-pack to use a different folder
+     println!("Processing member tier1_browser_wasm");    
+     std::env::set_current_dir("tier1_browser_wasm").unwrap();    
+     run_shell_command("cargo auto;"); 
+     std::env::set_current_dir(&workspace_dir).unwrap();  
+
+     run_shell_command("rm -rf ./automation_tasks_rs/target/debug/*/");
+     run_shell_command("rm -rf ./automation_tasks_rs/target/debug/.fingerprint/");
+     run_shell_command("rm -rf ./common_code/automation_tasks_rs/target/debug/*/");
+     run_shell_command("rm -rf ./common_code/automation_tasks_rs/target/debug/.fingerprint/");
+     run_shell_command("rm -rf ./tier2_web_server_actix_postgres/automation_tasks_rs/target/debug/*/");
+     run_shell_command("rm -rf ./tier2_web_server_actix_postgres/automation_tasks_rs/target/debug/.fingerprint/");
+     run_shell_command("rm -rf ./tier1_browser_wasm/automation_tasks_rs/target/debug/*/");
+     run_shell_command("rm -rf ./tier1_browser_wasm/automation_tasks_rs/target/debug/.fingerprint/");
 }
 
 /// write a comprehensible help for user defined tasks
@@ -112,9 +151,8 @@ fn completion() {
 /// I am not using the original cargo workspace functionality. The automation task will take care of all members.
 /// One is wasm project, so instead of cargo build, I use wam-pack build.
 fn task_build() {
-    
     let workspace_dir = std::env::current_dir().unwrap();
-
+            
     // build every member separately. 
     println!("Processing member common_code");    
     std::env::set_current_dir("common_code").unwrap();
