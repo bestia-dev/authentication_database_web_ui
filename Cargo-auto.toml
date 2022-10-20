@@ -1,0 +1,3 @@
+# OBSOLETE
+# I use it only because cargo-auto needs a Cargo.toml in the folder to work properly
+# TODO: maybe change this into Cargo-auto.toml just for cargo-auto ??

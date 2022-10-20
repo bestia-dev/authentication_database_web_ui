@@ -1,0 +1,63 @@
+[package]
+name = "tier1_browser_wasm"
+version = "0.2.188"
+description = "09. Tutorial to code authentication for database_web_ui (2022-10)"
+authors = ["bestia.dev"]
+homepage = "https://bestia.dev"
+edition = "2021"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/bestia-dev/authentication_database_web_ui"
+categories = ["rust-patterns"]
+keywords = ["wasm", "tutorials"]
+publish = false
+
+[lib]
+# cdylib is for the wasm module library
+crate-type = ["cdylib"]
+
+[dependencies]
+unwrap = "1.2.1"
+wasm-bindgen = "0.2.83"
+wasm-bindgen-futures = "0.4.33"
+console_error_panic_hook = "0.1.7"
+js-sys = "0.3.60"
+serde = { version = "1.0.145", features = ["derive"] }
+serde_json = "1.0.86"
+# serde-wasm-bindgen = "0.4.5"
+common_code = { path = "../common_code" }
+password-hash = "0.4.2"
+argon2 = "0.4.1"
+
+[dependencies.web-sys]
+version = "0.3.60"
+features = [
+  "AbortController",
+  "console",
+  "CharacterData",
+  "CssStyleDeclaration",
+  "Document",
+  "Element",
+  "ErrorEvent",
+  "Event",
+  "EventListener",
+  "EventTarget",
+  "FormData",
+  "Headers",
+  "HtmlElement",
+  "HtmlInputElement",
+  "HtmlSpanElement",
+  "HtmlTextAreaElement",
+  "KeyboardEvent",
+  "MouseEvent",
+  "Node",
+  "Request",
+  "RequestCache",
+  "RequestInit",
+  "RequestMode",
+  "Response",
+  "Screen",
+  "Storage",
+  "Text",
+  "Window",
+]
