@@ -1,6 +1,6 @@
 [package]
 name = "tier1_browser_wasm"
-version = "0.2.188"
+version = "2022.1020.1145"
 description = "09. Tutorial to code authentication for database_web_ui (2022-10)"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"
@@ -60,3 +60,9 @@ features = [
   "Text",
   "Window",
 ]
+
+[package.metadata.wasm-pack.profile.dev]
+wasm-opt = false
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
