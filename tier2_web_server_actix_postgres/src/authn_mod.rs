@@ -43,7 +43,7 @@ pub async fn authn_login_process_email(
     data_req: actix_web::web::Json<common_code::DataReqAuthnLoginProcessEmail>,
 ) -> ResultResponse {
     // TODO: return the result also as json 2022-10-21
-    let single_row = call_pg_func_auth_login_show(&data_req.user_email, &app_state).await?;
+    let single_row = call_pg_func_auth_login_show(&data_req.user_email, app_state).await?;
     let password_hash = get_string_from_row(&single_row, "password_hash")?;
     // extract salt
     let password_hash = password_hash::PasswordHash::new(&password_hash).unwrap();
@@ -57,7 +57,7 @@ pub async fn authn_login_process_email(
 /// read data from table authn_login for email_user
 async fn call_pg_func_auth_login_show(
     user_email: &str,
-    app_state: &DataAppState,
+    app_state: DataAppState,
 ) -> Result<tokio_postgres::Row, LibError> {
     let mut sql_params = crate::sql_params_mod::SqlParams::new();
     sql_params.insert(
@@ -65,7 +65,7 @@ async fn call_pg_func_auth_login_show(
         PostgresValueMultiType::String(user_email.to_string()),
     );
     let mut pg_func =
-        PostgresFunction::new_with_sql_params(&app_state, "authn_login_show", sql_params);
+        PostgresFunction::new_with_sql_params(app_state, "authn_login_show", sql_params);
     let single_row = pg_func.run_sql_function_return_single_row().await?;
     Ok(single_row)
 }
@@ -77,7 +77,7 @@ pub async fn authn_login_process_hash(
     data_req: actix_web::web::Json<common_code::DataReqAuthnLoginProcessHash>,
 ) -> ResultResponse {
     // check data_req.hash   in database
-    let single_row = call_pg_func_auth_login_show(&data_req.user_email, &app_state).await?;
+    let single_row = call_pg_func_auth_login_show(&data_req.user_email, app_state.clone()).await?;
     let password_hash: String = get_string_from_row(&single_row, "password_hash")?;
     let is_login_success = { password_hash == data_req.hash };
     let data_resp = common_code::DataRespAuthnLoginProcessHash {

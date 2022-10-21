@@ -2,7 +2,7 @@
 
 // type aliases: for less verbose types and better readability of the code
 
-use crate::actix_mod::{DataAppState, ResultResponse, ServiceRequestFromRequest};
+use crate::actix_mod::{RequestAndPayload, ResultResponse};
 use crate::server_side_multi_row_mod::ServerSideMultiRow;
 use crate::server_side_single_row_mod::ServerSideSingleRow;
 use actix_web::web::resource;
@@ -27,17 +27,9 @@ pub fn config_route_webpage_hits(cfg: &mut actix_web::web::ServiceConfig) {
 
 /// CRUD - read (list all webpages and counts) with simple filter and order_by
 #[function_name::named]
-pub async fn webpage_hits_list(
-    app_state: DataAppState,
-    mut srv_req: ServiceRequestFromRequest,
-) -> ResultResponse {
-    let mut ssmr = ServerSideMultiRow::new_with_service_request(
-        &app_state,
-        SCOPE,
-        function_name!(),
-        &mut srv_req,
-    )
-    .await;
+pub async fn webpage_hits_list(mut rap: RequestAndPayload) -> ResultResponse {
+    let mut ssmr =
+        ServerSideMultiRow::new_with_request_and_payload(SCOPE, function_name!(), &mut rap).await;
     // The where statement is constructed only for existing parameters, because efficiency.
     ssmr.where_clause = vec![
         "webpage like {f_like_webpage}",
@@ -45,101 +37,53 @@ pub async fn webpage_hits_list(
         "hit_counter < {f_lt_hit_counter}",
     ];
 
-    ssmr.run_multi_row_sql_and_process_html().await
+    ssmr.run_sql_and_process_html().await
 }
 
 /// UI - new record
 #[function_name::named]
-pub async fn webpage_hits_new(
-    app_state: DataAppState,
-    mut srv_req: ServiceRequestFromRequest,
-) -> ResultResponse {
-    let mut sssr = ServerSideSingleRow::new_with_service_request(
-        &app_state,
-        SCOPE,
-        function_name!(),
-        &mut srv_req,
-    )
-    .await;
-    sssr.run_sql_from_web_params_and_process_html().await
+pub async fn webpage_hits_new(mut rap: RequestAndPayload) -> ResultResponse {
+    let mut sssr =
+        ServerSideSingleRow::new_with_request_and_payload(SCOPE, function_name!(), &mut rap).await;
+    sssr.run_sql_and_process_html().await
 }
 
 /// UI - edit record
 #[function_name::named]
-pub async fn webpage_hits_edit(
-    app_state: DataAppState,
-    mut srv_req: ServiceRequestFromRequest,
-) -> ResultResponse {
-    let mut sssr = ServerSideSingleRow::new_with_service_request(
-        &app_state,
-        SCOPE,
-        function_name!(),
-        &mut srv_req,
-    )
-    .await;
-    sssr.run_sql_from_web_params_and_process_html().await
+pub async fn webpage_hits_edit(mut rap: RequestAndPayload) -> ResultResponse {
+    let mut sssr =
+        ServerSideSingleRow::new_with_request_and_payload(SCOPE, function_name!(), &mut rap).await;
+    sssr.run_sql_and_process_html().await
 }
 
 /// CRUD - create(insert)
 #[function_name::named]
-pub async fn webpage_hits_insert(
-    app_state: DataAppState,
-    mut srv_req: ServiceRequestFromRequest,
-) -> ResultResponse {
-    let mut sssr = ServerSideSingleRow::new_with_service_request(
-        &app_state,
-        SCOPE,
-        function_name!(),
-        &mut srv_req,
-    )
-    .await;
-    sssr.run_sql_from_web_params_and_process_html().await
+pub async fn webpage_hits_insert(mut rap: RequestAndPayload) -> ResultResponse {
+    let mut sssr =
+        ServerSideSingleRow::new_with_request_and_payload(SCOPE, function_name!(), &mut rap).await;
+    sssr.run_sql_and_process_html().await
 }
 
 /// CRUD - read (show one record)
 #[function_name::named]
-pub async fn webpage_hits_show(
-    app_state: DataAppState,
-    mut srv_req: ServiceRequestFromRequest,
-) -> ResultResponse {
-    let mut sssr = ServerSideSingleRow::new_with_service_request(
-        &app_state,
-        SCOPE,
-        function_name!(),
-        &mut srv_req,
-    )
-    .await;
-    sssr.run_sql_from_web_params_and_process_html().await
+pub async fn webpage_hits_show(mut rap: RequestAndPayload) -> ResultResponse {
+    let mut sssr =
+        ServerSideSingleRow::new_with_request_and_payload(SCOPE, function_name!(), &mut rap).await;
+    sssr.run_sql_and_process_html().await
 }
 
 /// CRUD - update
 #[function_name::named]
-pub async fn webpage_hits_update(
-    app_state: DataAppState,
-    mut srv_req: ServiceRequestFromRequest,
-) -> ResultResponse {
-    let mut sssr = ServerSideSingleRow::new_with_service_request(
-        &app_state,
-        SCOPE,
-        function_name!(),
-        &mut srv_req,
-    )
-    .await;
-    sssr.run_sql_from_web_params_and_process_html().await
+pub async fn webpage_hits_update(mut rap: RequestAndPayload) -> ResultResponse {
+    let mut sssr =
+        ServerSideSingleRow::new_with_request_and_payload(SCOPE, function_name!(), &mut rap).await;
+    sssr.run_sql_and_process_html().await
 }
 
 /// CRUD - delete
 #[function_name::named]
-pub async fn webpage_hits_delete(
-    app_state: DataAppState,
-    mut srv_req: ServiceRequestFromRequest,
-) -> ResultResponse {
-    let mut sssr = ServerSideSingleRow::new_with_service_request(
-        &app_state,
-        SCOPE,
-        function_name!(),
-        &mut srv_req,
-    )
-    .await;
-    sssr.run_sql_from_web_params_and_process_html().await
+pub async fn webpage_hits_delete(mut rap: RequestAndPayload) -> ResultResponse {
+    let mut sssr =
+        ServerSideSingleRow::new_with_request_and_payload(SCOPE, function_name!(), &mut rap).await;
+    sssr.run_sql_and_process_html().await
 }

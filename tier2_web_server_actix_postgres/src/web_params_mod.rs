@@ -2,8 +2,10 @@
 
 use std::collections::HashMap;
 
+use actix_web::FromRequest;
+
 use crate::{
-    actix_mod::ServiceRequestFromRequest,
+    actix_mod::RequestAndPayload,
     error_mod::{file_line_column, LibError},
 };
 
@@ -20,9 +22,14 @@ pub struct WebParams(pub HashMap<String, String>);
 
 impl WebParams {
     #[track_caller]
-    pub async fn from_service_request(srv_req: &mut ServiceRequestFromRequest) -> WebParams {
-        let query = srv_req.0.extract::<WebQuery>().await.unwrap();
-        let form = srv_req.0.extract::<Option<WebForm>>().await.unwrap();
+    pub async fn from_request_and_payload(rap: &mut RequestAndPayload) -> WebParams {
+        // form will consume the Payload! All other extractor will get it empty.
+        let form: Option<WebForm> = actix_web::web::Form::from_request(&rap.req, &mut rap.pl)
+            .await
+            .ok();
+        let query: WebQuery = actix_web::web::Query::from_request(&rap.req, &mut rap.pl)
+            .await
+            .unwrap();
 
         Self::from_query_and_form(&query, &form)
     }
@@ -32,7 +39,7 @@ impl WebParams {
     /// track_caller decoration makes Location::caller() return the caller location  
     /// for meaningful source code location of the actual error  
     #[track_caller]
-    pub fn from_query_and_form(query: &WebQuery, form: &Option<WebForm>) -> WebParams {
+    fn from_query_and_form(query: &WebQuery, form: &Option<WebForm>) -> WebParams {
         if let Some(form) = form {
             // into_iter() consumes the vector. The vector cannot be used after calling this.
             WebParams(form.0.clone().into_iter().collect())

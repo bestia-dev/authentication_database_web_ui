@@ -1372,7 +1372,7 @@ dependencies = [
 
 [[package]]
 name = "tier2_web_server_actix_postgres"
-version = "2022.1021.900"
+version = "2022.1021.1238"
 dependencies = [
  "actix-files",
  "actix-utils",

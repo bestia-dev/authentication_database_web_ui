@@ -14,9 +14,9 @@ use crate::web_params_mod::WebParams;
 // 4. run sql function from sql_params in order and get single row
 
 /// object for calling Postgres functions
-pub struct PostgresFunction<'a> {
+pub struct PostgresFunction {
     /// contains the connection pool and cached lists of functions and parameters
-    app_state: &'a DataAppState,
+    app_state: DataAppState,
     function_name: FunctionName,
     /// this params are in correct order for calling the sql function
     sql_params_in_order: Vec<PostgresValueMultiType>,
@@ -24,17 +24,18 @@ pub struct PostgresFunction<'a> {
     placeholders: String,
 }
 
-impl<'a> PostgresFunction<'a> {
+impl PostgresFunction {
     /// constructor with web_params
     #[track_caller]
     pub fn new_with_web_params(
-        app_state: &'a DataAppState,
+        app_state: DataAppState,
         function_name: &'static str,
         web_params: WebParams,
-    ) -> PostgresFunction<'a> {
+    ) -> PostgresFunction {
         let function_name_obj = FunctionName(function_name.to_string());
         // region: 1. prepare sql_params for sql function with correct data types from web_params
-        let sql_params = SqlParams::from_web_params(app_state, &function_name_obj, &web_params);
+        let sql_params =
+            SqlParams::from_web_params(app_state.clone(), &function_name_obj, &web_params);
         // endregion
 
         Self::new_with_sql_params(app_state, function_name, sql_params)
@@ -43,14 +44,14 @@ impl<'a> PostgresFunction<'a> {
     /// constructor from sql_params
     #[track_caller]
     pub fn new_with_sql_params(
-        app_state: &'a DataAppState,
+        app_state: DataAppState,
         function_name: &'static str,
         sql_params: SqlParams,
-    ) -> PostgresFunction<'a> {
+    ) -> PostgresFunction {
         let function_name_obj = FunctionName(function_name.to_string());
         // region: 2. prepare sql_params_in_order and placeholders from sql_params
-        let (sql_params_in_order, placeholders) =
-            sql_params.get_sql_params_in_order_and_placeholders(app_state, &function_name_obj);
+        let (sql_params_in_order, placeholders) = sql_params
+            .get_sql_params_in_order_and_placeholders(app_state.clone(), &function_name_obj);
         // endregion
 
         PostgresFunction {

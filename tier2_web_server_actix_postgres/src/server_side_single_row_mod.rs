@@ -9,38 +9,45 @@
 // 5. mix presentation and data, because this is server-side rendering
 // 6. return a response with no cache (because data in database can change fast)
 
-use crate::actix_mod::{DataAppState, ResultResponse, ServiceRequestFromRequest};
+use actix_web::web::Data;
+
+use crate::actix_mod::{DataAppState, RequestAndPayload, ResultResponse};
 use crate::postgres_function_mod::PostgresFunction;
 use crate::postgres_mod::FunctionName;
 use crate::web_params_mod::WebParams;
+
+use actix_web::FromRequest;
 
 /// the main ServerSideSingleRow object (struct with implementation)
 pub struct ServerSideSingleRow<'a> {
     scope: &'a str,
     function_name: FunctionName,
     /// process params and runs sql function
-    postgres_function: PostgresFunction<'a>,
+    postgres_function: PostgresFunction,
 }
 
 impl<'a> ServerSideSingleRow<'a> {
     #[track_caller]
-    pub async fn new_with_service_request(
-        app_state: &'a DataAppState,
+    pub async fn new_with_request_and_payload(
         scope: &'static str,
-        function_name: &'static str,
-        srv_req: &mut ServiceRequestFromRequest,
+        view_name: &'static str,
+        rap: &mut RequestAndPayload,
     ) -> ServerSideSingleRow<'a> {
         // region: 1. parse web data: strings coming from the browser in path, query and form
-        let web_params = WebParams::from_service_request(srv_req).await;
+        let web_params = WebParams::from_request_and_payload(rap).await;
+        let app_state: Data<crate::AppState> =
+            actix_web::web::Data::from_request(&rap.req, &mut rap.pl)
+                .await
+                .unwrap();
         // endregion
 
-        Self::new_with_web_params(app_state, scope, function_name, web_params)
+        Self::new_with_web_params(app_state, scope, view_name, web_params)
     }
 
     /// constructor from web_params    
     #[track_caller]
     pub fn new_with_web_params(
-        app_state: &'a DataAppState,
+        app_state: DataAppState,
         scope: &'a str,
         function_name: &'static str,
         web_params: WebParams,
@@ -58,7 +65,7 @@ impl<'a> ServerSideSingleRow<'a> {
 
     /// typical steps for a web app function for single Row sql function
     /// These steps can be called separately if some customization is needed
-    pub async fn run_sql_from_web_params_and_process_html(&mut self) -> ResultResponse {
+    pub async fn run_sql_and_process_html(&mut self) -> ResultResponse {
         // region: 3. run sql function and get single row
         let single_row = self
             .postgres_function

@@ -14,14 +14,17 @@
 // TODO: dynamically construct a where clause only for the used filters for efficiency 2022-10-21
 // TODO: dynamically construct the fields list only for fields used in the html (for efficiency) 2022-10-21
 
+use actix_web::web::Data;
 use lazy_static::lazy_static;
 use regex::Regex;
 
-use crate::actix_mod::{DataAppState, ResultResponse, ServiceRequestFromRequest};
+use crate::actix_mod::{DataAppState, RequestAndPayload, ResultResponse};
 use crate::postgres_mod::{FieldName, SqlParamsForPostgres, ViewName};
 use crate::postgres_type_mod::PostgresValueMultiType;
 use crate::sql_params_mod::SqlParams;
 use crate::web_params_mod::WebParams;
+
+use actix_web::FromRequest;
 
 lazy_static! {
     static ref RGX_01: Regex = Regex::new(r###"\{(.+?)}"###).unwrap();
@@ -29,7 +32,7 @@ lazy_static! {
 
 /// the main ServerSideMultiRow object (struct with implementation)
 pub struct ServerSideMultiRow<'a> {
-    app_state: &'a DataAppState,
+    app_state: DataAppState,
     scope: &'a str,
     view_name: ViewName,
     web_params: WebParams,
@@ -41,14 +44,17 @@ pub struct ServerSideMultiRow<'a> {
 
 impl<'a> ServerSideMultiRow<'a> {
     #[track_caller]
-    pub async fn new_with_service_request(
-        app_state: &'a DataAppState,
+    pub async fn new_with_request_and_payload(
         scope: &'static str,
         view_name: &'static str,
-        srv_req: &mut ServiceRequestFromRequest,
+        rap: &mut RequestAndPayload,
     ) -> ServerSideMultiRow<'a> {
         // region: 1. parse web data: strings coming from the browser in path, query and form
-        let web_params = WebParams::from_service_request(srv_req).await;
+        let web_params = WebParams::from_request_and_payload(rap).await;
+        let app_state: Data<crate::AppState> =
+            actix_web::web::Data::from_request(&rap.req, &mut rap.pl)
+                .await
+                .unwrap();
         // endregion
 
         Self::new_with_web_params(app_state, scope, view_name, web_params)
@@ -58,7 +64,7 @@ impl<'a> ServerSideMultiRow<'a> {
     /// It takes all the data needed to execute the function
     #[track_caller]
     pub fn new_with_web_params(
-        app_state: &'a DataAppState,
+        app_state: DataAppState,
         scope: &'static str,
         view_name: &'static str,
         web_params: WebParams,
@@ -77,7 +83,7 @@ impl<'a> ServerSideMultiRow<'a> {
 
     /// typical steps for a web app function for multi Row sql statement
     /// These steps can be called separately if some customization is needed
-    pub async fn run_multi_row_sql_and_process_html(&mut self) -> ResultResponse {
+    pub async fn run_sql_and_process_html(&mut self) -> ResultResponse {
         // region: 2. find out the filters from the parameters
         self.prepare_filter_params();
         // endregion

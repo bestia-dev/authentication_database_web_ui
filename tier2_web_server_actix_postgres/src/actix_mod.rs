@@ -152,14 +152,17 @@ pub fn redirect_to_login_page(
     )
 }
 
-/// TODO: experiment to make an extractor to return ServiceRequest 2022-10-21\
-/// I cannot add a trait for a struct if both are not mine.\
-/// I must create a newtype for experiment. I asked the actix-web discussion if there is another way.
-pub struct ServiceRequestFromRequest(pub actix_web::dev::ServiceRequest);
 use actix_utils::future::Ready;
 use actix_web::error::Error;
 
-impl actix_web::FromRequest for ServiceRequestFromRequest {
+/// TODO: experiment to make an extractor to return HttpRequest and Payload 2022-10-21\
+/// Just like ServiceRequest.
+pub struct RequestAndPayload {
+    pub req: actix_web::HttpRequest,
+    pub pl: actix_web::dev::Payload,
+}
+
+impl actix_web::FromRequest for RequestAndPayload {
     type Error = Error;
     type Future = Ready<Result<Self, Error>>;
 
@@ -168,11 +171,11 @@ impl actix_web::FromRequest for ServiceRequestFromRequest {
         req: &actix_web::HttpRequest,
         pl: &mut actix_web::dev::Payload,
     ) -> Self::Future {
-        // TODO: it is bad to clone these structs. I hope there will be an extractor in the original library. 2022-10-21
-        let req = req.to_owned();
-        let pl = pl.take();
-        let req = actix_web::dev::ServiceRequest::from_parts(req, pl);
+        let rap = RequestAndPayload {
+            req: req.to_owned(),
+            pl: pl.take(),
+        };
 
-        actix_utils::future::ok(ServiceRequestFromRequest(req))
+        actix_utils::future::ok(rap)
     }
 }

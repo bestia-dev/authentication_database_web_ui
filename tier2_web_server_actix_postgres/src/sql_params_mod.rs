@@ -19,7 +19,7 @@ impl SqlParams {
     /// get sql_params for sql function with correct data types from web_params
     /// This is a HashMap with no order.    
     pub fn from_web_params(
-        app_state: &DataAppState,
+        app_state: DataAppState,
         function_name: &FunctionName,
         web_params: &WebParams,
     ) -> Self {
@@ -82,7 +82,7 @@ impl SqlParams {
     /// the param order is important to call postgres functions
     pub fn get_sql_params_in_order_and_placeholders(
         &self,
-        app_state: &DataAppState,
+        app_state: DataAppState,
         function_name: &FunctionName,
     ) -> (Vec<PostgresValueMultiType>, String) {
         let mut sql_params_in_order: Vec<PostgresValueMultiType> = vec![];
