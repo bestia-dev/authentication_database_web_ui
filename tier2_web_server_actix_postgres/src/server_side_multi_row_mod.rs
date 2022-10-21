@@ -114,7 +114,7 @@ impl ServerSideMultiRow {
         // endregion
 
         // region: 8. return a response with no cache (because data in database can change fast)
-        crate::actix_mod::return_response_no_cache(body)
+        crate::actix_mod::return_html_response_no_cache(body)
         // endregion
     }
 

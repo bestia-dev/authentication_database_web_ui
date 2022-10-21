@@ -64,7 +64,9 @@ impl PostgresFunction {
 
     /// run sql function and return multi row (zero or more)
     /// 3. and 4. create reference to sql_params_in_order and run sql function
-    pub async fn run_sql_function_return_multi_row(&mut self) -> Vec<tokio_postgres::Row> {
+    pub async fn run_sql_function_return_multi_row(
+        &mut self,
+    ) -> core::result::Result<Vec<tokio_postgres::Row>, LibError> {
         // region: 3. create reference to sql_params_in_order, because postgres_client need this format
         let ref_to_sql_params = SqlParams::ref_to_function_params(&self.sql_params_in_order);
         // endregion
@@ -80,18 +82,17 @@ impl PostgresFunction {
             &query,
             &ref_to_sql_params,
         )
-        .await
-        .unwrap();
+        .await?;
 
         // endregion
-        multi_row
+        Ok(multi_row)
     }
 
     /// return exactly single row from function or error
     pub async fn run_sql_function_return_single_row(
         &mut self,
-    ) -> Result<tokio_postgres::Row, LibError> {
-        let mut multi_row = self.run_sql_function_return_multi_row().await;
+    ) -> core::result::Result<tokio_postgres::Row, LibError> {
+        let mut multi_row = self.run_sql_function_return_multi_row().await?;
         if multi_row.len() == 0 {
             Err(LibError::QueryReturnZeroRow {
                 developer_friendly: format!(

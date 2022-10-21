@@ -30,28 +30,7 @@ pub fn config_route_authn(cfg: &mut actix_web::web::ServiceConfig) {
 #[function_name::named]
 pub async fn authn_login() -> ResultResponse {
     let body = crate::html_templating_mod::read_template(SCOPE, function_name!());
-    crate::actix_mod::return_response_no_cache(body)
-}
-
-/// Ajax: receive json in the POST body.
-/// finds the salt and return it to the browser as json.
-/// Even if it does not find it it returns something, but not an error.
-/// I don't want the user to know, that the email is wrong. Because of brute force attacks.
-// #[function_name::named]
-pub async fn authn_login_process_email(
-    app_state: DataAppState,
-    data_req: actix_web::web::Json<common_code::DataReqAuthnLoginProcessEmail>,
-) -> ResultResponse {
-    // TODO: return the result also as json 2022-10-21
-    let single_row = call_pg_func_auth_login_show(&data_req.user_email, app_state).await?;
-    let password_hash = get_string_from_row(&single_row, "password_hash")?;
-    // extract salt
-    let password_hash = password_hash::PasswordHash::new(&password_hash).unwrap();
-
-    let data_resp = common_code::DataRespAuthnLoginProcessEmail {
-        salt: password_hash.salt.unwrap().to_string(),
-    };
-    crate::actix_mod::return_json_from_object(data_resp)
+    crate::actix_mod::return_html_response_no_cache(body)
 }
 
 /// read data from table authn_login for email_user
@@ -70,6 +49,53 @@ async fn call_pg_func_auth_login_show(
     Ok(single_row)
 }
 
+/// Ajax: receive json in the POST body.
+/// finds the salt and return it to the browser as json.
+/// Even if it does not find it it returns something, but not an error.
+/// I don't want the user to know, that the email is wrong. Because of brute force attacks.
+// #[function_name::named]
+pub async fn authn_login_process_email(
+    app_state: DataAppState,
+    data_req: actix_web::web::Json<common_code::DataReqAuthnLoginProcessEmail>,
+) -> actix_web::HttpResponse {
+    // A request handler function in Actix can return a Result.
+    // Actix server catches the error and calls the method error_response() from `impl actix_web::ResponseError for LibError`.
+    // This is tailored for a human HTML response, but not good for a json response.
+    // This function handles an ajax json request and has to return a json response. Always. In both cases of an ok data or error.
+    // The client must be able to deserialize it to a Rust object.
+    // I will use a Result enum to return a json to the client. It can contain the ok data or the error string.
+    // I want to catch the error propagation operator "?" before actix catches them in the request handler function.
+    // I will create an internal function, so I can catch errors propagated with the ? operator.
+    pub async fn internal_fn(
+        app_state: DataAppState,
+        data_req: actix_web::web::Json<common_code::DataReqAuthnLoginProcessEmail>,
+    ) -> core::result::Result<String, LibError> {
+        /*
+        let mut jsr = JsonSingleRow::new(SCOPE, function_name!(), &mut req_payload).await;
+        jsr.run_sql_and_return_json().await
+        */
+        // TODO: return the result also as json 2022-10-21
+        let single_row = call_pg_func_auth_login_show(&data_req.user_email, app_state).await?;
+        let password_hash = get_string_from_row(&single_row, "password_hash")?;
+        // extract salt
+        let password_hash = password_hash::PasswordHash::new(&password_hash)
+            .map_err(|_| crate::error_mod::LibError::PasswordHash)?;
+
+        Ok(password_hash.salt.unwrap().to_string())
+    }
+    match internal_fn(app_state, data_req).await {
+        Ok(salt) => {
+            let data_resp = common_code::ResultAuthnLoginProcessEmail::Data { salt: salt };
+            crate::actix_mod::return_json_resp_from_object(data_resp)
+        }
+
+        Err(err) => {
+            let err_resp = common_code::ResultAuthnLoginProcessEmail::Error(err.to_string());
+            crate::actix_mod::return_json_resp_from_object(err_resp)
+        }
+    }
+}
+
 /// authn_login_process_hash
 // #[function_name::named]
 pub async fn authn_login_process_hash(
@@ -77,8 +103,10 @@ pub async fn authn_login_process_hash(
     data_req: actix_web::web::Json<common_code::DataReqAuthnLoginProcessHash>,
 ) -> ResultResponse {
     // check data_req.hash   in database
-    let single_row = call_pg_func_auth_login_show(&data_req.user_email, app_state.clone()).await?;
-    let password_hash: String = get_string_from_row(&single_row, "password_hash")?;
+    let single_row = call_pg_func_auth_login_show(&data_req.user_email, app_state.clone())
+        .await
+        .unwrap();
+    let password_hash: String = get_string_from_row(&single_row, "password_hash").unwrap();
     let is_login_success = { password_hash == data_req.hash };
     let data_resp = common_code::DataRespAuthnLoginProcessHash {
         login_success: is_login_success,

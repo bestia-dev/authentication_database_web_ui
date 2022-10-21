@@ -1,13 +1,16 @@
 // error_mod.rs
 
-/// enum for library errors with thiserror
-/// thiserror generates the Display trait for enum variants
+/// enum for library errors with thiserror\
+/// thiserror generates the Display trait for enum variants\
 /// user_friendly is for user message, developer_friendly is for developer log
 #[derive(thiserror::Error, Debug)]
 pub enum LibError {
-    /// Database connection error.
+    /// Database connection error
     #[error("Database connection error.")]
     DatabaseConnection,
+    /// PasswordHash error
+    #[error("PasswordHash error")]
+    PasswordHash,
     /// Query error: {user_friendly}
     #[error("Query error: {user_friendly}")]
     QueryError {

@@ -51,7 +51,7 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "common_code"
-version = "2022.1021.721"
+version = "2022.1021.1705"
 dependencies = [
  "serde",
  "serde_json",
@@ -219,7 +219,7 @@ dependencies = [
 
 [[package]]
 name = "tier1_browser_wasm"
-version = "2022.1021.829"
+version = "2022.1021.1724"
 dependencies = [
  "argon2",
  "common_code",

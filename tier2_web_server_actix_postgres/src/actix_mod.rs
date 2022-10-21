@@ -4,8 +4,6 @@
 pub type ResultResponse = actix_web::Result<actix_web::HttpResponse>;
 pub type DataAppState = actix_web::web::Data<crate::AppState>;
 
-use actix_web::FromRequest;
-
 use crate::{error_mod::time_epoch_as_millis, APP_MAIN_ROUTE};
 
 /// configure the route with scope
@@ -38,7 +36,7 @@ pub fn config_route_main(cfg: &mut actix_web::web::ServiceConfig) {
 
 /// fn to return a response when we have the body
 /// web apps modify data all the time, so caching is not good
-pub fn return_response_no_cache(body: String) -> actix_web::Result<actix_web::HttpResponse> {
+pub fn return_html_response_no_cache(body: String) -> actix_web::Result<actix_web::HttpResponse> {
     use actix_web::http::header;
     Ok(actix_web::HttpResponse::Ok()
         .append_header(header::ContentType(mime::TEXT_HTML_UTF_8))
@@ -57,6 +55,18 @@ pub fn return_json_from_object(
         .append_header(header::ContentType(mime::APPLICATION_JSON))
         .append_header(header::CacheControl(vec![header::CacheDirective::NoStore]))
         .body(json_body))
+}
+
+/// fn to return a json response when we have the a serializable object.
+/// It does not return a Result object, only just a response object.
+/// The error must be already processed and somehow put inside the data_resp enum or struct.
+pub fn return_json_resp_from_object(data_resp: impl serde::Serialize) -> actix_web::HttpResponse {
+    let json_body = serde_json::to_string(&data_resp).unwrap();
+    use actix_web::http::header;
+    actix_web::HttpResponse::Ok()
+        .append_header(header::ContentType(mime::APPLICATION_JSON))
+        .append_header(header::CacheControl(vec![header::CacheDirective::NoStore]))
+        .body(json_body)
 }
 
 /// fn to return a json response when we have the a serializable object
@@ -179,6 +189,8 @@ impl actix_web::FromRequest for RequestAndPayload {
         actix_utils::future::ok(req_payload)
     }
 }
+
+use actix_web::FromRequest;
 
 impl RequestAndPayload {
     pub async fn web_params(&mut self) -> crate::web_params_mod::WebParams {

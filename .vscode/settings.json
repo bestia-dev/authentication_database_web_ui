@@ -38,6 +38,8 @@
         "rustlang",
         "Sendgrid",
         "serde",
+        "ssmr",
+        "sssr",
         "startuml",
         "stylesheet",
         "templating",
