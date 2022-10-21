@@ -13,7 +13,8 @@ pg_dump -F t -U admin -h localhost -p 5432 webpage_hit_counter > db_backup/webpa
 Run this from the VSCode terminal inside the project folder.
 
 ```bash
-createdb -U admin -h localhost -p 5432 webpage_hit_counter2; pg_restore -c -U admin -h localhost -p 5432 -d webpage_hit_counter2 db_backup/webpage_hit_counter.tar
+createdb -U admin -h localhost -p 5432 webpage_hit_counter2; 
+pg_restore -c -U admin -h localhost -p 5432 -d webpage_hit_counter2 db_backup/webpage_hit_counter_2022_10_20.tar
 ```
 
 ## psql connection

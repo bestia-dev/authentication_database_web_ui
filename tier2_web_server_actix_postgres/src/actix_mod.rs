@@ -1,8 +1,6 @@
 // authentication_database_web_ui/tier2_web_server_actix_postgres/src/actix_mod.rs
 
 // type aliases: for less verbose types and better readability of the code
-pub type WebForm = actix_web::web::Form<Vec<(String, String)>>;
-pub type WebQuery = actix_web::web::Query<Vec<(String, String)>>;
 pub type ResultResponse = actix_web::Result<actix_web::HttpResponse>;
 pub type DataAppState = actix_web::web::Data<crate::AppState>;
 
@@ -152,4 +150,29 @@ pub fn redirect_to_login_page(
             .append_header((actix_web::http::header::LOCATION, url))
             .finish(),
     )
+}
+
+/// TODO: experiment to make an extractor to return ServiceRequest 2022-10-21\
+/// I cannot add a trait for a struct if both are not mine.\
+/// I must create a newtype for experiment. I asked the actix-web discussion if there is another way.
+pub struct ServiceRequestFromRequest(pub actix_web::dev::ServiceRequest);
+use actix_utils::future::Ready;
+use actix_web::error::Error;
+
+impl actix_web::FromRequest for ServiceRequestFromRequest {
+    type Error = Error;
+    type Future = Ready<Result<Self, Error>>;
+
+    #[inline]
+    fn from_request(
+        req: &actix_web::HttpRequest,
+        pl: &mut actix_web::dev::Payload,
+    ) -> Self::Future {
+        // TODO: it is bad to clone these structs. I hope there will be an extractor in the original library. 2022-10-21
+        let req = req.to_owned();
+        let pl = pl.take();
+        let req = actix_web::dev::ServiceRequest::from_parts(req, pl);
+
+        actix_utils::future::ok(ServiceRequestFromRequest(req))
+    }
 }

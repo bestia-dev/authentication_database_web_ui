@@ -1,6 +1,6 @@
 [package]
 name = "tier2_web_server_actix_postgres"
-version = "2022.1020.1136"
+version = "2022.1021.900"
 description = "09. Tutorial to code authentication for database_web_ui (2022-10)"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"
@@ -35,3 +35,4 @@ serde = { version = "1.0.145", features = ["derive"] }
 serde_json = "1.0.86"
 password-hash = "0.4.2"
 uuid = {version = "1.2.1", features = ["v4","fast-rng"]}
+actix-utils = "3.0.1"

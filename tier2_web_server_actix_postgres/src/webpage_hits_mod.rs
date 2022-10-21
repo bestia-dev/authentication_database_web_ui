@@ -2,7 +2,7 @@
 
 // type aliases: for less verbose types and better readability of the code
 
-use crate::actix_mod::{DataAppState, ResultResponse, WebForm, WebQuery};
+use crate::actix_mod::{DataAppState, ResultResponse, ServiceRequestFromRequest};
 use crate::server_side_multi_row_mod::ServerSideMultiRow;
 use crate::server_side_single_row_mod::ServerSideSingleRow;
 use actix_web::web::resource;
@@ -29,16 +29,15 @@ pub fn config_route_webpage_hits(cfg: &mut actix_web::web::ServiceConfig) {
 #[function_name::named]
 pub async fn webpage_hits_list(
     app_state: DataAppState,
-    query: WebQuery,
-    form: Option<WebForm>,
+    mut srv_req: ServiceRequestFromRequest,
 ) -> ResultResponse {
-    let mut ssmr = ServerSideMultiRow::new_with_query_and_form(
+    let mut ssmr = ServerSideMultiRow::new_with_service_request(
         &app_state,
         SCOPE,
         function_name!(),
-        &query,
-        &form,
-    );
+        &mut srv_req,
+    )
+    .await;
     // The where statement is constructed only for existing parameters, because efficiency.
     ssmr.where_clause = vec![
         "webpage like {f_like_webpage}",
@@ -53,16 +52,15 @@ pub async fn webpage_hits_list(
 #[function_name::named]
 pub async fn webpage_hits_new(
     app_state: DataAppState,
-    query: WebQuery,
-    form: Option<WebForm>,
+    mut srv_req: ServiceRequestFromRequest,
 ) -> ResultResponse {
-    let mut sssr = ServerSideSingleRow::new_with_query_and_form(
+    let mut sssr = ServerSideSingleRow::new_with_service_request(
         &app_state,
         SCOPE,
         function_name!(),
-        &query,
-        &form,
-    );
+        &mut srv_req,
+    )
+    .await;
     sssr.run_sql_from_web_params_and_process_html().await
 }
 
@@ -70,16 +68,15 @@ pub async fn webpage_hits_new(
 #[function_name::named]
 pub async fn webpage_hits_edit(
     app_state: DataAppState,
-    query: WebQuery,
-    form: Option<WebForm>,
+    mut srv_req: ServiceRequestFromRequest,
 ) -> ResultResponse {
-    let mut sssr = ServerSideSingleRow::new_with_query_and_form(
+    let mut sssr = ServerSideSingleRow::new_with_service_request(
         &app_state,
         SCOPE,
         function_name!(),
-        &query,
-        &form,
-    );
+        &mut srv_req,
+    )
+    .await;
     sssr.run_sql_from_web_params_and_process_html().await
 }
 
@@ -87,16 +84,15 @@ pub async fn webpage_hits_edit(
 #[function_name::named]
 pub async fn webpage_hits_insert(
     app_state: DataAppState,
-    query: WebQuery,
-    form: Option<WebForm>,
+    mut srv_req: ServiceRequestFromRequest,
 ) -> ResultResponse {
-    let mut sssr = ServerSideSingleRow::new_with_query_and_form(
+    let mut sssr = ServerSideSingleRow::new_with_service_request(
         &app_state,
         SCOPE,
         function_name!(),
-        &query,
-        &form,
-    );
+        &mut srv_req,
+    )
+    .await;
     sssr.run_sql_from_web_params_and_process_html().await
 }
 
@@ -104,16 +100,15 @@ pub async fn webpage_hits_insert(
 #[function_name::named]
 pub async fn webpage_hits_show(
     app_state: DataAppState,
-    query: WebQuery,
-    form: Option<WebForm>,
+    mut srv_req: ServiceRequestFromRequest,
 ) -> ResultResponse {
-    let mut sssr = ServerSideSingleRow::new_with_query_and_form(
+    let mut sssr = ServerSideSingleRow::new_with_service_request(
         &app_state,
         SCOPE,
         function_name!(),
-        &query,
-        &form,
-    );
+        &mut srv_req,
+    )
+    .await;
     sssr.run_sql_from_web_params_and_process_html().await
 }
 
@@ -121,16 +116,15 @@ pub async fn webpage_hits_show(
 #[function_name::named]
 pub async fn webpage_hits_update(
     app_state: DataAppState,
-    query: WebQuery,
-    form: Option<WebForm>,
+    mut srv_req: ServiceRequestFromRequest,
 ) -> ResultResponse {
-    let mut sssr = ServerSideSingleRow::new_with_query_and_form(
+    let mut sssr = ServerSideSingleRow::new_with_service_request(
         &app_state,
         SCOPE,
         function_name!(),
-        &query,
-        &form,
-    );
+        &mut srv_req,
+    )
+    .await;
     sssr.run_sql_from_web_params_and_process_html().await
 }
 
@@ -138,15 +132,14 @@ pub async fn webpage_hits_update(
 #[function_name::named]
 pub async fn webpage_hits_delete(
     app_state: DataAppState,
-    query: WebQuery,
-    form: Option<WebForm>,
+    mut srv_req: ServiceRequestFromRequest,
 ) -> ResultResponse {
-    let mut sssr = ServerSideSingleRow::new_with_query_and_form(
+    let mut sssr = ServerSideSingleRow::new_with_service_request(
         &app_state,
         SCOPE,
         function_name!(),
-        &query,
-        &form,
-    );
+        &mut srv_req,
+    )
+    .await;
     sssr.run_sql_from_web_params_and_process_html().await
 }

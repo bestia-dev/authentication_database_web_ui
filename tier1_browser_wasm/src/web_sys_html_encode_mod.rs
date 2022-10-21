@@ -1,6 +1,8 @@
 // web_sys_html_encode_mod.rs
 
-// TODO: check that literals are correct microxml?
+#![allow(dead_code)]
+
+// TODO: check that literals are correct microxml? 2022-10-21
 
 /* TODO
 The HtmlAttributeEncode method encodes characters appropriate for insertion into an HTML attribute value.
@@ -13,7 +15,7 @@ The string result from the HtmlAttributeEncode method should be used only for do
 /// html_encoded_push!(exp.explanation_all.,"{}", &exp.reg_str)
 #[macro_export]
 macro_rules! html_encoded_push {
-    // TODO: refactor to accept any number of params
+    // TODO: refactor to accept any number of params 2022-10-21
     ($html: expr, $template:expr) => {
         $html.push_to_use_only_by_the_macro_html_encoded_push(&format!($template))
     };
@@ -52,7 +54,7 @@ macro_rules! html_encoded_push {
 /// works like the format! macro, but the variables are html-encoded
 #[macro_export]
 macro_rules! format_html {
-    // TODO: refactor to accept any number of params
+    // TODO: refactor to accept any number of params 2022-10-21
     ($template:expr, $param_1: expr) => {
         format!(
             $template,

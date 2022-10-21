@@ -42,6 +42,7 @@ pub async fn authn_login_process_email(
     app_state: DataAppState,
     data_req: actix_web::web::Json<common_code::DataReqAuthnLoginProcessEmail>,
 ) -> ResultResponse {
+    // TODO: return the result also as json 2022-10-21
     let single_row = call_pg_func_auth_login_show(&data_req.user_email, &app_state).await?;
     let password_hash = get_string_from_row(&single_row, "password_hash")?;
     // extract salt

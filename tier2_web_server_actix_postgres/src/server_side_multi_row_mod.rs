@@ -11,13 +11,13 @@
 // 7. mix presentation and data, because this is server-side rendering
 // 8. return a response with no cache (because data in database can change fast)
 
-// TODO: dynamically construct a where clause only for the used filters for efficiency
-// TODO: dynamically construct the fields list only for fields used in the html (for efficiency)
+// TODO: dynamically construct a where clause only for the used filters for efficiency 2022-10-21
+// TODO: dynamically construct the fields list only for fields used in the html (for efficiency) 2022-10-21
 
 use lazy_static::lazy_static;
 use regex::Regex;
 
-use crate::actix_mod::{DataAppState, ResultResponse, WebForm, WebQuery};
+use crate::actix_mod::{DataAppState, ResultResponse, ServiceRequestFromRequest};
 use crate::postgres_mod::{FieldName, SqlParamsForPostgres, ViewName};
 use crate::postgres_type_mod::PostgresValueMultiType;
 use crate::sql_params_mod::SqlParams;
@@ -41,15 +41,14 @@ pub struct ServerSideMultiRow<'a> {
 
 impl<'a> ServerSideMultiRow<'a> {
     #[track_caller]
-    pub fn new_with_query_and_form(
+    pub async fn new_with_service_request(
         app_state: &'a DataAppState,
         scope: &'static str,
         view_name: &'static str,
-        query: &'a WebQuery,
-        form: &'a Option<WebForm>,
+        srv_req: &mut ServiceRequestFromRequest,
     ) -> ServerSideMultiRow<'a> {
         // region: 1. parse web data: strings coming from the browser in path, query and form
-        let web_params = WebParams::from_actix(query, form);
+        let web_params = WebParams::from_service_request(srv_req).await;
         // endregion
 
         Self::new_with_web_params(app_state, scope, view_name, web_params)
@@ -209,7 +208,7 @@ impl<'a> ServerSideMultiRow<'a> {
             self.view_name.0, self.sql_where, self.sql_order_by
         );
         // dbg!(&query);
-        // TODO: convert sql errors in a single place
+        // TODO: convert sql errors in a single place 2022-10-21
         let row_set = postgres_client.query(&query, &sql_params).await.unwrap();
 
         row_set

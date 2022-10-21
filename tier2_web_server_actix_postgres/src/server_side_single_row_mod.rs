@@ -9,7 +9,7 @@
 // 5. mix presentation and data, because this is server-side rendering
 // 6. return a response with no cache (because data in database can change fast)
 
-use crate::actix_mod::{DataAppState, ResultResponse, WebForm, WebQuery};
+use crate::actix_mod::{DataAppState, ResultResponse, ServiceRequestFromRequest};
 use crate::postgres_function_mod::PostgresFunction;
 use crate::postgres_mod::FunctionName;
 use crate::web_params_mod::WebParams;
@@ -23,17 +23,17 @@ pub struct ServerSideSingleRow<'a> {
 }
 
 impl<'a> ServerSideSingleRow<'a> {
-    /// Constructor from actix extractors: query and form    
     #[track_caller]
-    pub fn new_with_query_and_form(
+    pub async fn new_with_service_request(
         app_state: &'a DataAppState,
-        scope: &'a str,
+        scope: &'static str,
         function_name: &'static str,
-        query: &'a WebQuery,
-        form: &'a Option<WebForm>,
+        srv_req: &mut ServiceRequestFromRequest,
     ) -> ServerSideSingleRow<'a> {
-        // 1. prepare web_params from strings coming from the browser in path, query and form
-        let web_params = WebParams::from_actix(query, form);
+        // region: 1. parse web data: strings coming from the browser in path, query and form
+        let web_params = WebParams::from_service_request(srv_req).await;
+        // endregion
+
         Self::new_with_web_params(app_state, scope, function_name, web_params)
     }
 
@@ -44,7 +44,7 @@ impl<'a> ServerSideSingleRow<'a> {
         scope: &'a str,
         function_name: &'static str,
         web_params: WebParams,
-    ) -> ServerSideSingleRow<'a> {
+    ) -> Self {
         // 2. prepare PostgresFunction with correct data types from web_params
         let postgres_function =
             PostgresFunction::new_with_web_params(app_state, function_name, web_params);

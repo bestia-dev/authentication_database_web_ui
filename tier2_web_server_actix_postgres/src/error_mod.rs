@@ -70,6 +70,7 @@ impl actix_web::ResponseError for LibError {
         // more information for the developer
         // I need the exact time to match the user message with the log
         let time = time_epoch_as_millis();
+        // TODO: the response to json must be json! 2022-10-21
         // log is developer friendly with many more info
         log::error!("{time} {}\n{:#?}", self, self);
         // only the user-friendly error for the user

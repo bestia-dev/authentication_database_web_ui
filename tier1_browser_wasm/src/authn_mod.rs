@@ -71,7 +71,7 @@ pub mod authn_login {
         } else {
             let div_alert = get_html_element_by_id("div_alert");
             div_alert.set_text_content(Some("Authentication failed !"));
-            // TODO: on key_up for email or password empty the alert textContent
+            // TODO: on key_up for email or password empty the alert textContent 2022-10-21
         }
     }
 }

@@ -2,7 +2,12 @@
 
 use std::collections::HashMap;
 
-use crate::error_mod::{file_line_column, LibError};
+use crate::{
+    actix_mod::ServiceRequestFromRequest,
+    error_mod::{file_line_column, LibError},
+};
+
+// type aliases: for less verbose types and better readability of the code
 type WebForm = actix_web::web::Form<Vec<(String, String)>>;
 type WebQuery = actix_web::web::Query<Vec<(String, String)>>;
 
@@ -14,22 +19,20 @@ type WebQuery = actix_web::web::Query<Vec<(String, String)>>;
 pub struct WebParams(pub HashMap<String, String>);
 
 impl WebParams {
-    /*
-    pub fn new() -> Self {
-        let h: HashMap<String, String> = HashMap::new();
-        WebParams(h)
-    }
+    #[track_caller]
+    pub async fn from_service_request(srv_req: &mut ServiceRequestFromRequest) -> WebParams {
+        let query = srv_req.0.extract::<WebQuery>().await.unwrap();
+        let form = srv_req.0.extract::<Option<WebForm>>().await.unwrap();
 
-       pub fn insert(&mut self, name: &str, value: &str) {
-        self.0.insert(name.to_string(), value.to_string());
-    } */
+        Self::from_query_and_form(&query, &form)
+    }
 
     /// get WebParams from POST(form) if exists or else GET(web query)  
     /// If Post(form) exists, then GET(web query) is ignored.  
     /// track_caller decoration makes Location::caller() return the caller location  
     /// for meaningful source code location of the actual error  
     #[track_caller]
-    pub fn from_actix(query: &WebQuery, form: &Option<WebForm>) -> WebParams {
+    pub fn from_query_and_form(query: &WebQuery, form: &Option<WebForm>) -> WebParams {
         if let Some(form) = form {
             // into_iter() consumes the vector. The vector cannot be used after calling this.
             WebParams(form.0.clone().into_iter().collect())

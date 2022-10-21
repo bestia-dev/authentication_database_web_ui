@@ -74,12 +74,11 @@ This session cookie will be attached to every request sent from this client. The
 It is not easy to send emails over SMTP anymore because of spam. There is so much spam, that big email providers invented the "email deliverability reputation" system, which makes it difficult for smaller senders to not be flagged as spam. So the solution is to use some free email providers like MailGun, MailJet, Mailersend or Sendgrid. The email communication between a web app and its user is called "transactional email" and is specific because it needs to be fast and reliable. A transactional email is a type of email message that’s triggered by a specific action on a website or mobile app. Some common examples of transactional emails include password resets, order confirmations, automated abandoned cart emails, account notifications, social media updates, welcome emails, and any other confirmation emails that are sent via automation. These automated emails are typically sent programmatically through an email API or SMTP server.
 
 
-
 Save your html files in UTF-8 encoding without the byte-order mark (BOM).
 
 The declaration is not an HTML tag. It is an "information" to the browser about what document type to expect.
 
-TODO: random salt, random session_id
+TODO: random salt, random session_id 2022-10-21
 
 ## Debugger
 

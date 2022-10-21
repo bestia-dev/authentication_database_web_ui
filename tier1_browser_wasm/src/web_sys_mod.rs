@@ -2,6 +2,8 @@
 //! helper functions for web_sys, window, document, dom, console,
 //! local_storage, session_storage,...
 
+#![allow(dead_code)]
+
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 // region: use

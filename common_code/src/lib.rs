@@ -13,6 +13,7 @@ pub struct DataReqAuthnLoginProcessEmail {
 
 /// json response data for authn_login_process_email
 #[derive(Serialize, Deserialize)]
+// TODO: the response must be enum like Result with ok and err variant 2022-10-21
 pub struct DataRespAuthnLoginProcessEmail {
     pub salt: String,
 }
