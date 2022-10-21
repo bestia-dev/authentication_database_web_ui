@@ -64,7 +64,7 @@ impl<'a> ServerSideSingleRow<'a> {
         // endregion
 
         // region: 6. return a response with no cache (because data in database can change fast)
-        crate::actix_mod::return_html_response_no_cache(body)
+        Ok(crate::actix_mod::return_html_response_no_cache(body))
         // endregion
     }
 }

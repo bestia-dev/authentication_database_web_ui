@@ -6,8 +6,16 @@
 #[derive(thiserror::Error, Debug)]
 pub enum LibError {
     /// Database connection error
-    #[error("Database connection error.")]
+    #[error("Database connection error")]
     DatabaseConnection,
+
+    /// Mutex error
+    #[error("Mutex error")]
+    MutexError,
+    /// Authentication failed
+    #[error("Authentication failed")]
+    AuthenticationFailed,
+
     /// PasswordHash error
     #[error("PasswordHash error")]
     PasswordHash,
@@ -49,6 +57,12 @@ pub enum LibError {
     /// The query returned more than one row.
     #[error("The query returned more than one row.")]
     QueryReturnMoreThanOneRow {
+        developer_friendly: String,
+        source_line_column: String,
+    },
+    /// Serde_json parse error.
+    #[error("Serde_json parse error.")]
+    SerdeJsonParseError {
         developer_friendly: String,
         source_line_column: String,
     },
@@ -97,4 +111,15 @@ pub fn file_line_column(source_caller_location: &std::panic::Location) -> String
         source_caller_location.line(),
         source_caller_location.column()
     )
+}
+
+// implementing from, when I need to convert one type of error to the other
+
+impl From<serde_json::error::Error> for LibError {
+    fn from(_err: serde_json::error::Error) -> LibError {
+        LibError::SerdeJsonParseError {
+            developer_friendly: String::new(),
+            source_line_column: String::new(),
+        }
+    }
 }

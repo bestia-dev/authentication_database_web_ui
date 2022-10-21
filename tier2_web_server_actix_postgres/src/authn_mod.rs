@@ -8,6 +8,7 @@ use crate::error_mod::LibError;
 use crate::postgres_function_mod::PostgresFunction;
 use crate::postgres_mod::get_string_from_row;
 use crate::postgres_type_mod::PostgresValueMultiType;
+use actix_web::cookie::Cookie;
 use actix_web::cookie::SameSite;
 use actix_web::web::resource;
 use actix_web::web::to;
@@ -30,7 +31,7 @@ pub fn config_route_authn(cfg: &mut actix_web::web::ServiceConfig) {
 #[function_name::named]
 pub async fn authn_login() -> ResultResponse {
     let body = crate::html_templating_mod::read_template(SCOPE, function_name!());
-    crate::actix_mod::return_html_response_no_cache(body)
+    Ok(crate::actix_mod::return_html_response_no_cache(body))
 }
 
 /// read data from table authn_login for email_user
@@ -69,7 +70,7 @@ pub async fn authn_login_process_email(
     pub async fn internal_fn(
         app_state: DataAppState,
         data_req: actix_web::web::Json<common_code::DataReqAuthnLoginProcessEmail>,
-    ) -> core::result::Result<String, LibError> {
+    ) -> core::result::Result<common_code::ResultAuthnLoginProcessEmail, LibError> {
         /*
         let mut jsr = JsonSingleRow::new(SCOPE, function_name!(), &mut req_payload).await;
         jsr.run_sql_and_return_json().await
@@ -81,14 +82,17 @@ pub async fn authn_login_process_email(
         let password_hash = password_hash::PasswordHash::new(&password_hash)
             .map_err(|_| crate::error_mod::LibError::PasswordHash)?;
 
-        Ok(password_hash.salt.unwrap().to_string())
+        let salt = password_hash
+            .salt
+            .ok_or(LibError::PasswordHash)?
+            .to_string();
+        let data_resp = common_code::ResultAuthnLoginProcessEmail::Data { salt: salt };
+        Ok(data_resp)
     }
-    match internal_fn(app_state, data_req).await {
-        Ok(salt) => {
-            let data_resp = common_code::ResultAuthnLoginProcessEmail::Data { salt: salt };
-            crate::actix_mod::return_json_resp_from_object(data_resp)
-        }
 
+    // here we can call the internal function
+    match internal_fn(app_state, data_req).await {
+        Ok(data_resp) => crate::actix_mod::return_json_resp_from_object(data_resp),
         Err(err) => {
             let err_resp = common_code::ResultAuthnLoginProcessEmail::Error(err.to_string());
             crate::actix_mod::return_json_resp_from_object(err_resp)
@@ -101,52 +105,76 @@ pub async fn authn_login_process_email(
 pub async fn authn_login_process_hash(
     app_state: DataAppState,
     data_req: actix_web::web::Json<common_code::DataReqAuthnLoginProcessHash>,
-) -> ResultResponse {
-    // check data_req.hash   in database
-    let single_row = call_pg_func_auth_login_show(&data_req.user_email, app_state.clone())
-        .await
-        .unwrap();
-    let password_hash: String = get_string_from_row(&single_row, "password_hash").unwrap();
-    let is_login_success = { password_hash == data_req.hash };
-    let data_resp = common_code::DataRespAuthnLoginProcessHash {
-        login_success: is_login_success,
-    };
-    if is_login_success {
-        log::info!("The user is authenticated successfully. Returning session_id cookie.");
+) -> actix_web::HttpResponse {
+    pub async fn internal_fn(
+        app_state: DataAppState,
+        data_req: actix_web::web::Json<common_code::DataReqAuthnLoginProcessHash>,
+    ) -> core::result::Result<(common_code::DataRespAuthnLoginProcessHash, Cookie<'static>), LibError>
+    {
+        // check data_req.hash   in database
+        let single_row =
+            call_pg_func_auth_login_show(&data_req.user_email, app_state.clone()).await?;
+        let password_hash: String = get_string_from_row(&single_row, "password_hash")?;
+        let is_login_success = { password_hash == data_req.hash };
+        if !is_login_success {
+            log::warn!("The user authentication failed.");
+            Err(LibError::AuthenticationFailed)
+        } else {
+            log::info!("The user is authenticated successfully. Returning session_id cookie.");
 
-        // random session_id as UUID
-        let uuid = uuid::Uuid::new_v4().to_string();
-        // add to app_state active_sessions
-        app_state.active_sessions.lock().unwrap().insert(
-            uuid.clone(),
-            (
-                data_req.user_email.clone(),
-                crate::error_mod::time_epoch_as_millis(),
-            ),
-        );
-        // create cookie and add to response
-        let mut cookie = actix_web::cookie::Cookie::new("session_id", uuid.clone());
+            // random session_id as UUID
+            let uuid = uuid::Uuid::new_v4().to_string();
+            // add to app_state active_sessions
+            app_state
+                .active_sessions
+                .lock()
+                .map_err(|_err| LibError::MutexError)?
+                .insert(
+                    uuid.clone(),
+                    (
+                        data_req.user_email.clone(),
+                        crate::error_mod::time_epoch_as_millis(),
+                    ),
+                );
+            // create cookie and add to response
+            let mut cookie = actix_web::cookie::Cookie::new("session_id", uuid.clone());
 
-        // # About session cookies
-        // If 'expires' or 'max-age' is unspecified, the cookie becomes a session cookie.
-        // A session finishes when the client shuts down, after which the session cookie is removed.
-        // Warning: Many web browsers have a session restore feature that will save all tabs and
-        // restore them the next time the browser is used. Session cookies will also be restored,
-        // as if the browser was never closed.
-        // I will check the session_id expiration on the server, not on the client.
+            // # About session cookies
+            // If 'expires' or 'max-age' is unspecified, the cookie becomes a session cookie.
+            // A session finishes when the client shuts down, after which the session cookie is removed.
+            // Warning: Many web browsers have a session restore feature that will save all tabs and
+            // restore them the next time the browser is used. Session cookies will also be restored,
+            // as if the browser was never closed.
+            // I will check the session_id expiration on the server, not on the client.
 
-        // very important security setting
-        cookie.set_same_site(SameSite::Strict);
-        // on the same site, we can have may different applications with different cookies
-        cookie.set_path(format!("/{APP_MAIN_ROUTE}/"));
-        // this is a session_id cookie that browser sends on every request. Javascript does not need access to it.
-        cookie.set_http_only(true);
-        // the cookie is sent only over secured https line. Except for localhost.
-        cookie.set_secure(true);
-        // if successful return new session cookie
-        crate::actix_mod::return_json_from_object_with_cookie(data_resp, cookie)
-    } else {
-        log::warn!("The user authentication failed.");
-        crate::actix_mod::return_json_from_object(data_resp)
+            // very important security setting
+            cookie.set_same_site(SameSite::Strict);
+            // on the same site, we can have may different applications with different cookies
+            cookie.set_path(format!("/{APP_MAIN_ROUTE}/"));
+            // this is a session_id cookie that browser sends on every request. Javascript does not need access to it.
+            cookie.set_http_only(true);
+            // the cookie is sent only over secured https line. Except for localhost.
+            cookie.set_secure(true);
+            // if successful return new session cookie
+            let data_resp = common_code::DataRespAuthnLoginProcessHash {
+                login_success: is_login_success,
+            };
+            Ok((data_resp, cookie))
+        }
+    }
+
+    // here we can call the internal function and catch the possible errors
+    // in this particular case we will return to the client `login_success: false` instead of an error variant
+    match internal_fn(app_state, data_req).await {
+        Ok((data_resp, cookie)) => {
+            crate::actix_mod::return_json_resp_from_object_with_cookie(data_resp, cookie)
+        }
+        Err(err) => {
+            log::error!("{}", err);
+            let err_resp = common_code::DataRespAuthnLoginProcessHash {
+                login_success: false,
+            };
+            crate::actix_mod::return_json_resp_from_object(err_resp)
+        }
     }
 }
