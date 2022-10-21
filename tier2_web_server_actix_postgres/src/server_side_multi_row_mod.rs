@@ -14,7 +14,6 @@
 // TODO: dynamically construct a where clause only for the used filters for efficiency 2022-10-21
 // TODO: dynamically construct the fields list only for fields used in the html (for efficiency) 2022-10-21
 
-use actix_web::web::Data;
 use lazy_static::lazy_static;
 use regex::Regex;
 
@@ -24,16 +23,14 @@ use crate::postgres_type_mod::PostgresValueMultiType;
 use crate::sql_params_mod::SqlParams;
 use crate::web_params_mod::WebParams;
 
-use actix_web::FromRequest;
-
 lazy_static! {
     static ref RGX_01: Regex = Regex::new(r###"\{(.+?)}"###).unwrap();
 }
 
 /// the main ServerSideMultiRow object (struct with implementation)
-pub struct ServerSideMultiRow<'a> {
+pub struct ServerSideMultiRow {
     app_state: DataAppState,
-    scope: &'a str,
+    scope: &'static str,
     view_name: ViewName,
     web_params: WebParams,
     sql_params_in_order: Vec<PostgresValueMultiType>,
@@ -42,33 +39,20 @@ pub struct ServerSideMultiRow<'a> {
     sql_order_by: String,
 }
 
-impl<'a> ServerSideMultiRow<'a> {
-    #[track_caller]
-    pub async fn new_with_request_and_payload(
-        scope: &'static str,
-        view_name: &'static str,
-        rap: &mut RequestAndPayload,
-    ) -> ServerSideMultiRow<'a> {
-        // region: 1. parse web data: strings coming from the browser in path, query and form
-        let web_params = WebParams::from_request_and_payload(rap).await;
-        let app_state: Data<crate::AppState> =
-            actix_web::web::Data::from_request(&rap.req, &mut rap.pl)
-                .await
-                .unwrap();
-        // endregion
-
-        Self::new_with_web_params(app_state, scope, view_name, web_params)
-    }
-
+impl ServerSideMultiRow {
     /// constructor for the server side rendering object
     /// It takes all the data needed to execute the function
     #[track_caller]
-    pub fn new_with_web_params(
-        app_state: DataAppState,
+    pub async fn new(
         scope: &'static str,
         view_name: &'static str,
-        web_params: WebParams,
-    ) -> ServerSideMultiRow<'a> {
+        req_payload: &mut RequestAndPayload,
+    ) -> ServerSideMultiRow {
+        // region: 1. parse web data: strings coming from the browser in path, query and form
+        let web_params = req_payload.web_params().await;
+        let app_state = req_payload.app_state().await;
+        // endregion
+
         ServerSideMultiRow {
             app_state,
             scope,

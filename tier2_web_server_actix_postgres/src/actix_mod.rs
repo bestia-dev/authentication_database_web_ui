@@ -4,7 +4,7 @@
 pub type ResultResponse = actix_web::Result<actix_web::HttpResponse>;
 pub type DataAppState = actix_web::web::Data<crate::AppState>;
 
-use log::info;
+use actix_web::FromRequest;
 
 use crate::{error_mod::time_epoch_as_millis, APP_MAIN_ROUTE};
 
@@ -108,7 +108,7 @@ pub fn on_request_received_is_session_cookie_ok(req: &actix_web::dev::ServiceReq
                         // log::info!( "session: {} {} {}", cookie.value(), &user_email, last_access_time_in_millis );
                         // expires in 10 minutes of inactivity
                         if time_epoch_as_millis() - last_access_time_in_millis > 600_000 {
-                            info!("The cookie has expired after 10 minutes.");
+                            log::info!("The cookie has expired after 10 minutes.");
                             // remove it from sessions
                             sessions.remove(cookie.value());
                             return false;
@@ -153,13 +153,13 @@ pub fn redirect_to_login_page(
 }
 
 use actix_utils::future::Ready;
-use actix_web::error::Error;
+use actix_web::{error::Error, web::Data};
 
 /// TODO: experiment to make an extractor to return HttpRequest and Payload 2022-10-21\
 /// Just like ServiceRequest.
 pub struct RequestAndPayload {
     pub req: actix_web::HttpRequest,
-    pub pl: actix_web::dev::Payload,
+    pub payload: actix_web::dev::Payload,
 }
 
 impl actix_web::FromRequest for RequestAndPayload {
@@ -169,13 +169,25 @@ impl actix_web::FromRequest for RequestAndPayload {
     #[inline]
     fn from_request(
         req: &actix_web::HttpRequest,
-        pl: &mut actix_web::dev::Payload,
+        payload: &mut actix_web::dev::Payload,
     ) -> Self::Future {
-        let rap = RequestAndPayload {
+        let req_payload = RequestAndPayload {
             req: req.to_owned(),
-            pl: pl.take(),
+            payload: payload.take(),
         };
 
-        actix_utils::future::ok(rap)
+        actix_utils::future::ok(req_payload)
+    }
+}
+
+impl RequestAndPayload {
+    pub async fn web_params(&mut self) -> crate::web_params_mod::WebParams {
+        crate::web_params_mod::WebParams::from_request_and_payload(self).await
+    }
+
+    pub async fn app_state(&mut self) -> Data<crate::AppState> {
+        actix_web::web::Data::from_request(&self.req, &mut self.payload)
+            .await
+            .unwrap()
     }
 }

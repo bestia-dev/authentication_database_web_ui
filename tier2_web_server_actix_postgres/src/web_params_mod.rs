@@ -21,29 +21,26 @@ type WebQuery = actix_web::web::Query<Vec<(String, String)>>;
 pub struct WebParams(pub HashMap<String, String>);
 
 impl WebParams {
-    #[track_caller]
-    pub async fn from_request_and_payload(rap: &mut RequestAndPayload) -> WebParams {
-        // form will consume the Payload! All other extractor will get it empty.
-        let form: Option<WebForm> = actix_web::web::Form::from_request(&rap.req, &mut rap.pl)
-            .await
-            .ok();
-        let query: WebQuery = actix_web::web::Query::from_request(&rap.req, &mut rap.pl)
-            .await
-            .unwrap();
-
-        Self::from_query_and_form(&query, &form)
-    }
-
-    /// get WebParams from POST(form) if exists or else GET(web query)  
+    /// get WebParams from POST(web form) if exists or else GET(web query)  
     /// If Post(form) exists, then GET(web query) is ignored.  
     /// track_caller decoration makes Location::caller() return the caller location  
     /// for meaningful source code location of the actual error  
     #[track_caller]
-    fn from_query_and_form(query: &WebQuery, form: &Option<WebForm>) -> WebParams {
+    pub async fn from_request_and_payload(req_payload: &mut RequestAndPayload) -> WebParams {
+        // form will consume the Payload! All other extractor will get it empty.
+        let form: Option<WebForm> =
+            actix_web::web::Form::from_request(&req_payload.req, &mut req_payload.payload)
+                .await
+                .ok();
+
         if let Some(form) = form {
             // into_iter() consumes the vector. The vector cannot be used after calling this.
             WebParams(form.0.clone().into_iter().collect())
         } else {
+            let query: WebQuery =
+                actix_web::web::Query::from_request(&req_payload.req, &mut req_payload.payload)
+                    .await
+                    .unwrap();
             WebParams(query.0.clone().into_iter().collect())
         }
     }

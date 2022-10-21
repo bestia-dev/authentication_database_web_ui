@@ -9,14 +9,9 @@
 // 5. mix presentation and data, because this is server-side rendering
 // 6. return a response with no cache (because data in database can change fast)
 
-use actix_web::web::Data;
-
-use crate::actix_mod::{DataAppState, RequestAndPayload, ResultResponse};
+use crate::actix_mod::{RequestAndPayload, ResultResponse};
 use crate::postgres_function_mod::PostgresFunction;
 use crate::postgres_mod::FunctionName;
-use crate::web_params_mod::WebParams;
-
-use actix_web::FromRequest;
 
 /// the main ServerSideSingleRow object (struct with implementation)
 pub struct ServerSideSingleRow<'a> {
@@ -28,37 +23,23 @@ pub struct ServerSideSingleRow<'a> {
 
 impl<'a> ServerSideSingleRow<'a> {
     #[track_caller]
-    pub async fn new_with_request_and_payload(
+    pub async fn new(
         scope: &'static str,
         view_name: &'static str,
-        rap: &mut RequestAndPayload,
+        req_payload: &mut RequestAndPayload,
     ) -> ServerSideSingleRow<'a> {
         // region: 1. parse web data: strings coming from the browser in path, query and form
-        let web_params = WebParams::from_request_and_payload(rap).await;
-        let app_state: Data<crate::AppState> =
-            actix_web::web::Data::from_request(&rap.req, &mut rap.pl)
-                .await
-                .unwrap();
+        let web_params = req_payload.web_params().await;
+        let app_state = req_payload.app_state().await;
         // endregion
 
-        Self::new_with_web_params(app_state, scope, view_name, web_params)
-    }
-
-    /// constructor from web_params    
-    #[track_caller]
-    pub fn new_with_web_params(
-        app_state: DataAppState,
-        scope: &'a str,
-        function_name: &'static str,
-        web_params: WebParams,
-    ) -> Self {
         // 2. prepare PostgresFunction with correct data types from web_params
         let postgres_function =
-            PostgresFunction::new_with_web_params(app_state, function_name, web_params);
+            PostgresFunction::new_with_web_params(app_state, view_name, web_params);
 
         ServerSideSingleRow {
             scope,
-            function_name: FunctionName(function_name.to_string()),
+            function_name: FunctionName(view_name.to_string()),
             postgres_function,
         }
     }
