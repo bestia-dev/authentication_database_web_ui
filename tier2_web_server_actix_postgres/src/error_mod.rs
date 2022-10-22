@@ -1,7 +1,7 @@
 // error_mod.rs
 
-/// enum for library errors with thiserror\
-/// thiserror generates the Display trait for enum variants\
+/// enum for all library errors with thiserror \
+/// thiserror generates the Display trait for enum variants \
 /// user_friendly is for user message, developer_friendly is for developer log
 #[derive(thiserror::Error, Debug)]
 pub enum LibError {
@@ -12,6 +12,7 @@ pub enum LibError {
     /// Mutex error
     #[error("Mutex error")]
     MutexError,
+
     /// Authentication failed
     #[error("Authentication failed")]
     AuthenticationFailed,
@@ -72,7 +73,13 @@ pub enum LibError {
     */
 }
 
-/// actix error has this trait for custom errors
+/// Actix error has the trait 'ResponseError' for custom errors to return a coherent error response to the client.
+/// This web application is heterogeneous and can return html or json responses or anything else.
+/// This trait cannot distinguish between this two. I have to choose one option and stick with it.
+/// When there is code running on the client I can receive anything and transform it as I wish.
+/// But for clean server side rendering there is no option of manipulating anything on the client.
+/// So I choose that the only reasonable response is fully server side rendered HTML.
+/// I will use the 'id' attribute to later extract data out of HTML when needed.
 impl actix_web::ResponseError for LibError {
     /// html status code for error
     fn status_code(&self) -> actix_web::http::StatusCode {
@@ -87,11 +94,16 @@ impl actix_web::ResponseError for LibError {
         // more information for the developer
         // I need the exact time to match the user message with the log
         let time = time_epoch_as_millis();
-        // TODO: the response to json must be json! 2022-10-21
+
         // log is developer friendly with many more info
         log::error!("{time} {}\n{:#?}", self, self);
+
         // only the user-friendly error for the user
-        actix_web::HttpResponse::build(status_code).body(format!("{time} {}", self))
+        let error_text = format!("{time} {}", self);
+        let body = crate::html_templating_mod::read_template("error", "error");
+        let body = body.replace("{error_text}", &error_text);
+
+        actix_web::HttpResponse::build(status_code).body(body)
     }
 }
 
@@ -121,5 +133,11 @@ impl From<serde_json::error::Error> for LibError {
             developer_friendly: String::new(),
             source_line_column: String::new(),
         }
+    }
+}
+
+impl<T> From<std::sync::PoisonError<T>> for LibError {
+    fn from(_err: std::sync::PoisonError<T>) -> LibError {
+        LibError::MutexError
     }
 }

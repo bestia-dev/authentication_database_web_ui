@@ -47,13 +47,13 @@ pub fn return_html_response_no_cache(body: String) -> actix_web::HttpResponse {
 /// fn to return a json response when we have the a serializable object.
 /// It does not return a Result object, only just a response object.
 /// The error must be already processed and somehow put inside the data_resp enum or struct.
-pub fn return_json_resp_from_object(data_resp: impl serde::Serialize) -> actix_web::HttpResponse {
-    let json_body = serde_json::to_string(&data_resp).expect("I think this should not error ever!");
+pub fn return_json_resp_from_object(data_resp: impl serde::Serialize) -> ResultResponse {
+    let json_body = serde_json::to_string(&data_resp)?;
     use actix_web::http::header;
-    actix_web::HttpResponse::Ok()
+    Ok(actix_web::HttpResponse::Ok()
         .append_header(header::ContentType(mime::APPLICATION_JSON))
         .append_header(header::CacheControl(vec![header::CacheDirective::NoStore]))
-        .body(json_body)
+        .body(json_body))
 }
 
 /// fn to return a json response when we have the a serializable object
@@ -62,15 +62,15 @@ pub fn return_json_resp_from_object(data_resp: impl serde::Serialize) -> actix_w
 pub fn return_json_resp_from_object_with_cookie(
     data_resp: impl serde::Serialize,
     cookie: actix_web::cookie::Cookie,
-) -> actix_web::HttpResponse {
-    let json_body = serde_json::to_string(&data_resp).expect("I think this should not error ever!");
+) -> ResultResponse {
+    let json_body = serde_json::to_string(&data_resp)?;
     use actix_web::http::header;
     let response = actix_web::HttpResponse::Ok()
         .append_header(header::ContentType(mime::APPLICATION_JSON))
         .append_header(header::CacheControl(vec![header::CacheDirective::NoStore]))
         .cookie(cookie)
         .body(json_body);
-    response
+    Ok(response)
 }
 
 /// when a request is received we check for the session cookie

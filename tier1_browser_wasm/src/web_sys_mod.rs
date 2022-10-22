@@ -4,8 +4,6 @@
 
 #![allow(dead_code)]
 
-use serde::de::DeserializeOwned;
-use serde::Serialize;
 // region: use
 use unwrap::unwrap;
 use wasm_bindgen::{JsCast, JsValue};
@@ -30,6 +28,26 @@ macro_rules! on_click {
 
         let html_element = get_html_element_by_id($element_1_id);
         html_element.set_onclick(Some(closure.as_ref().unchecked_ref()));
+        closure.forget();
+    }};
+}
+
+/// Simple macro to set listener of key_down events to an element_id to an async function.
+/// no args: on_key_down!(element_1_id, function_ident)
+/// no args: on_key_down!("example_email",example_email)
+#[macro_export]
+macro_rules! on_keydown {
+    ($element_1_id: expr, $function_ident: ident) => {{
+        let closure = Closure::wrap(Box::new(move || {
+            // event listeners use sync functions,
+            // but most of other functions are async because of javascript
+            wasm_bindgen_futures::spawn_local(async move {
+                $function_ident().await;
+            });
+        }) as Box<dyn FnMut()>);
+
+        let html_element = get_html_element_by_id($element_1_id);
+        html_element.set_onkeydown(Some(closure.as_ref().unchecked_ref()));
         closure.forget();
     }};
 }
@@ -103,19 +121,6 @@ pub async fn fetch_json_response(url: String, json_jsvalue_body: String) -> Stri
     let text_jsvalue = unwrap!(JsFuture::from(unwrap!(resp.text())).await);
     let txt_response: String = unwrap!(text_jsvalue.as_string());
     txt_response
-}
-
-/// fetch in Rust with async await for executor spawn_local()
-/// parameter is a Serializable object
-/// return the response as deserialized object from json. Any error will panic.
-pub async fn fetch_object_response<T>(url: String, obj: impl Serialize) -> T
-where
-    T: DeserializeOwned,
-{
-    let json_jsvalue_body = serde_json::to_string(&obj).unwrap();
-    let json_jsvalue = fetch_json_response(url, json_jsvalue_body).await;
-    let resp_data: T = serde_json::from_str(&json_jsvalue).unwrap();
-    resp_data
 }
 
 /// set element inner text string by id

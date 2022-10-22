@@ -1,6 +1,6 @@
 [package]
 name = "tier1_browser_wasm"
-version = "2022.1021.1724"
+version = "2022.1022.1130"
 description = "09. Tutorial to code authentication for database_web_ui (2022-10)"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"
@@ -18,6 +18,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 unwrap = "1.2.1"
+anyhow = "1.0.66"
 wasm-bindgen = "0.2.83"
 wasm-bindgen-futures = "0.4.33"
 console_error_panic_hook = "0.1.7"
