@@ -4,7 +4,11 @@
 
 #![allow(dead_code)]
 
+use serde::de::DeserializeOwned;
+use serde::Serialize;
 // region: use
+use crate::APP_MAIN_ROUTE;
+use anyhow::anyhow;
 use unwrap::unwrap;
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
@@ -133,4 +137,34 @@ pub fn set_element_inner_html_by_id(
     //debug_write("before value()");
     let html = html.get_html();
     element.set_inner_html(&html);
+}
+
+// generic send serializable object to server and get response with deserialize object
+pub async fn send_obj_get_obj<T>(
+    scope: &str,
+    function_name: &str,
+    req_object: impl Serialize,
+) -> anyhow::Result<T>
+where
+    T: DeserializeOwned,
+{
+    let json_body = serde_json::to_string(&req_object).unwrap();
+    let resp_string = fetch_json_response(
+        format!("/{APP_MAIN_ROUTE}/{scope}/{function_name}"),
+        json_body,
+    )
+    .await;
+    match serde_json::from_str::<T>(&resp_string) {
+        Err(err) => {
+            msg_authentication_failed(&format!("Error {}", err));
+            return Err(anyhow!("error"));
+        }
+        Ok(resp_obj) => Ok(resp_obj),
+    }
+}
+
+pub fn msg_authentication_failed(debug_text: &str) {
+    debug_write(debug_text);
+    let div_alert = get_html_element_by_id("div_alert");
+    div_alert.set_text_content(Some("Authentication failed !"));
 }
