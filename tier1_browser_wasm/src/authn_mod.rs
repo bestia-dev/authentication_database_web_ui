@@ -6,7 +6,7 @@
 pub mod authn_login {
     // For the on_click macro, I must use crate::on_click and wasm_bindgen::JsCast
     use crate::on_click;
-    use crate::on_keydown;
+    use crate::on_input;
     use crate::web_sys_mod::*;
     use crate::APP_MAIN_ROUTE;
     use anyhow::anyhow;
@@ -23,14 +23,14 @@ pub mod authn_login {
 
         // region: add event listeners
         on_click!("btn_submit", btn_submit);
-        on_keydown!("user_email", email_pass_on_keydown);
-        on_keydown!("password", email_pass_on_keydown);
+        on_input!("user_email", email_pass_on_input);
+        on_input!("password", email_pass_on_input);
 
         // endregion: add event listeners
     }
 
     /// on key down
-    pub async fn email_pass_on_keydown() {
+    pub async fn email_pass_on_input() {
         let div_alert = get_html_element_by_id("div_alert");
         div_alert.set_text_content(None);
     }
@@ -45,8 +45,7 @@ pub mod authn_login {
             return ();
         }
         if let Ok(salt) = send_email_get_salt(user_email.clone()).await {
-
-            let hash = calculate_hash(user_email.clone(),password,salt);
+            let hash = calculate_hash(user_email.clone(), password, salt);
 
             if let Ok(login_success) = send_email_hash_get_authn_success(user_email, hash).await {
                 if login_success == false {
@@ -64,7 +63,7 @@ pub mod authn_login {
         }
     }
 
-    fn calculate_hash(user_email:String,password:String, salt: String) -> String {
+    fn calculate_hash(user_email: String, password: String, salt: String) -> String {
         let input_password = format!("{user_email}_{password}");
         let argon2 = argon2::Argon2::default();
         let hash =

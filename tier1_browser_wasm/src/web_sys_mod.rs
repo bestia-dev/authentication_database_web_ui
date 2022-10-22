@@ -32,11 +32,11 @@ macro_rules! on_click {
     }};
 }
 
-/// Simple macro to set listener of key_down events to an element_id to an async function.
-/// no args: on_key_down!(element_1_id, function_ident)
-/// no args: on_key_down!("example_email",example_email)
+/// Simple macro to set listener of on_input events to an element_id to an async function.
+/// no args: on_input!(element_1_id, function_ident)
+/// no args: on_input!("example_email",example_email)
 #[macro_export]
-macro_rules! on_keydown {
+macro_rules! on_input {
     ($element_1_id: expr, $function_ident: ident) => {{
         let closure = Closure::wrap(Box::new(move || {
             // event listeners use sync functions,
@@ -47,7 +47,7 @@ macro_rules! on_keydown {
         }) as Box<dyn FnMut()>);
 
         let html_element = get_html_element_by_id($element_1_id);
-        html_element.set_onkeydown(Some(closure.as_ref().unchecked_ref()));
+        html_element.set_oninput(Some(closure.as_ref().unchecked_ref()));
         closure.forget();
     }};
 }

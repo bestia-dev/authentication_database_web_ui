@@ -27,6 +27,7 @@
         "noopener",
         "onclick",
         "onfocus",
+        "oninput",
         "onkeydown",
         "onkeyup",
         "Outro",
