@@ -29,7 +29,7 @@ pub fn config_route_main(cfg: &mut actix_web::web::ServiceConfig) {
         )
         .service(
             actix_web::web::scope(&format!("/{APP_MAIN_ROUTE}/authn"))
-                .configure(crate::authn_mod::config_route_authn),
+                .configure(crate::authn_login_mod::config_route_authn),
         )
     ;
 }

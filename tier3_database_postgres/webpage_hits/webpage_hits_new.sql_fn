@@ -1,9 +1,9 @@
-select drop_function('webpage_hits_new');
+select a_drop_function_any_param('webpage_hits_new');
 
-create function  public.webpage_hits_new()
+create function  webpage_hits_new()
 returns table(id integer, webpage varchar(100), hit_count integer) 
-language 'plpgsql'
-as $body$
+language plpgsql as
+$$
 declare
 begin
 return query 
@@ -14,4 +14,4 @@ select random_between(1, 1000000000) as id,
 0 as hit_count;
 
 end; 
-$body$;
+$$;

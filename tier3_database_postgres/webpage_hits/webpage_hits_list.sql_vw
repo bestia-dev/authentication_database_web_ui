@@ -1,4 +1,4 @@
-create or replace view public.webpage_hits_list
+create view webpage_hits_list
 as
 -- select * from webpage_hits_list;
 

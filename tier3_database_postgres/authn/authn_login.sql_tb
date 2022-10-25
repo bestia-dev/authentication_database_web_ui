@@ -1,0 +1,15 @@
+-- create table but column by column, so I can extend it later with new columns and constraints
+
+CREATE TABLE IF NOT EXISTS authn_login
+(
+    authn_login_id SERIAL,
+    CONSTRAINT authn_login_pkey PRIMARY KEY (authn_login_id)
+);
+
+ALTER TABLE authn_login ADD COLUMN IF NOT EXISTS user_email varchar(100) NOT NULL;
+SELECT a_add_constraint_unique_if_not_exists_one_column('authn_login', 'user_email');
+
+ALTER TABLE authn_login ADD COLUMN IF NOT EXISTS password_hash varchar(100) NOT NULL;
+ALTER TABLE authn_login ADD COLUMN IF NOT EXISTS failed_attempts integer DEFAULT 0 NOT NULL;
+ALTER TABLE authn_login ADD COLUMN IF NOT EXISTS blocked boolean DEFAULT FALSE NOT NULL;
+ 

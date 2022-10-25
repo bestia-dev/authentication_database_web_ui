@@ -1,0 +1,10 @@
+-- create table but column by column, so I can extend it later with new columns and constraints
+
+CREATE TABLE IF NOT EXISTS webpage
+(
+    id integer NOT NULL,
+    CONSTRAINT webpage_pkey PRIMARY KEY (id)
+);
+
+ALTER TABLE webpage ADD COLUMN IF NOT EXISTS webpage varchar(100) NOT NULL;
+SELECT a_add_constraint_unique_if_not_exists_one_column('webpage', 'webpage');

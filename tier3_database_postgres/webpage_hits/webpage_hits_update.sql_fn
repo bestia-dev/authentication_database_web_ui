@@ -1,12 +1,12 @@
-select drop_function('webpage_hits_update');
+select a_drop_function_any_param('webpage_hits_update');
 
-create function public.webpage_hits_update(
+create function webpage_hits_update(
 _id int,
 _webpage varchar(100),
 _hit_count integer)
 returns table(id integer, webpage varchar(100), hit_count integer) 
-language 'plpgsql'
-as $body$
+language plpgsql as
+$$
 declare
 begin
 
@@ -24,4 +24,4 @@ from webpage_hits W
 where W.id=_id;
 
 end; 
-$body$;
+$$;

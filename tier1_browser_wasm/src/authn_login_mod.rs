@@ -1,4 +1,4 @@
-// authn_mod.rs
+// authn_login_mod.rs
 // This module is for the SCOPE "/authn/". There is a folder with the same name with html files.
 // Every html file has its separate sub-module.
 

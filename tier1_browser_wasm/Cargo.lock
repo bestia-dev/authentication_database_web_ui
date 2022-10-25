@@ -225,7 +225,7 @@ dependencies = [
 
 [[package]]
 name = "tier1_browser_wasm"
-version = "2022.1022.1433"
+version = "2022.1024.933"
 dependencies = [
  "anyhow",
  "argon2",

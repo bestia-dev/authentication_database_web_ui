@@ -1,10 +1,10 @@
-select drop_function('webpage_hits_show');
+select a_drop_function_any_param('webpage_hits_edit');
 
-create function  public.webpage_hits_show(
+create function  webpage_hits_edit(
 _id int)
 returns table(id integer, webpage varchar(100), hit_count integer) 
-language 'plpgsql'
-as $body$
+language plpgsql as
+$$
 declare
 begin
 
@@ -14,4 +14,4 @@ from webpage_hits w
 where w.id=_id;
 
 end; 
-$body$;
+$$;

@@ -90,7 +90,7 @@ pub async fn run_sql_select_query_pool(
 pub async fn get_for_cache_all_function_input_params(
     db_pool: &deadpool_postgres::Pool,
 ) -> (SqlFunctionInputParams, SqlFunctionInputParamsOrder) {
-    let query = "SELECT proname, args_def from list_all_function_input_params;";
+    let query = "SELECT proname, args_def from a_list_all_function_input_params;";
     let vec_row = run_sql_select_query_pool(db_pool, query, &vec![])
         .await
         .unwrap();
@@ -128,7 +128,7 @@ pub async fn get_for_cache_all_function_input_params(
 /// Hashmap of all view fields with data types. I use it to construct the WHERE clause.
 /// Call it once on application start and store the result in a global variable.
 pub async fn get_for_cache_all_view_fields(db_pool: &deadpool_postgres::Pool) -> SqlViewFields {
-    let query = "SELECT relname, attname, typname from list_all_view_fields order by relname;";
+    let query = "SELECT relname, attname, typname from a_list_all_view_fields order by relname;";
     let vec_row = run_sql_select_query_pool(db_pool, query, &vec![])
         .await
         .unwrap();
@@ -148,11 +148,9 @@ pub async fn get_for_cache_all_view_fields(db_pool: &deadpool_postgres::Pool) ->
             }
             old_relname = relname;
         }
-        //dbg!(&relname);
+        dbg!(&row);
         let attname = FieldName(row.get(1));
-        //dbg!(&attname);
         let typname: String = row.get(2);
-        //dbg!(&typname);
         use std::str::FromStr;
         let arg_type = PostgresFieldType::from_str(&typname).unwrap();
         hm_name_type.insert(attname, arg_type);

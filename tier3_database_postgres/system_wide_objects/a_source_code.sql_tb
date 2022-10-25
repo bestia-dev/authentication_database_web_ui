@@ -1,0 +1,17 @@
+-- a_source_code.sql
+-- On database migration/update I want to install only the source code that is new or changed.
+-- Postgres does not store the exact source code of the views and functions I install. 
+-- This makes it difficult to know if the new source code is different from the old source code.
+-- I don't want to drop and recreate a view or function, if the source code is completely the same.
+-- Sadly I need to solve this problem on my own. I need a new table, to store the installed source code.
+
+-- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/system_wide_objects/a_source_code.sql
+
+CREATE TABLE IF NOT EXISTS a_source_code
+(
+    object_name name,
+    CONSTRAINT a_source_code_pkey PRIMARY KEY (object_name)
+);
+
+ALTER TABLE a_source_code ADD COLUMN IF NOT EXISTS definition text NOT NULL;
+ 

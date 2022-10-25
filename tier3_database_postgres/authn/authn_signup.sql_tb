@@ -1,0 +1,12 @@
+-- create table but column by column, so I can extend it later with new columns and constraints
+
+CREATE TABLE IF NOT EXISTS authn_signup
+(
+    user_email varchar(100) NOT NULL,
+    CONSTRAINT authn_signup_pkey PRIMARY KEY (user_email)     
+);
+
+ALTER TABLE authn_signup ADD COLUMN IF NOT EXISTS password_hash varchar(100) NOT NULL;
+ALTER TABLE authn_signup ADD COLUMN IF NOT EXISTS verified BOOLEAN default(false) NOT NULL;
+ALTER TABLE authn_signup ADD COLUMN IF NOT EXISTS created_at timestamp default now() NOT NULL;
+

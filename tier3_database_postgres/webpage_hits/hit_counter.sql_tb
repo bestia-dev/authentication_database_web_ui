@@ -1,0 +1,12 @@
+-- create table but column by column, so I can extend it later with new columns and constraints
+
+CREATE TABLE IF NOT EXISTS hit_counter
+(
+    id SERIAL,
+    CONSTRAINT hit_counter_pkey PRIMARY KEY (id)    
+);
+
+ALTER TABLE hit_counter ADD COLUMN IF NOT EXISTS webpage_id integer NOT NULL;
+SELECT a_add_constraint_foreign_if_not_exists_one_column('hit_counter','webpage_id','webpage', 'id');
+
+ALTER TABLE hit_counter ADD COLUMN IF NOT EXISTS count integer DEFAULT 0 NOT NULL;

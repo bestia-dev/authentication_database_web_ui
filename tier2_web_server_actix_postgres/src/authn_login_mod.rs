@@ -1,4 +1,4 @@
-//! authn_mod.rs
+//! authn_login_mod.rs
 
 use crate::actix_mod::DataAppState;
 use crate::actix_mod::ResultResponse;
@@ -48,30 +48,39 @@ async fn call_pg_func_auth_login_show(
 
 /// Ajax: receive json in the POST body.
 /// Finds the salt from database and return it to the browser as json.
-/// I don't want the user to know, that the email is wrong. Because of brute force attacks.
+/// I don't want the client to know, that the email is wrong. Because of brute force attacks.
 /// If email does not exist return a random salt.
-// #[function_name::named]
 pub async fn authn_login_process_email(
     app_state: DataAppState,
     data_req: actix_web::web::Json<common_code::DataReqAuthnLoginProcessEmail>,
 ) -> ResultResponse {
-    let single_row = call_pg_func_auth_login_show(&data_req.user_email, app_state).await?;
-    let password_hash = get_string_from_row(&single_row, "password_hash")?;
-    // extract salt
-    let password_hash = password_hash::PasswordHash::new(&password_hash)
-        .map_err(|_| crate::error_mod::LibError::PasswordHash)?;
+    let salt = match call_pg_func_auth_login_show(&data_req.user_email, app_state).await {
+        Err(_err) => {
+            // return a random salt, so the client cannot know that the email does not exist in the database. Never trust the client.
+            let uuid = uuid::Uuid::new_v4().to_string();
+            let salt = uuid.as_str().to_string();
+            salt
+        }
+        Ok(single_row) => {
+            let password_hash = get_string_from_row(&single_row, "password_hash")?;
+            // extract salt
+            let password_hash = password_hash::PasswordHash::new(&password_hash)
+                .map_err(|_| crate::error_mod::LibError::PasswordHash)?;
 
-    let salt = password_hash
-        .salt
-        // ok_or from option to error
-        .ok_or(LibError::PasswordHash)?
-        .to_string();
+            let salt = password_hash
+                .salt
+                // ok_or from option to error
+                .ok_or(LibError::PasswordHash)?
+                .to_string();
+            salt
+        }
+    };
+
     let data_resp = common_code::DataRespAuthnLoginProcessEmail { salt };
     crate::actix_mod::return_json_resp_from_object(data_resp)
 }
 
 /// authn_login_process_hash
-// #[function_name::named]
 pub async fn authn_login_process_hash(
     app_state: DataAppState,
     data_req: actix_web::web::Json<common_code::DataReqAuthnLoginProcessHash>,

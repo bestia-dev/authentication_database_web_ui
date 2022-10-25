@@ -1,6 +1,9 @@
-create or replace view public.list_all_function_input_params
+drop view if exists a_list_all_function_input_params;
+
+create view a_list_all_function_input_params
 as
--- select * from list_all_function_input_params ;
+-- select * from a_list_all_function_input_params ;
+-- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/system_wide_objects/a_list_all_function_input_params.sql
 
 SELECT 
 p.proname, 
