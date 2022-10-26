@@ -1,0 +1,57 @@
+-- tier3_database_postgres/level01_system/a_migrate_function.sql_fn
+
+-- select a_drop_function_any_param('a_migrate_function');
+
+select a_migrate_function('a_migrate_function',
+$source_code$
+
+CREATE FUNCTION a_migrate_function(_object_name name, _definition text)
+RETURNS text 
+AS
+-- checks in the a_source_code if the function is already installed
+-- if is equal, nothing happens
+-- else drop the old and install the new function
+-- finally insert/update into a_source_code  
+-- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level01_system/a_migrate_function.sql
+$$
+DECLARE
+   _old_definition text;
+   _x_void text;
+BEGIN
+
+   if not exists(select * from a_source_code a where a.object_name = _object_name) then
+      if exists(select * from pg_proc p where p.pronamespace=2200 and p.proname=_object_name ) then
+         select a_drop_function_any_param(_object_name) into _x_void;
+      end if;
+
+      EXECUTE _definition;
+
+      insert into a_source_code (object_name, definition)
+      values (_object_name, _definition);
+      return format('Inserted function: %I', _object_name);
+   else
+      select a.definition 
+      into _old_definition
+      from a_source_code a
+      where a.object_name = _object_name;
+
+      if _definition <> _old_definition then
+         if exists(select * from pg_proc p where p.pronamespace=2200 and p.proname=_object_name ) then
+            select a_drop_function_any_param(_object_name) into _x_void;
+         end if;
+         
+         EXECUTE _definition;
+
+         update a_source_code
+         set definition = _definition
+         where object_name = _object_name;
+
+         return format('Updated function: %I', _object_name);
+      end if;
+
+   end if;
+return format('Function up to date: %I', _object_name);
+END;
+$$ LANGUAGE plpgsql;
+
+$source_code$);

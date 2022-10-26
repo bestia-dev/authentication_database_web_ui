@@ -1,0 +1,23 @@
+-- tier3_database_postgres/level02_authn/authn_signup_delete.sql_fn
+
+select a_migrate_function('authn_signup_delete',
+$source_code$
+
+create function authn_signup_delete(
+_user_email varchar(100))
+returns table(deleted_rows integer) 
+language plpgsql as
+$$
+declare
+begin
+
+delete from authn_signup a
+where a.user_email = _user_email;
+
+return query 
+select 1 as deleted_rows;
+
+end; 
+$$;
+
+$source_code$);
