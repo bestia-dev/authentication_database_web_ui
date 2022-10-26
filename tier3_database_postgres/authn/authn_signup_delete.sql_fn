@@ -1,4 +1,7 @@
-SELECT a_drop_function_any_param('authn_signup_delete');
+-- tier3_database_postgres/authn/authn_signup_delete.sql_fn
+
+select a_migrate_function('authn_signup_delete',
+$source_code$
 
 create function authn_signup_delete(
 _user_email varchar(100))
@@ -16,3 +19,5 @@ select 1 as deleted_rows;
 
 end; 
 $$;
+
+$source_code$);

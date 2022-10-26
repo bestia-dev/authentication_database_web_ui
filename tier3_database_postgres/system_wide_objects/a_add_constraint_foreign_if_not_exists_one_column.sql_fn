@@ -1,10 +1,10 @@
--- a_add_constraint_foreign_if_not_exists_one_column.sql_fn
+-- tier3_database_postgres/system_wide_objects/a_add_constraint_foreign_if_not_exists_one_column.sql_fn
 
 select a_migrate_function('a_add_constraint_foreign_if_not_exists_one_column',
 $source_code$
 
 CREATE FUNCTION a_add_constraint_foreign_if_not_exists_one_column(_table name, _column name, _table_ref name, _column_ref name)
-RETURNS void
+RETURNS text
 -- ALTER TABLE hit_counter ADD CONSTRAINT webpage FOREIGN KEY (webpage_id) REFERENCES webpage (id);
 -- ALTER TABLE hit_counter drop constraint webpage;
 -- SELECT a_add_constraint_foreign_if_not_exists_one_column('hit_counter','webpage_id','webpage', 'id');
@@ -13,6 +13,7 @@ as
 $$
 DECLARE 
     _constraint_name text := format('%I_foreign_%I', _table, _column);
+    _ddl_statement text := format('ALTER TABLE %I ADD CONSTRAINT %I FOREIGN KEY (%I) REFERENCES %I (%I)', _table, _constraint_name, _column, _table_ref, _column_ref );
 BEGIN
 
     IF NOT EXISTS(
@@ -21,8 +22,10 @@ BEGIN
             JOIN pg_class AS t ON c.conrelid = t.oid
             WHERE c.contype='f' and t.relname = _table AND c.conname = _constraint_name
     ) THEN        
-        EXECUTE format('ALTER TABLE %I ADD CONSTRAINT %I FOREIGN KEY (%I) REFERENCES %I (%I)', _table, _constraint_name, _column, _table_ref, _column_ref );
+        EXECUTE _ddl_statement;
+        return format('%', _ddl_statement);
     END IF;
+    return format('Constraint up to date: %I', _constraint_name);
 END;
 $$ language plpgsql;
 

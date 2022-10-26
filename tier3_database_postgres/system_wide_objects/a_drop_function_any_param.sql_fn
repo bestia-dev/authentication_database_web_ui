@@ -1,3 +1,4 @@
+-- tier3_database_postgres/system_wide_objects/a_drop_function_any_param.sql_fn
 
 -- select a_drop_function_any_param('a_drop_function_any_param');
 
@@ -5,7 +6,7 @@ select a_migrate_function('a_drop_function_any_param',
 $source_code$
 
 CREATE FUNCTION a_drop_function_any_param(_name name)
-RETURNS void
+RETURNS text
 AS
 -- drop all functions with given _name regardless of function parameters
 -- test it: create function test1. Then 
@@ -26,7 +27,9 @@ BEGIN
 
    IF _functions_dropped > 0 THEN       -- only if function(s) found
      EXECUTE _sql;
+     return _sql;
    END IF;
+   return '';
 END;
 $$ LANGUAGE plpgsql;
 

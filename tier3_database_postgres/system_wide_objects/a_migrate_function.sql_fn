@@ -1,4 +1,4 @@
--- a_migrate_function.sql_fn
+-- tier3_database_postgres/system_wide_objects/a_migrate_function.sql_fn
 
 -- select a_drop_function_any_param('a_migrate_function');
 
@@ -6,7 +6,7 @@ select a_migrate_function('a_migrate_function',
 $source_code$
 
 CREATE FUNCTION a_migrate_function(_object_name name, _definition text)
-RETURNS void 
+RETURNS text 
 AS
 -- checks in the a_source_code if the function is already installed
 -- if is equal, nothing happens
@@ -28,6 +28,7 @@ BEGIN
 
       insert into a_source_code (object_name, definition)
       values (_object_name, _definition);
+      return format('Inserted function: %I', _object_name);
    else
       select a.definition 
       into _old_definition
@@ -45,10 +46,11 @@ BEGIN
          set definition = _definition
          where object_name = _object_name;
 
+         return format('Updated function: %I', _object_name);
       end if;
 
    end if;
-
+return format('Function up to date: %I', _object_name);
 END;
 $$ LANGUAGE plpgsql;
 

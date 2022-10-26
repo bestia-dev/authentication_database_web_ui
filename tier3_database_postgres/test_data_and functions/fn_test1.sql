@@ -1,3 +1,5 @@
+-- tier3_database_postgres/test_data_and functions/fn_test1.sql
+
 select a_drop_function_any_param('test1');
 
 create function  test1(_name text)

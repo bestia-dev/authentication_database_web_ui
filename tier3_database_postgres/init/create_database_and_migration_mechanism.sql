@@ -1,4 +1,4 @@
--- create_database_and_migration_mechanism.sql
+-- tier3_database_postgres/init/create_database_and_migration_mechanism.sql
 
 -- This sql script contains code for the creation and initialisation of the database with a migration mechanism.
 -- After that we can use the installed migration mechanism to migrate/update the database forward as we develop and deploy.
@@ -22,7 +22,7 @@ CREATE TABLE a_source_code
 );
 
 CREATE FUNCTION a_drop_function_any_param(_name name)
-RETURNS void
+RETURNS text
 AS
 -- drop all functions with given _name regardless of function parameters
 -- test it: create function test1. Then 
@@ -43,12 +43,17 @@ BEGIN
 
    IF _functions_dropped > 0 THEN       -- only if function(s) found
      EXECUTE _sql;
+     return _sql;
    END IF;
+   return '';
 END;
 $$ LANGUAGE plpgsql;
 
+$source_code$);
+
+
 CREATE FUNCTION a_migrate_function(_object_name name, _definition text)
-RETURNS void 
+RETURNS text 
 AS
 -- checks in the a_source_code if the function is already installed
 -- if is equal, nothing happens
@@ -70,6 +75,7 @@ BEGIN
 
       insert into a_source_code (object_name, definition)
       values (_object_name, _definition);
+      return format('Inserted function: %I', _object_name);
    else
       select a.definition 
       into _old_definition
@@ -87,9 +93,11 @@ BEGIN
          set definition = _definition
          where object_name = _object_name;
 
+         return format('Updated function: %I', _object_name);
       end if;
 
    end if;
-
+return format('All up to date: %I', _object_name);
 END;
 $$ LANGUAGE plpgsql;
+

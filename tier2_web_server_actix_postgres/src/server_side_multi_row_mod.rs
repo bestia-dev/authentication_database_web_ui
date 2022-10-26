@@ -183,7 +183,6 @@ impl ServerSideMultiRow {
     }
 
     /// run sql multi row statement
-    /// void function also returns a Row with the data type Void
     pub async fn run_sql_multi_row_statement(
         &self,
         sql_params: SqlParamsForPostgres<'_>,

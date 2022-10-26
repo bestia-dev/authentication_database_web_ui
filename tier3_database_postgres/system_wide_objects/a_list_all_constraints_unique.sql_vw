@@ -1,4 +1,7 @@
-drop view if exists a_list_all_constraints_unique;
+-- tier3_database_postgres/system_wide_objects/a_list_all_constraints_unique.sql_vw
+
+select a_migrate_view('a_list_all_constraints_unique',
+$source_code$
 
 create view a_list_all_constraints_unique
 as
@@ -16,3 +19,4 @@ FROM pg_catalog.pg_constraint con
 join pg_class cls on cls.oid = con.conrelid
 WHERE  con.contype = 'u' and  con.connamespace=2200    
 
+$source_code$);

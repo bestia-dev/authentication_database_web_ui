@@ -1,12 +1,17 @@
+-- tier3_database_postgres/authn/authn_signup.sql_tb
 -- create table but column by column, so I can extend it later with new columns and constraints
 
-CREATE TABLE IF NOT EXISTS authn_signup
+select a_migrate_table('authn_signup',
+$source_code$
+
+CREATE TABLE authn_signup
 (
     user_email varchar(100) NOT NULL,
     CONSTRAINT authn_signup_pkey PRIMARY KEY (user_email)     
 );
 
-ALTER TABLE authn_signup ADD COLUMN IF NOT EXISTS password_hash varchar(100) NOT NULL;
-ALTER TABLE authn_signup ADD COLUMN IF NOT EXISTS verified BOOLEAN default(false) NOT NULL;
-ALTER TABLE authn_signup ADD COLUMN IF NOT EXISTS created_at timestamp default now() NOT NULL;
+$source_code$);
 
+select a_migrate_column('authn_signup','password_hash','varchar(100) NOT NULL');
+select a_migrate_column('authn_signup','verified','BOOLEAN default(false) NOT NULL');
+select a_migrate_column('authn_signup','created_at','timestamp default now() NOT NULL');

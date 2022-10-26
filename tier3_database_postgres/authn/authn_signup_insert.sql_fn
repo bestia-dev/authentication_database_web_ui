@@ -1,4 +1,7 @@
-select a_drop_function_any_param('authn_signup_insert');
+-- tier3_database_postgres/authn/authn_signup_insert.sql_fn
+
+select a_migrate_function('authn_signup_insert',
+$source_code$
 
 create function  authn_signup_insert(
 _user_email varchar(100),
@@ -21,3 +24,5 @@ where w.user_email=_user_email;
 
 end; 
 $$;
+
+$source_code$);

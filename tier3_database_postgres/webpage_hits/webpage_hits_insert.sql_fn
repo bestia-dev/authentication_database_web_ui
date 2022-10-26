@@ -1,4 +1,7 @@
-select a_drop_function_any_param('webpage_hits_insert');
+-- tier3_database_postgres/webpage_hits/webpage_hits_insert.sql_fn
+
+select a_migrate_function('webpage_hits_insert',
+$source_code$
 
 create function  webpage_hits_insert(
 _id integer,
@@ -24,3 +27,5 @@ where w.id=_id;
 
 end; 
 $$;
+
+$source_code$);

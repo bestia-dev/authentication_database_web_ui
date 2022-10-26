@@ -40,7 +40,6 @@ pub fn template_replace_fields_from_single_row(
                 let value: i32 = single_row.get(i);
                 text_replaced = text_replaced.replace(&placeholder, &value.to_string())
             }
-            &Type::VOID => (),
             _ => panic!("Unrecognized postgres type: {:?}", col.type_()),
         }
     }

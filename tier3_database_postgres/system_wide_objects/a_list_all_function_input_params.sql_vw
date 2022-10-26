@@ -1,4 +1,7 @@
-drop view if exists a_list_all_function_input_params;
+-- tier3_database_postgres/system_wide_objects/a_list_all_function_input_params.sql_vw
+
+select a_migrate_view('a_list_all_function_input_params',
+$source_code$
 
 create view a_list_all_function_input_params
 as
@@ -15,3 +18,5 @@ FROM pg_proc p
 -- don't show system functions
 where p.pronamespace not in (11,13161)
 order by p.proname;
+
+$source_code$);

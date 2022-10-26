@@ -1,12 +1,19 @@
+-- tier3_database_postgres/webpage_hits/hit_counter.sql_tb
+
 -- create table but column by column, so I can extend it later with new columns and constraints
 
-CREATE TABLE IF NOT EXISTS hit_counter
+select a_migrate_table('hit_counter',
+$source_code$
+
+CREATE TABLE hit_counter
 (
     id SERIAL,
     CONSTRAINT hit_counter_pkey PRIMARY KEY (id)    
 );
 
-ALTER TABLE hit_counter ADD COLUMN IF NOT EXISTS webpage_id integer NOT NULL;
+$source_code$);
+
+select a_migrate_column('hit_counter','webpage_id','integer NOT NULL');
 SELECT a_add_constraint_foreign_if_not_exists_one_column('hit_counter','webpage_id','webpage', 'id');
 
-ALTER TABLE hit_counter ADD COLUMN IF NOT EXISTS count integer DEFAULT 0 NOT NULL;
+select a_migrate_column('hit_counter','count','integer DEFAULT 0 NOT NULL');

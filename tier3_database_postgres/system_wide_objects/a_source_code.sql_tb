@@ -1,4 +1,5 @@
--- a_source_code.sql
+-- tier3_database_postgres/system_wide_objects/a_source_code.sql_tb
+
 -- On database migration/update I want to install only the source code that is new or changed.
 -- Postgres does not store the exact source code of the views and functions I install. 
 -- This makes it difficult to know if the new source code is different from the old source code.
@@ -7,11 +8,17 @@
 
 -- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/system_wide_objects/a_source_code.sql
 
-CREATE TABLE IF NOT EXISTS a_source_code
+select a_migrate_table('a_source_code',
+$source_code$
+
+CREATE TABLE a_source_code
 (
     object_name name,
     CONSTRAINT a_source_code_pkey PRIMARY KEY (object_name)
 );
 
-ALTER TABLE a_source_code ADD COLUMN IF NOT EXISTS definition text NOT NULL;
+$source_code$);
+
+select a_migrate_column('a_source_code','definition','text NOT NULL');
+
  

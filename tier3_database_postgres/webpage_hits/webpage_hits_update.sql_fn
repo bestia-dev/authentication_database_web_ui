@@ -1,4 +1,7 @@
-select a_drop_function_any_param('webpage_hits_update');
+-- tier3_database_postgres/webpage_hits/webpage_hits_update.sql_fn
+
+select a_migrate_function('webpage_hits_update',
+$source_code$
 
 create function webpage_hits_update(
 _id int,
@@ -25,3 +28,5 @@ where W.id=_id;
 
 end; 
 $$;
+
+$source_code$);

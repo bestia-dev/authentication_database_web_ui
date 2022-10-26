@@ -1,4 +1,7 @@
-select a_drop_function_any_param('authn_login_show');
+--tier3_database_postgres/authn/authn_login_show.sql_fn
+
+select a_migrate_function('authn_login_show',
+$source_code$
 
 create function authn_login_show(
 _user_email varchar(100))
@@ -24,3 +27,5 @@ where t.user_email = _user_email;
 
 end; 
 $$;
+
+$source_code$);

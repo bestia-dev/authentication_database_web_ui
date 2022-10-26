@@ -1,4 +1,4 @@
--- a_random_between.sql
+-- tier3_database_postgres/system_wide_objects/a_random_between.sql_fn
 
 -- select a_drop_function_any_param('a_random_between');
 -- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/system_wide_objects/a_random_between.sql

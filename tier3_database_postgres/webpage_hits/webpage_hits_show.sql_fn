@@ -1,4 +1,7 @@
-select a_drop_function_any_param('webpage_hits_show');
+-- tier3_database_postgres/webpage_hits/webpage_hits_show.sql_fn
+
+select a_migrate_function('webpage_hits_show',
+$source_code$
 
 create function  webpage_hits_show(
 _id int)
@@ -15,3 +18,5 @@ where w.id=_id;
 
 end; 
 $$;
+
+$source_code$);

@@ -1,10 +1,10 @@
--- a_add_constraint_unique_if_not_exists_one_column.sql_fn
+-- tier3_database_postgres/system_wide_objects/a_add_constraint_unique_if_not_exists_one_column.sql_fn
 
 select a_migrate_function('a_add_constraint_unique_if_not_exists_one_column',
 $source_code$
 
 CREATE FUNCTION a_add_constraint_unique_if_not_exists_one_column(_table name, _column name)
-RETURNS void
+RETURNS text
 -- ALTER TABLE authn_login ADD CONSTRAINT authn_login_uniq_user_email UNIQUE (user_email);
 -- ALTER TABLE authn_login drop constraint authn_login_uniq_user_email;
 -- SELECT a_add_constraint_unique_if_not_exists_one_column('authn_login', 'user_email');
@@ -13,6 +13,7 @@ AS
 $$
 DECLARE 
     _constraint_name text := format('%I_uniq_%I', _table, _column);
+    _ddl_statement text := format('ALTER TABLE %I ADD CONSTRAINT %I UNIQUE (%I)', _table, _constraint_name, _column );
 BEGIN
 
     IF NOT EXISTS(
@@ -21,8 +22,10 @@ BEGIN
             JOIN pg_class AS t ON c.conrelid = t.oid
             WHERE c.contype='u' and t.relname = _table AND c.conname = _constraint_name
     ) THEN        
-        EXECUTE format('ALTER TABLE %I ADD CONSTRAINT %I UNIQUE (%I)', _table, _constraint_name, _column );
+        EXECUTE _ddl_statement;
+        return format('%', _ddl_statement);
     END IF;
+    return format('Constraint up to date: %I', _constraint_name);
 END;
 $$ LANGUAGE plpgsql ;
 
