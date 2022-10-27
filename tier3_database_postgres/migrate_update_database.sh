@@ -9,7 +9,11 @@
 # To create the new database and initialize or bootstrap the migration mechanism use:
 # tier3_database_postgres/init/create_database_and_migration_mechanism.sql
 # After bootstrap, all subsequent migration/update code will work, because the migration mechanism is already installed.
+echo "start tier3_database_postgres/migrate_update_database.sh"
+echo ""
+sh tier3_database_postgres/level10_system/migrate_update_database_level10.sh
+sh tier3_database_postgres/level20_authn/migrate_update_database_level20.sh
+sh tier3_database_postgres/level30_webpage_hits/migrate_update_database_level30.sh
 
-sh tier3_database_postgres/level01_system/migrate_update_database_level01.sh
-sh tier3_database_postgres/level02_authn/migrate_update_database_level02.sh
-sh tier3_database_postgres/level03_webpage_hits/migrate_update_database_level03.sh
+# TODO: the output is horrible !!!
+# I need to process this output and show only the part that is NOT OK.

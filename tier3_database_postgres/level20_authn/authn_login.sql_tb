@@ -1,0 +1,21 @@
+-- tier3_database_postgres/level20_authn/authn_login.sql_tb
+-- create table but column by column, so I can extend it later with new columns and constraints
+
+select a_migrate_table('authn_login',
+$source_code$
+
+CREATE TABLE authn_login
+(
+    authn_login_id SERIAL,
+    CONSTRAINT authn_login_pkey PRIMARY KEY (authn_login_id)
+);
+
+$source_code$);
+
+select a_migrate_column('authn_login','user_email','varchar(100)','','NOT NULL');
+SELECT a_add_constraint_unique_if_not_exists_one_column('authn_login', 'user_email');
+
+select a_migrate_column('authn_login','password_hash','varchar(100)','','NOT NULL');
+select a_migrate_column('authn_login','failed_attempts','int4','0', 'NOT NULL');
+select a_migrate_column('authn_login','blocked','bool','FALSE', 'NOT NULL');
+ 

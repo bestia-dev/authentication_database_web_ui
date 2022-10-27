@@ -3,12 +3,11 @@
 -- This sql script contains code for the creation and initialisation of the database with a migration mechanism.
 -- After that we can use the installed migration mechanism to migrate/update the database forward as we develop and deploy.
 
--- Run this sql script with psql. Connect to the default database 'postgres' to create the new database webpage_hit_counter. 
+-- Run this sql script with psql only if the database webpage_hit_counter does not already exist. 
+-- Connect to the default database 'postgres' to create the new database webpage_hit_counter. 
 -- Then the script will change the current database and install other database objects.
 -- psql -U admin -h localhost -p 5432 -d postgres -f tier3_database_postgres/init/create_database_and_migration_mechanism.sql
 
--- if the database already exists I will get an error.
--- I cannot use a DO block because of pecullar error: CREATE DATABASE cannot be executed from a function.
 CREATE DATABASE webpage_hit_counter;
 
 -- change the current database. This command only works with psql.
@@ -28,7 +27,7 @@ AS
 -- test it: create function test1. Then 
 -- select a_drop_function_any_param('test1');   
 -- drop function a_drop_function_any_param;
--- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level01_system/a_drop_function_any_param.sql
+-- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_drop_function_any_param.sql
 $$
 DECLARE
    _sql text;
@@ -59,7 +58,7 @@ AS
 -- if is equal, nothing happens
 -- else drop the old and install the new function
 -- finally insert/update into a_source_code  
--- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level01_system/a_migrate_function.sql
+-- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_migrate_function.sql
 $$
 DECLARE
    _old_definition text;
@@ -97,7 +96,7 @@ BEGIN
       end if;
 
    end if;
-return format('All up to date: %I', _object_name);
+return format('Up to date Function: %I', _object_name);
 END;
 $$ LANGUAGE plpgsql;
 

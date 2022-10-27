@@ -1,0 +1,22 @@
+-- tier3_database_postgres/level10_system/a_list_all_function_input_params.sql_vw
+
+select a_migrate_view('a_list_all_function_input_params',
+$source_code$
+
+create view a_list_all_function_input_params
+as
+-- select * from a_list_all_function_input_params ;
+-- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_list_all_function_input_params.sql
+
+SELECT 
+p.proname, 
+-- definition of arguments without defaults. 
+-- returns string that must be parsed later.
+-- _id integer, _webpage character varying, _hit_count integer
+pg_get_function_arguments(oid) AS args_def 
+FROM pg_proc p 
+-- don't show system functions
+where p.pronamespace not in (11,13161)
+order by p.proname;
+
+$source_code$);

@@ -1,0 +1,13 @@
+-- tier3_database_postgres/level30_webpage_hits/webpage_hits_list.sql_vw
+
+select a_migrate_view('webpage_hits_list',
+$source_code$
+
+create view webpage_hits_list
+as
+-- select * from webpage_hits_list;
+
+select w.id, w.webpage, w.hit_count
+from webpage_hits w;
+
+$source_code$);
