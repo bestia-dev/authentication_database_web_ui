@@ -18,7 +18,7 @@ declare
 begin
 
    if not exists(select * from a_source_code a where a.object_name = _object_name) then
-      if exists(select * from information_schema.tables c where c.table_schema = 'public' and c.table_type='BASE table' and c.table_name=_object_name) then
+      if exists(select * from a_list_all_tables a where a.table_name=_object_name) then
          -- do nothing. Just insert into a_source_code
       else
          execute _definition;
@@ -35,7 +35,7 @@ begin
       where a.object_name = _object_name;
 
       if _definition <> _old_definition then
-         if exists(select * from information_schema.tables c where c.table_schema = 'public' and c.table_type='BASE table' and c.table_name=_object_name) then
+         if exists(select * from a_list_all_tables a where a.table_name=_object_name) then
             return format('ERROR: Table (pk) is different and cannot change: %I   %s   %s', _object_name, _definition, _old_definition);
          else
             execute _definition;

@@ -20,7 +20,7 @@ declare
 begin
 
    if not exists(select * from a_source_code a where a.object_name = _object_name) then
-      if exists(select * from information_schema.views v where table_schema='public' and v.table_name=_object_name) then
+      if exists(select * from a_list_all_views v where v.view_name=_object_name) then
          execute format('DROP VIEW %I CASCADE', _object_name);
       end if;
 
@@ -36,7 +36,7 @@ begin
       where a.object_name = _object_name;
 
       if _definition <> _old_definition then
-         if exists(select * from information_schema.views v where table_schema='public' and v.table_name=_object_name) then
+         if exists(select * from a_list_all_views v where v.view_name=_object_name) then
             execute format('DROP VIEW %I CASCADE', _object_name);
          end if;
          

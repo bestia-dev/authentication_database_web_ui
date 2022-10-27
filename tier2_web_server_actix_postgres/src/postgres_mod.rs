@@ -132,7 +132,7 @@ pub async fn get_for_cache_all_function_input_params(
 /// Hashmap of all view fields with data types. I use it to construct the where clause.
 /// Call it once on application start and store the result in a global variable.
 pub async fn get_for_cache_all_view_fields(db_pool: &deadpool_postgres::Pool) -> SqlViewFields {
-    let query = "select table_name, column_name, udt_name from a_list_all_view_fields order by table_name;";
+    let query = "select view_name, column_name, udt_name from a_list_all_view_fields order by view_name;";
     let vec_row = run_sql_select_query_pool(db_pool, query, &vec![])
         .await
         .unwrap();
@@ -140,17 +140,17 @@ pub async fn get_for_cache_all_view_fields(db_pool: &deadpool_postgres::Pool) ->
     let mut all_view_fields: SqlViewFields = HashMap::new();
     let mut hm_name_type = HashMap::new();
 
-    let mut old_table_name = ViewName(String::new());
-    let mut table_name: ViewName;
+    let mut old_view_name = ViewName(String::new());
+    let mut view_name: ViewName;
     for row in vec_row.iter() {
-        table_name = ViewName(row.get(0));
-        if table_name != old_table_name {
-            if !old_table_name.0.is_empty() {
+        view_name = ViewName(row.get(0));
+        if view_name != old_view_name {
+            if !old_view_name.0.is_empty() {
                 //dbg!(&vec_name_type);
-                all_view_fields.insert(old_table_name, hm_name_type);
+                all_view_fields.insert(old_view_name, hm_name_type);
                 hm_name_type = HashMap::new();
             }
-            old_table_name = table_name;
+            old_view_name = view_name;
         }
         dbg!(&row);
         let column_name = FieldName(row.get(1));
@@ -159,9 +159,9 @@ pub async fn get_for_cache_all_view_fields(db_pool: &deadpool_postgres::Pool) ->
         let arg_type = PostgresUdtType::from_str(&udt_name).unwrap();
         hm_name_type.insert(column_name, arg_type);
     }
-    if !old_table_name.0.is_empty() {
+    if !old_view_name.0.is_empty() {
         //dbg!(&vec_name_type);
-        all_view_fields.insert(old_table_name, hm_name_type);
+        all_view_fields.insert(old_view_name, hm_name_type);
     }
     // dbg!(&view_fields);
     all_view_fields

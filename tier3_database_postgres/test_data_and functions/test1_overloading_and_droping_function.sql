@@ -11,7 +11,7 @@ declare
 
 begin
   return query 
-select p.routine_name::name from information_schema.routines p;
+select p.routine_name from a_list_all_functions p;
 end
 $$;
 ----------------------------------------------------------------------------
@@ -26,7 +26,7 @@ declare
 
 begin
   return query 
-select p.routine_name::name from information_schema.routines p where p.routine_name=_name;
+select p.routine_name from a_list_all_functions p where p.routine_name=_name;
 end
 $$;
 ----------------------------------------------------------------------------
