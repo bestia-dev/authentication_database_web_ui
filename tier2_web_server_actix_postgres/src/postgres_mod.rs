@@ -115,7 +115,7 @@ pub async fn get_for_cache_all_function_input_params(
         let param_name = ParamName(row.get(1));
         use std::str::FromStr;
         let udt_name = row.get(2);
-        dbg!(&udt_name);
+        //dbg!(&udt_name);
         let arg_type = PostgresUdtType::from_str(udt_name).unwrap();
         hm_name_type.insert(param_name.clone(), arg_type);
         params_order.push(param_name);
@@ -132,7 +132,8 @@ pub async fn get_for_cache_all_function_input_params(
 /// Hashmap of all view fields with data types. I use it to construct the where clause.
 /// Call it once on application start and store the result in a global variable.
 pub async fn get_for_cache_all_view_fields(db_pool: &deadpool_postgres::Pool) -> SqlViewFields {
-    let query = "select view_name, column_name, udt_name from a_list_all_view_fields order by view_name;";
+    let query =
+        "select view_name, column_name, udt_name from a_list_all_view_fields order by view_name;";
     let vec_row = run_sql_select_query_pool(db_pool, query, &vec![])
         .await
         .unwrap();
@@ -155,6 +156,7 @@ pub async fn get_for_cache_all_view_fields(db_pool: &deadpool_postgres::Pool) ->
         dbg!(&row);
         let column_name = FieldName(row.get(1));
         let udt_name: String = row.get(2);
+        dbg!(&udt_name);
         use std::str::FromStr;
         let arg_type = PostgresUdtType::from_str(&udt_name).unwrap();
         hm_name_type.insert(column_name, arg_type);

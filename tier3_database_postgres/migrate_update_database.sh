@@ -24,3 +24,9 @@ grep -v "^$\|(1 row)\|Up to date.*\|a_migrate.*\|----[-]*" tier3_database_postgr
 
 echo "Ended tier3_database_postgres/migrate_update_database.sh"
 echo ""
+
+# run checks
+echo "Started tier3_database_postgres/migrate_check.sh ..."
+psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/migrate_check.sql
+echo "Ended tier3_database_postgres/migrate_check.sh"
+echo ""

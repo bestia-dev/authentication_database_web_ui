@@ -12,7 +12,7 @@ as
 -- I must test and check there is no foreign keys with multiple columns, because it can make problems.
 -- select * from a_check_multi_column_foreign ;
 
- select constraint_name, count(*)
+ select constraint_name, count(*)::int4
  from a_list_all_constraints_foreign
  group by constraint_name
  HAVING count(*)>1

@@ -1,4 +1,4 @@
--- tier3_database_postgres/init/create_database_and_migration_mechanism.sql
+-- tier3_database_postgres/level00_init/create_database_and_migration_mechanism.sql
 
 -- This sql script contains code for the creation and initialisation of the database with a migration mechanism.
 -- After that we can use the installed migration mechanism to migrate/update the database forward as we develop and deploy.
@@ -6,12 +6,12 @@
 -- Run this sql script with psql only if the database webpage_hit_counter does not already exist. 
 -- Connect to the default database 'postgres' to create the new database webpage_hit_counter. 
 -- Then the script will change the current database and install other database objects.
--- psql -U admin -h localhost -p 5432 -d postgres -f tier3_database_postgres/init/create_database_and_migration_mechanism.sql
+-- psql -U admin -h localhost -p 5432 -d postgres -f tier3_database_postgres/level00_init/create_database_and_migration_mechanism.sql
 
 create database webpage_hit_counter;
 
 -- change the current database. This command only works with psql.
-\c webpage_hit_counter
+\c webpage_hit_counter;
 
 create table a_source_code
 (
@@ -30,7 +30,17 @@ t.specific_name::name,
 t.type_udt_name::name
 from information_schema.routines t
 where t.routine_schema='public' and t.routine_type='FUNCTION'
-order by t.routine_name
+order by t.routine_name;
+
+create view a_list_all_views
+as
+-- only public views
+-- select * from a_list_all_views ;
+
+select t.table_name::name as view_name
+from information_schema.views t
+where t.table_schema='public'
+order by t.table_name;
 
 create function a_drop_function_any_param(_name name)
 returns text
@@ -39,7 +49,7 @@ as
 -- test it: create function test1. Then 
 -- select a_drop_function_any_param('test1');   
 -- drop function a_drop_function_any_param;
--- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_drop_function_any_param.sql
+-- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_drop_function_any_param.sql_fn
 $$
 declare
    _sql text;
@@ -59,8 +69,6 @@ begin
    return '';
 end;
 $$ language plpgsql;
-
-$source_code$);
 
 
 create or replace function a_migrate_function(_object_name name, _definition text)

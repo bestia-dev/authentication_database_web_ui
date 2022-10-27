@@ -8,7 +8,7 @@ as
 -- WARNING: this works correctly only for relations with only ONE column !
 -- select * from a_list_all_constraints_foreign ;
 -- namespace or schema 2200 = public
--- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_list_all_constraints_foreign.sql
+-- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_list_all_constraints_foreign.sql_vw
 
 select t.constraint_name::name, 
 k.table_name::name, 

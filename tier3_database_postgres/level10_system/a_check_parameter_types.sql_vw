@@ -1,0 +1,20 @@
+-- tier3_database_postgres/level10_system/a_check_parameter_types.sql_vw
+
+-- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_check_parameter_types.sql_vw
+
+select a_migrate_view('a_check_parameter_types',
+$source_code$
+
+create view a_check_parameter_types
+as
+-- There is absolutely too much different types (even with multiple synonims) in Postgres.
+-- For a simple database application I need just a few types. Limiting types this way makes everything much easier.
+-- I must test and check there is no strange types.
+-- select * from a_check_parameter_types ;
+
+ select routine_name, parameter_name, udt_name
+ from a_list_all_function_input_params
+ where udt_name not in ('name','text','int4','varchar','bool')
+ 
+
+$source_code$);

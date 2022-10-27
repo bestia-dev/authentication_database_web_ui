@@ -12,7 +12,7 @@ as
 -- test it: create function test1. Then 
 -- select a_drop_function_any_param('test1');   
 -- drop function a_drop_function_any_param;
--- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_drop_function_any_param.sql
+-- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_drop_function_any_param.sql_fn
 $$
 declare
    _sql text;

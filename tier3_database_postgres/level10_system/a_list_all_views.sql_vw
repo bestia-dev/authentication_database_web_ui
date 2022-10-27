@@ -13,6 +13,6 @@ as
 select t.table_name::name as view_name
 from information_schema.views t
 where t.table_schema='public'
-order by t.table_name
+order by t.table_name;
 
 $source_code$);

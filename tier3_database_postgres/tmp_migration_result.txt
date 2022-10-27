@@ -1,12 +1,17 @@
 Only the actual changes are listed here. The complete output is in tier3_database_postgres/tmp_migration_result.txt.
-           a_migrate_table            
---------------------------------------
- Up to date Table (pk): a_source_code
+         a_migrate_function          
+-------------------------------------
+ Up to date Function: a_migrate_view
 (1 row)
 
-               a_migrate_column                
------------------------------------------------
- Up to date Column: "a_source_code.definition"
+          a_migrate_view           
+-----------------------------------
+ Up to date View: a_list_all_views
+(1 row)
+
+            a_migrate_view             
+---------------------------------------
+ Up to date View: a_list_all_functions
 (1 row)
 
                a_migrate_function               
@@ -19,9 +24,14 @@ Only the actual changes are listed here. The complete output is in tier3_databas
  Up to date Function: a_migrate_function
 (1 row)
 
-          a_migrate_function           
----------------------------------------
- Up to date Function: a_migrate_column
+           a_migrate_view           
+------------------------------------
+ Up to date View: a_list_all_tables
+(1 row)
+
+                   a_migrate_view                   
+----------------------------------------------------
+ Up to date View: a_list_all_table_field_definition
 (1 row)
 
           a_migrate_function          
@@ -29,19 +39,29 @@ Only the actual changes are listed here. The complete output is in tier3_databas
  Up to date Function: a_migrate_table
 (1 row)
 
-         a_migrate_function          
--------------------------------------
- Up to date Function: a_migrate_view
-(1 row)
-
           a_migrate_function           
 ---------------------------------------
- Up to date Function: a_random_between
+ Up to date Function: a_migrate_column
 (1 row)
 
-             a_migrate_view              
------------------------------------------
- Up to date View: a_list_all_view_fields
+           a_migrate_table            
+--------------------------------------
+ Up to date Table (pk): a_source_code
+(1 row)
+
+               a_migrate_column                
+-----------------------------------------------
+ Up to date Column: "a_source_code.definition"
+(1 row)
+
+                 a_migrate_view                 
+------------------------------------------------
+ Up to date View: a_list_all_constraints_unique
+(1 row)
+
+                 a_migrate_view                  
+-------------------------------------------------
+ Up to date View: a_list_all_constraints_foreign
 (1 row)
 
                 a_migrate_function                 
@@ -54,19 +74,49 @@ Only the actual changes are listed here. The complete output is in tier3_databas
  Up to date Function: a_migrate_constraint_unique
 (1 row)
 
-                 a_migrate_view                 
-------------------------------------------------
- Up to date View: a_list_all_constraints_unique
-(1 row)
-
                   a_migrate_view                   
 ---------------------------------------------------
  Up to date View: a_list_all_function_input_params
 (1 row)
 
-                   a_migrate_view                   
-----------------------------------------------------
- Up to date View: a_list_all_table_field_definition
+             a_migrate_view              
+-----------------------------------------
+ Up to date View: a_list_all_view_fields
+(1 row)
+
+               a_migrate_view               
+--------------------------------------------
+ Up to date View: a_check_function_overload
+(1 row)
+
+                a_migrate_view                
+----------------------------------------------
+ Up to date View: a_check_multi_column_unique
+(1 row)
+
+                a_migrate_view                 
+-----------------------------------------------
+ Up to date View: a_check_multi_column_foreign
+(1 row)
+
+              a_migrate_view              
+------------------------------------------
+ Up to date View: a_check_parameter_types
+(1 row)
+
+              a_migrate_view               
+-------------------------------------------
+ Up to date View: a_check_table_field_type
+(1 row)
+
+              a_migrate_view              
+------------------------------------------
+ Up to date View: a_check_view_field_type
+(1 row)
+
+          a_migrate_function           
+---------------------------------------
+ Up to date Function: a_random_between
 (1 row)
 
           a_migrate_table           

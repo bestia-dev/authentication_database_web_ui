@@ -1,6 +1,6 @@
 -- tier3_database_postgres/level10_system/a_check_function_overload.sql_vw
 
--- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_check_function_overload.sql
+-- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_check_function_overload.sql_vw
 
 select a_migrate_view('a_check_function_overload',
 $source_code$
@@ -12,7 +12,8 @@ as
 -- I must test and check there is no overloaded function, because it can make problems.
 -- select * from a_check_function_overload ;
 
- select routine_name, count(*), format('select a_drop_function_any_param(''%I'');',routine_name) as drop_statement
+ select routine_name, count(*)::int4, 
+ format('select a_drop_function_any_param(''%I'');',routine_name) as drop_statement
  from a_list_all_functions
  group by routine_name
  HAVING count(*)>1
