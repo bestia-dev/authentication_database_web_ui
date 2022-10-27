@@ -4,8 +4,8 @@ select a_migrate_function('webpage_hits_delete',
 $source_code$
 
 create function webpage_hits_delete(
-_id integer)
-returns table(deleted_rows integer) 
+_id int4)
+returns table(deleted_rows int4) 
 language plpgsql as
 $$
 declare

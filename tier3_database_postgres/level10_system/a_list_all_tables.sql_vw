@@ -1,0 +1,18 @@
+-- tier3_database_postgres/level10_system/a_list_all_tables.sql_vw
+
+-- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_list_all_tables.sql
+
+select a_migrate_view('a_list_all_tables',
+$source_code$
+
+create view a_list_all_tables
+as
+-- only public tables
+-- select * from a_list_all_tables ;
+
+select t.table_name::name
+from information_schema.tables t
+where t.table_schema='public' and t.table_type='BASE TABLE'
+order by t.table_name
+
+$source_code$);

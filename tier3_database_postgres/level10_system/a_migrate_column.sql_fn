@@ -3,18 +3,18 @@
 select a_migrate_function('a_migrate_column',
 $source_code$
 
-CREATE FUNCTION a_migrate_column(_table name, _column name, _type text, _default text, _not_null text)
-RETURNS text 
-AS
+create function a_migrate_column(_table name, _column name, _type text, _default text, _not_null text)
+returns text 
+as
 -- checks in the a_source_code if the column is already installed
 -- if is equal, nothing happens
 -- else write an error, because we cannot just drop a column !
 -- finally insert/update into a_source_code  
--- ALTER TABLE webpage ADD COLUMN webpage_txt varchar(100) NOT NULL;
--- ALTER TABLE webpage ALTER COLUMN webpage_txt varchar(100) NOT NULL;
+-- alter table webpage add COLUMN webpage_txt varchar(100) not null;
+-- alter table webpage alter COLUMN webpage_txt varchar(100) not null;
 -- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_migrate_column.sql_fn
 $$
-DECLARE
+declare
    _default_txt text := case when _default <> '' then format(' default(%s)', _default) else '' end;
    _not_null_txt text := case when _not_null <> '' then format(' %s', _not_null) else '' end;
    _definition text := format('%s%s%s', _type, _default_txt, _not_null_txt);
@@ -25,7 +25,7 @@ DECLARE
    _installed_default text;
    _installed_not_null text;
    _x_void text;
-BEGIN
+begin
 
    -- I can FORCE here only certain data types with explicit names. The same set of data types I can use inside the Rust code.
    -- Postgres is a mess with datatypes. You can call it integer, int4, int and what not. This is bad. Really bad if you want to analyze anything.
@@ -35,19 +35,19 @@ BEGIN
       RAISE EXCEPTION 'Data type %s in not allowed in this limited set of types: varchar(x), text, int4, bool, timestamp.', _type;
    end if;
 
-   if not (_not_null = 'NOT NULL') then
-      RAISE EXCEPTION 'Parameter _not_null can only contain the phrase "NOT NULL", not the phrase "%s".', _not_null;
+   if not (_not_null = 'not null') then
+      RAISE EXCEPTION 'Parameter _not_null can only contain the phrase "not null", not the phrase "%s".', _not_null;
    end if;
 
 
    if not exists(select * from a_source_code a where a.object_name = _object_name) then
-      if exists(select * from information_schema.columns c WHERE c.table_schema = 'public' and c.table_name=_table and c.column_name=_column) then
+      if exists(select * from information_schema.columns c where c.table_schema = 'public' and c.table_name=_table and c.column_name=_column) then
          select d.installed_definition into _installed_definition from a_list_all_table_field_definition d where d.table_name=_table and d.column_name=_column ;
          if _installed_definition <> _definition then
             return format('ERROR: Installed definition is different:    %s   %s', _installed_definition, _definition);
          end if;
       else
-         EXECUTE format('ALTER TABLE %I ADD COLUMN %I %s;', _table, _column, _definition);
+         execute format('alter table %I add COLUMN %I %s;', _table, _column, _definition);
       end if;
 
       insert into a_source_code (object_name, definition)
@@ -61,7 +61,7 @@ BEGIN
       where a.object_name = _object_name;
 
       if _definition <> _old_definition then
-         if not exists(select * from information_schema.columns c WHERE c.table_schema = 'public' and c.table_name=_table and c.column_name=_column) then
+         if not exists(select * from information_schema.columns c where c.table_schema = 'public' and c.table_name=_table and c.column_name=_column) then
             return format('ERROR: Column "%s" exists in a_source_code, but is not already installed ?!?', _object_name);
          end if;
          
@@ -70,18 +70,18 @@ BEGIN
          from a_list_all_table_field_definition d where d.table_name=_table and d.column_name=_column ;
 
          if _installed_type <> _type then
-            EXECUTE format('ALTER TABLE %I ALTER COLUMN %I TYPE %s;', _table, _column, _type);
+            execute format('alter table %I alter COLUMN %I TYPE %s;', _table, _column, _type);
          end if;
 
          if _installed_default <> _default then
-            EXECUTE format('ALTER TABLE %I ALTER COLUMN %I SET DEFAULT %s;', _table, _column, _default);
+            execute format('alter table %I alter COLUMN %I SET DEFAULT %s;', _table, _column, _default);
          end if;         
 
          if _installed_not_null <> _not_null then
             if _not_null = '' then
-               EXECUTE format('ALTER TABLE %I ALTER COLUMN %I DROP NOT NULL;', _table, _column);
+               execute format('alter table %I alter COLUMN %I DROP not null;', _table, _column);
             else
-               EXECUTE format('ALTER TABLE %I ALTER COLUMN %I SET %s;', _table, _column, _not_null);
+               execute format('alter table %I alter COLUMN %I SET %s;', _table, _column, _not_null);
             end if;
          end if;  
 
@@ -94,7 +94,7 @@ BEGIN
 
    end if;
    return format('Up to date Column: %I', _object_name);
-END;
-$$ LANGUAGE plpgsql;
+end;
+$$ language plpgsql;
 
 $source_code$);

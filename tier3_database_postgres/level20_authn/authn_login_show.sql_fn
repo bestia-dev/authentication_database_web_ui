@@ -5,10 +5,10 @@ $source_code$
 
 create function authn_login_show(
 _user_email varchar(100))
-returns table( authn_login_id integer,
+returns table( authn_login_id int4,
     user_email varchar(100),
     password_hash varchar(100),
-    failed_attempts integer,
+    failed_attempts int4,
     blocked bool) 
 language plpgsql as 
 $$

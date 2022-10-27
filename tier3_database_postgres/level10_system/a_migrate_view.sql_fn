@@ -5,8 +5,8 @@
 select a_migrate_function('a_migrate_view',
 $source_code$
 
-CREATE FUNCTION a_migrate_view(_object_name name, _definition text)
-RETURNS text 
+create function a_migrate_view(_object_name name, _definition text)
+returns text 
 AS
 -- checks in the a_source_code if the view is already installed
 -- if is equal, nothing happens
@@ -14,17 +14,17 @@ AS
 -- finally insert/update into a_source_code  
 -- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_migrate_view.sql_fn
 $$
-DECLARE
+declare
    _old_definition text;
    _x_void text;
-BEGIN
+begin
 
    if not exists(select * from a_source_code a where a.object_name = _object_name) then
-      if exists(select * FROM pg_class c WHERE c.relkind = 'v' and c.relnamespace=2200 and c.relname=_object_name) then
-         EXECUTE format('DROP VIEW %I CASCADE', _object_name);
+      if exists(select * from information_schema.views v where table_schema='public' and v.table_name=_object_name) then
+         execute format('DROP VIEW %I CASCADE', _object_name);
       end if;
 
-      EXECUTE _definition;
+      execute _definition;
 
       insert into a_source_code (object_name, definition)
       values (_object_name, _definition);
@@ -36,11 +36,11 @@ BEGIN
       where a.object_name = _object_name;
 
       if _definition <> _old_definition then
-         if exists(select * FROM pg_class c WHERE c.relkind = 'v' and c.relnamespace=2200 and c.relname=_object_name) then
-            EXECUTE format('DROP VIEW %I CASCADE', _object_name);
+         if exists(select * from information_schema.views v where table_schema='public' and v.table_name=_object_name) then
+            execute format('DROP VIEW %I CASCADE', _object_name);
          end if;
          
-         EXECUTE _definition;
+         execute _definition;
 
          update a_source_code
          set definition = _definition
@@ -51,7 +51,7 @@ BEGIN
 
    end if;
    return format('Up to date View: %I', _object_name);
-END;
-$$ LANGUAGE plpgsql;
+end;
+$$ language plpgsql;
 
 $source_code$);

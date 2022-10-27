@@ -5,7 +5,7 @@ $source_code$
 
 create function authn_signup_delete(
 _user_email varchar(100))
-returns table(deleted_rows integer) 
+returns table(deleted_rows int4) 
 language plpgsql as
 $$
 declare

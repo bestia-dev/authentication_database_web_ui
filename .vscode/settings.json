@@ -3,7 +3,7 @@
         "actix",
         "Alla",
         "apos",
-        "attname",
+
         "bestia",
         "bindgen",
         "buildah",
@@ -35,7 +35,7 @@
         "proname",
         "Prost",
         "psql",
-        "relname",
+
         "rustflags",
         "rustfmt",
         "rustlang",
@@ -47,7 +47,7 @@
         "stylesheet",
         "templating",
         "thiserror",
-        "typname",
+
         "unambiguity",
         "usize",
         "Webassembly",

@@ -5,18 +5,15 @@ $source_code$
 
 create view a_list_all_constraints_unique
 as
--- select * from list_constraints_unique ;
+-- select * from a_list_all_constraints_unique ;
 -- namespace or schema 2200 = public
 -- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_list_all_constraints_unique.sql
 
-SELECT con.conname, cls.relname,
-    array_to_string(array(select kcu.column_name
-    from information_schema.key_column_usage kcu
-    where kcu.constraint_name = con.conname
-    and kcu.constraint_schema='public'
-    order by kcu.ordinal_position),',') as columns
-FROM pg_catalog.pg_constraint con
-join pg_class cls on cls.oid = con.conrelid
-WHERE  con.contype = 'u' and  con.connamespace=2200    
+select t.constraint_name::name, 
+t.table_name::name, 
+c.column_name::name
+from information_schema.table_constraints t
+join information_schema.constraint_column_usage c on c.constraint_name=t.constraint_name
+where t.constraint_schema='public' and t.constraint_type='UNIQUE'
 
 $source_code$);

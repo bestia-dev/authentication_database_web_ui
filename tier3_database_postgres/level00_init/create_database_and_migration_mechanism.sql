@@ -8,69 +8,81 @@
 -- Then the script will change the current database and install other database objects.
 -- psql -U admin -h localhost -p 5432 -d postgres -f tier3_database_postgres/init/create_database_and_migration_mechanism.sql
 
-CREATE DATABASE webpage_hit_counter;
+create database webpage_hit_counter;
 
 -- change the current database. This command only works with psql.
 \c webpage_hit_counter
 
-CREATE TABLE a_source_code
+create table a_source_code
 (
     object_name name,
-    definition text NOT NULL,
-    CONSTRAINT a_source_code_pkey PRIMARY KEY (object_name)
+    definition text not null,
+    constraint a_source_code_pkey primary key (object_name)
 );
 
-CREATE FUNCTION a_drop_function_any_param(_name name)
-RETURNS text
-AS
+create view a_list_all_functions
+as
+-- only public functions
+-- select * from a_list_all_functions ;
+
+select t.routine_name::name, 
+t.specific_name::name, 
+t.type_udt_name::name
+from information_schema.routines t
+where t.routine_schema='public' and t.routine_type='FUNCTION'
+order by t.routine_name
+
+create function a_drop_function_any_param(_name name)
+returns text
+as
 -- drop all functions with given _name regardless of function parameters
 -- test it: create function test1. Then 
 -- select a_drop_function_any_param('test1');   
 -- drop function a_drop_function_any_param;
 -- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_drop_function_any_param.sql
 $$
-DECLARE
+declare
    _sql text;
    _functions_dropped int;
-BEGIN
-   SELECT count(*)::int
-        , 'DROP FUNCTION ' || string_agg(oid::regprocedure::text, '; DROP FUNCTION ')
-   FROM   pg_catalog.pg_proc
-   WHERE  proname = _name
-   AND    pg_function_is_visible(oid)  -- restrict to current search_path
-   INTO   _functions_dropped, _sql;     -- count only returned if subsequent DROPs succeed
+begin
+   select count(*)::int
+        , 'DROP function ' || string_agg(oid::regprocedure::text, '; DROP function ')
+   from   pg_catalog.pg_proc
+   where  proname = _name
+   and    pg_function_is_visible(oid)  -- restrict to current search_path
+   into   _functions_dropped, _sql;     -- count only returned if subsequent DROPs succeed
 
-   IF _functions_dropped > 0 THEN       -- only if function(s) found
-     EXECUTE _sql;
+   if _functions_dropped > 0 then       -- only if function(s) found
+     execute _sql;
      return _sql;
-   END IF;
+   end if;
    return '';
-END;
-$$ LANGUAGE plpgsql;
+end;
+$$ language plpgsql;
 
 $source_code$);
 
 
-CREATE FUNCTION a_migrate_function(_object_name name, _definition text)
-RETURNS text 
-AS
+create or replace function a_migrate_function(_object_name name, _definition text)
+returns text 
+as
 -- checks in the a_source_code if the function is already installed
 -- if is equal, nothing happens
 -- else drop the old and install the new function
 -- finally insert/update into a_source_code  
 -- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_migrate_function.sql
 $$
-DECLARE
+declare
    _old_definition text;
    _x_void text;
-BEGIN
+begin
 
    if not exists(select * from a_source_code a where a.object_name = _object_name) then
-      if exists(select * from pg_proc p where p.pronamespace=2200 and p.proname=_object_name ) then
+      if exists(select * from a_list_all_functions p where p.routine_name=_object_name) then
          select a_drop_function_any_param(_object_name) into _x_void;
       end if;
 
-      EXECUTE _definition;
+      execute _definition;
 
       insert into a_source_code (object_name, definition)
       values (_object_name, _definition);
@@ -82,11 +94,11 @@ BEGIN
       where a.object_name = _object_name;
 
       if _definition <> _old_definition then
-         if exists(select * from pg_proc p where p.pronamespace=2200 and p.proname=_object_name ) then
+         if exists(select * from a_list_all_functions p where p.routine_name=_object_name) then
             select a_drop_function_any_param(_object_name) into _x_void;
          end if;
          
-         EXECUTE _definition;
+         execute _definition;
 
          update a_source_code
          set definition = _definition
@@ -97,6 +109,5 @@ BEGIN
 
    end if;
 return format('Up to date Function: %I', _object_name);
-END;
-$$ LANGUAGE plpgsql;
-
+end;
+$$ language plpgsql;

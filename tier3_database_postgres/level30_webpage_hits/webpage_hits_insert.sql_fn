@@ -4,10 +4,10 @@ select a_migrate_function('webpage_hits_insert',
 $source_code$
 
 create function  webpage_hits_insert(
-_id integer,
+_id int4,
 _webpage varchar(100),
-_hit_count integer)
-returns table(id integer, webpage varchar(100), hit_count integer) 
+_hit_count int4)
+returns table(id int4, webpage varchar(100), hit_count int4) 
 language plpgsql as
 $$
 declare

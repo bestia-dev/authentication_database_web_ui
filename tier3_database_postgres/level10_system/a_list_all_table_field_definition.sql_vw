@@ -10,45 +10,45 @@ as
 -- select * from a_list_all_table_field_definition ;
 
 select
-c.table_name,
-c.column_name,
+c.table_name::name,
+c.column_name::name,
 s.definition as souce_code_definition,
 format('%s%s%s%s',c.udt_name,
-    CASE WHEN c.udt_name='varchar' 
-    THEN format('(%s)',c.character_maximum_length)
-    ELSE ''
-    END,
-    CASE WHEN c.column_default is not null
-    THEN format(' default(%s)', c.column_default)
-    ELSE ''
-    END,    
-    CASE WHEN c.is_nullable='NO' 
-    THEN ' NOT NULL'
-    ELSE ''
-    END
+    case when c.udt_name='varchar' 
+    then format('(%s)',c.character_maximum_length)
+    else ''
+    end,
+    case when c.column_default is not null
+    then format(' default(%s)', c.column_default)
+    else ''
+    end,    
+    case when c.is_nullable='NO' 
+    then ' not null'
+    else ''
+    end
 ) as installed_definition,
 format('%s%s',c.udt_name,
-    CASE WHEN c.udt_name='varchar' 
-    THEN format('(%s)',c.character_maximum_length)
-    ELSE ''
-    END
+    case when c.udt_name='varchar' 
+    then format('(%s)',c.character_maximum_length)
+    else ''
+    end
 ) as installed_type,
 format('%s', 
-    CASE WHEN c.column_default is not null
-    THEN format('default(%s)', c.column_default)
-    ELSE ''
-    END  
+    case when c.column_default is not null
+    then format('default(%s)', c.column_default)
+    else ''
+    end  
 ) as installed_default,
 format('%s', 
-    CASE WHEN c.is_nullable='NO' 
-    THEN ' NOT NULL'
-    ELSE ''
-    END   
+    case when c.is_nullable='NO' 
+    then ' not null'
+    else ''
+    end   
 ) as installed_not_null
 
 from information_schema.tables t
 join information_schema.columns c on c.table_name=t.table_name
-left JOIN a_source_code s on s.object_name = format('%I.%I', c.table_name, c.column_name)
+left join a_source_code s on s.object_name = format('%I.%I', c.table_name, c.column_name)
 where t.table_schema='public' and t.table_type = 'BASE TABLE'
 -- don't compare the primary key (1), because its definition is stored as table (pk) inside a_source_code
 and c.ordinal_position > 1

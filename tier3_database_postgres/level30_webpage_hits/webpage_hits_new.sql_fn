@@ -4,7 +4,7 @@ select a_migrate_function('webpage_hits_new',
 $source_code$
 
 create function  webpage_hits_new()
-returns table(id integer, webpage varchar(100), hit_count integer) 
+returns table(id int4, webpage varchar(100), hit_count int4) 
 language plpgsql as
 $$
 declare

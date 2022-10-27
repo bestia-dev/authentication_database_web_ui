@@ -11,12 +11,12 @@
 select a_migrate_table('a_source_code',
 $source_code$
 
-CREATE TABLE a_source_code
+create table a_source_code
 (
     object_name name,
-    CONSTRAINT a_source_code_pkey PRIMARY KEY (object_name)
+    constraint a_source_code_pkey primary key (object_name)
 );
 
 $source_code$);
 
-select a_migrate_column('a_source_code','definition','text','','NOT NULL');
+select a_migrate_column('a_source_code','definition','text','','not null');

@@ -1,0 +1,20 @@
+-- tier3_database_postgres/level10_system/a_check_multi_column_foreign.sql_vw
+
+-- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_check_multi_column_foreign.sql
+
+select a_migrate_view('a_check_multi_column_foreign',
+$source_code$
+
+create view a_check_multi_column_foreign
+as
+-- Foreign constraint is simple if it uses only one column.
+-- There are instances where could be easier to use more columns, but this complicates everything very much.
+-- I must test and check there is no foreign keys with multiple columns, because it can make problems.
+-- select * from a_check_multi_column_foreign ;
+
+ select constraint_name, count(*)
+ from a_list_all_constraints_foreign
+ group by constraint_name
+ HAVING count(*)>1
+
+$source_code$);

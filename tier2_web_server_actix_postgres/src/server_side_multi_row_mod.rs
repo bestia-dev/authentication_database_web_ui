@@ -3,7 +3,7 @@
 // Structs and methods for server side rendering in web server functions
 // for multi row: (list):
 // 1. parse web data: strings coming from the browser in path, query and form
-// 2. these are filter data for WHERE and ORDER_BY from the parameters
+// 2. these are filter data for where and ORDER_BY from the parameters
 // 3. cast the web data to call the sql statement with correct data types
 // 4. retrieve sql data as vector of rows
 // 5. read html template (presentation) from disk or cache
@@ -123,7 +123,7 @@ impl ServerSideMultiRow {
     /// if starts with f_like_ use the like operator
     pub fn prepare_filter_params(&mut self) {
         let mut placeholder = 1;
-        let mut where_inter_word = "WHERE ";
+        let mut where_inter_word = "where ";
 
         for single_line_of_where in self.where_clause.iter() {
             // find all variables in {} using regex
@@ -136,10 +136,10 @@ impl ServerSideMultiRow {
                     if let Some(param_from_web) =
                         self.web_params.0.iter().find(|&x| x.0 == param_name)
                     {
-                        // the first inter_word is WHERE, later is AND
+                        // the first inter_word is where, later is and
                         self.sql_where.push_str(where_inter_word);
-                        if where_inter_word != " AND " {
-                            where_inter_word = " AND ";
+                        if where_inter_word != " and " {
+                            where_inter_word = " and ";
                         }
 
                         let placeholder_str = format!("${placeholder}");
@@ -193,7 +193,7 @@ impl ServerSideMultiRow {
                 .unwrap();
 
         let query = format!(
-            "SELECT * FROM {} {} {};",
+            "select * from {} {} {};",
             self.view_name.0, self.sql_where, self.sql_order_by
         );
         // dbg!(&query);

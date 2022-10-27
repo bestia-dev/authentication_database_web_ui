@@ -5,15 +5,15 @@
 select a_migrate_table('hit_counter',
 $source_code$
 
-CREATE TABLE hit_counter
+create table hit_counter
 (
-    id SERIAL,
-    CONSTRAINT hit_counter_pkey PRIMARY KEY (id)    
+    id serial,
+    constraint hit_counter_pkey primary key (id)    
 );
 
 $source_code$);
 
-select a_migrate_column('hit_counter','webpage_id','int4','','NOT NULL');
-SELECT a_add_constraint_foreign_if_not_exists_one_column('hit_counter','webpage_id','webpage', 'id');
+select a_migrate_column('hit_counter','webpage_id','int4','','not null');
+select a_migrate_constraint_foreign('hit_counter','webpage_id','webpage', 'id');
 
-select a_migrate_column('hit_counter','count','int4','0','NOT NULL');
+select a_migrate_column('hit_counter','count','int4','0','not null');

@@ -10,15 +10,13 @@ as
 -- select * from a_list_all_view_fields ;
 -- types: int4, varchar, name, text,...
 
-SELECT
-    c.relname,
-    a.attname,
-    t.typname
-FROM pg_class c
-INNER JOIN pg_attribute a ON a.attrelid = c.oid
-INNER JOIN pg_type t ON t.oid = a.atttypid
--- v = view
-WHERE c.relkind = 'v'
-and c.relnamespace not in (11,13161)
+select
+    t.table_name::name,
+    c.column_name::name,
+    c.udt_name::name
+from information_schema.tables t
+join information_schema.columns c on c.table_name=t.table_name
+where t.table_schema='public' and t.table_type = 'VIEW'
+order by t.table_name, c.column_name
 
 $source_code$);

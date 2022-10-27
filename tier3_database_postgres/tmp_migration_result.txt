@@ -1,0 +1,211 @@
+Only the actual changes are listed here. The complete output is in tier3_database_postgres/tmp_migration_result.txt.
+           a_migrate_table            
+--------------------------------------
+ Up to date Table (pk): a_source_code
+(1 row)
+
+               a_migrate_column                
+-----------------------------------------------
+ Up to date Column: "a_source_code.definition"
+(1 row)
+
+               a_migrate_function               
+------------------------------------------------
+ Up to date Function: a_drop_function_any_param
+(1 row)
+
+           a_migrate_function            
+-----------------------------------------
+ Up to date Function: a_migrate_function
+(1 row)
+
+          a_migrate_function           
+---------------------------------------
+ Up to date Function: a_migrate_column
+(1 row)
+
+          a_migrate_function          
+--------------------------------------
+ Up to date Function: a_migrate_table
+(1 row)
+
+         a_migrate_function          
+-------------------------------------
+ Up to date Function: a_migrate_view
+(1 row)
+
+          a_migrate_function           
+---------------------------------------
+ Up to date Function: a_random_between
+(1 row)
+
+             a_migrate_view              
+-----------------------------------------
+ Up to date View: a_list_all_view_fields
+(1 row)
+
+                a_migrate_function                 
+---------------------------------------------------
+ Up to date Function: a_migrate_constraint_foreign
+(1 row)
+
+                a_migrate_function                
+--------------------------------------------------
+ Up to date Function: a_migrate_constraint_unique
+(1 row)
+
+                 a_migrate_view                 
+------------------------------------------------
+ Up to date View: a_list_all_constraints_unique
+(1 row)
+
+                  a_migrate_view                   
+---------------------------------------------------
+ Up to date View: a_list_all_function_input_params
+(1 row)
+
+                   a_migrate_view                   
+----------------------------------------------------
+ Up to date View: a_list_all_table_field_definition
+(1 row)
+
+          a_migrate_table           
+------------------------------------
+ Up to date Table (pk): authn_login
+(1 row)
+
+              a_migrate_column               
+---------------------------------------------
+ Up to date Column: "authn_login.user_email"
+(1 row)
+
+            a_migrate_constraint_unique             
+----------------------------------------------------
+ Up to date Constraint: authn_login_uniq_user_email
+(1 row)
+
+                a_migrate_column                
+------------------------------------------------
+ Up to date Column: "authn_login.password_hash"
+(1 row)
+
+                 a_migrate_column                 
+--------------------------------------------------
+ Up to date Column: "authn_login.failed_attempts"
+(1 row)
+
+             a_migrate_column             
+------------------------------------------
+ Up to date Column: "authn_login.blocked"
+(1 row)
+
+           a_migrate_table           
+-------------------------------------
+ Up to date Table (pk): authn_signup
+(1 row)
+
+                a_migrate_column                 
+-------------------------------------------------
+ Up to date Column: "authn_signup.password_hash"
+(1 row)
+
+              a_migrate_column              
+--------------------------------------------
+ Up to date Column: "authn_signup.verified"
+(1 row)
+
+               a_migrate_column               
+----------------------------------------------
+ Up to date Column: "authn_signup.created_at"
+(1 row)
+
+          a_migrate_function           
+---------------------------------------
+ Up to date Function: authn_login_show
+(1 row)
+
+            a_migrate_function            
+------------------------------------------
+ Up to date Function: authn_signup_insert
+(1 row)
+
+            a_migrate_function            
+------------------------------------------
+ Up to date Function: authn_signup_delete
+(1 row)
+
+        a_migrate_table         
+--------------------------------
+ Up to date Table (pk): webpage
+(1 row)
+
+           a_migrate_column           
+--------------------------------------
+ Up to date Column: "webpage.webpage"
+(1 row)
+
+         a_migrate_constraint_unique         
+---------------------------------------------
+ Up to date Constraint: webpage_uniq_webpage
+(1 row)
+
+          a_migrate_table           
+------------------------------------
+ Up to date Table (pk): hit_counter
+(1 row)
+
+              a_migrate_column               
+---------------------------------------------
+ Up to date Column: "hit_counter.webpage_id"
+(1 row)
+
+             a_migrate_constraint_foreign              
+-------------------------------------------------------
+ Up to date Constraint: hit_counter_foreign_webpage_id
+(1 row)
+
+            a_migrate_column            
+----------------------------------------
+ Up to date Column: "hit_counter.count"
+(1 row)
+
+        a_migrate_view         
+-------------------------------
+ Up to date View: webpage_hits
+(1 row)
+
+           a_migrate_view           
+------------------------------------
+ Up to date View: webpage_hits_list
+(1 row)
+
+           a_migrate_function           
+----------------------------------------
+ Up to date Function: webpage_hits_show
+(1 row)
+
+          a_migrate_function           
+---------------------------------------
+ Up to date Function: webpage_hits_new
+(1 row)
+
+            a_migrate_function            
+------------------------------------------
+ Up to date Function: webpage_hits_insert
+(1 row)
+
+           a_migrate_function           
+----------------------------------------
+ Up to date Function: webpage_hits_edit
+(1 row)
+
+            a_migrate_function            
+------------------------------------------
+ Up to date Function: webpage_hits_update
+(1 row)
+
+            a_migrate_function            
+------------------------------------------
+ Up to date Function: webpage_hits_delete
+(1 row)
+

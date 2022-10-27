@@ -8,15 +8,15 @@ as
 -- select * from a_list_all_function_input_params ;
 -- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_list_all_function_input_params.sql
 
-SELECT 
-p.proname, 
--- definition of arguments without defaults. 
--- returns string that must be parsed later.
--- _id integer, _webpage character varying, _hit_count integer
-pg_get_function_arguments(oid) AS args_def 
-FROM pg_proc p 
--- don't show system functions
-where p.pronamespace not in (11,13161)
-order by p.proname;
+select 
+r.routine_name::name,
+p.ordinal_position::int4,
+p.parameter_name::name,
+p.udt_name::name
+from information_schema.routines r
+join information_schema.parameters p 
+on p.specific_name=r.specific_name and p.parameter_mode='IN'
+where r.routine_schema='public' and r.routine_type='FUNCTION'
+order by r.routine_name, p.ordinal_position;
 
 $source_code$);

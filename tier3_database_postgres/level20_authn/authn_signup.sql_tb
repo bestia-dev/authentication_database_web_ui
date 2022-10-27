@@ -4,14 +4,14 @@
 select a_migrate_table('authn_signup',
 $source_code$
 
-CREATE TABLE authn_signup
+create table authn_signup
 (
-    user_email varchar(100) NOT NULL,
-    CONSTRAINT authn_signup_pkey PRIMARY KEY (user_email)     
+    user_email varchar(100) not null,
+    constraint authn_signup_pkey primary key (user_email)     
 );
 
 $source_code$);
 
-select a_migrate_column('authn_signup','password_hash','varchar(100)','', 'NOT NULL');
-select a_migrate_column('authn_signup','verified','bool','false','NOT NULL');
-select a_migrate_column('authn_signup','created_at','timestamp','now()','NOT NULL');
+select a_migrate_column('authn_signup','password_hash','varchar(100)','', 'not null');
+select a_migrate_column('authn_signup','verified','bool','false','not null');
+select a_migrate_column('authn_signup','created_at','timestamp','now()','not null');

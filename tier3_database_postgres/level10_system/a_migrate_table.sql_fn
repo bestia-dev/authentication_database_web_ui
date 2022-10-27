@@ -3,25 +3,25 @@
 select a_migrate_function('a_migrate_table',
 $source_code$
 
-CREATE FUNCTION a_migrate_table(_object_name name, _definition text)
-RETURNS text 
-AS
+create function a_migrate_table(_object_name name, _definition text)
+returns text 
+as
 -- checks in the a_source_code if the table is already installed (only the primary key)
 -- if is equal, nothing happens
 -- else write an error, because we cannot just drop a table !
 -- finally insert/update into a_source_code  
 -- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_migrate_table.sql_fn
 $$
-DECLARE
+declare
    _old_definition text;
    _x_void text;
-BEGIN
+begin
 
    if not exists(select * from a_source_code a where a.object_name = _object_name) then
-      if exists(select * FROM information_schema.tables c WHERE c.table_schema = 'public' and c.table_type='BASE TABLE' and c.table_name=_object_name) then
+      if exists(select * from information_schema.tables c where c.table_schema = 'public' and c.table_type='BASE table' and c.table_name=_object_name) then
          -- do nothing. Just insert into a_source_code
       else
-         EXECUTE _definition;
+         execute _definition;
       end if;
 
       insert into a_source_code (object_name, definition)
@@ -35,10 +35,10 @@ BEGIN
       where a.object_name = _object_name;
 
       if _definition <> _old_definition then
-         if exists(select * FROM information_schema.tables c WHERE c.table_schema = 'public' and c.table_type='BASE TABLE' and c.table_name=_object_name) then
+         if exists(select * from information_schema.tables c where c.table_schema = 'public' and c.table_type='BASE table' and c.table_name=_object_name) then
             return format('ERROR: Table (pk) is different and cannot change: %I   %s   %s', _object_name, _definition, _old_definition);
          else
-            EXECUTE _definition;
+            execute _definition;
          end if;
                   
          update a_source_code
@@ -50,7 +50,7 @@ BEGIN
 
    end if;
    return format('Up to date Table (pk): %I', _object_name);
-END;
-$$ LANGUAGE plpgsql;
+end;
+$$ language plpgsql;
 
 $source_code$);

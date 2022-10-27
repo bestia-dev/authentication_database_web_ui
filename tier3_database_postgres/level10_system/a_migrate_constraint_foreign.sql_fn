@@ -1,0 +1,31 @@
+-- tier3_database_postgres/level10_system/a_migrate_constraint_foreign.sql_fn
+
+select a_migrate_function('a_migrate_constraint_foreign',
+$source_code$
+
+create function a_migrate_constraint_foreign(_table name, _column name, _table_ref name, _column_ref name)
+returns text
+-- alter table hit_counter add constraint hit_counter_foreign_webpage foreign key (webpage_id) references webpage (id);
+-- alter table hit_counter drop constraint hit_counter_foreign_webpage;
+-- select a_migrate_constraint_foreign('hit_counter','webpage_id','webpage', 'id');
+-- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/level10_system/a_migrate_constraint_foreign.sql
+as
+$$
+declare 
+    _constraint_name text := format('%I_foreign_%I', _table, _column);
+    _ddl_statement text := format('alter table %I add constraint %I foreign key (%I) references %I (%I)', _table, _constraint_name, _column, _table_ref, _column_ref );
+begin
+
+    if not exists(
+            select *
+            from a_list_all_constraints_foreign c            
+            where c.table_name = _table and c.constraint_name = _constraint_name
+    ) then        
+        execute _ddl_statement;
+        return format('%', _ddl_statement);
+    end if;
+    return format('Up to date Constraint: %I', _constraint_name);
+end;
+$$ language plpgsql;
+
+$source_code$);

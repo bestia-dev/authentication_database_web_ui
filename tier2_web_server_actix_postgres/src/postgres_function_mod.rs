@@ -72,7 +72,7 @@ impl PostgresFunction {
         // endregion
         // 4. run sql function from ref_to_sql_params in order and get single row
         let query = format!(
-            "SELECT * from {}({});",
+            "select * from {}({});",
             self.function_name.0, self.placeholders
         );
 

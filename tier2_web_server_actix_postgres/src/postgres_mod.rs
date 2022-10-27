@@ -2,13 +2,13 @@
 
 // type alias to make it more concise, precise and readable
 /// params are mostly searched by param name
-pub type ParamsNameType = HashMap<ParamName, PostgresInputType>;
+pub type ParamsNameType = HashMap<ParamName, PostgresUdtType>;
 /// functions are always searched by function name
 pub type SqlFunctionInputParams = HashMap<FunctionName, ParamsNameType>;
 /// functions params must be in correct order
 pub type SqlFunctionInputParamsOrder = HashMap<FunctionName, Vec<ParamName>>;
 /// fields are always searched by field name
-pub type FieldsNameType = HashMap<FieldName, PostgresFieldType>;
+pub type FieldsNameType = HashMap<FieldName, PostgresUdtType>;
 /// views are always searched by view name
 pub type SqlViewFields = HashMap<ViewName, FieldsNameType>;
 /// this type is used to give parameters to postgres run command
@@ -26,7 +26,7 @@ pub struct FieldName(pub String);
 
 use crate::{
     error_mod::{file_line_column, LibError},
-    postgres_type_mod::{PostgresFieldType, PostgresInputType},
+    postgres_type_mod::PostgresUdtType,
 };
 use std::collections::HashMap;
 use tokio_postgres::error::SqlState;
@@ -46,11 +46,11 @@ pub async fn run_sql_select_query_pool(
         code: SqlState( E42804, ), DATATYPE_MISMATCH
             message: "structure of query does not match function result type",
             detail: Some( "Returned type character varying(100) does not match expected type text in column 2.", ),
-            where_: Some( "PL/pgSQL function webpage_hits_insert(integer,text,integer) line 12 at RETURN QUERY", ),
+            where_: Some( "PL/pgSQL function webpage_hits_insert(int4,text,int4) line 12 at RETURN QUERY", ),
         code: SqlState( E23505, ), SqlState::UNIQUE_VIOLATION
             message: "duplicate key value violates unique constraint \"webpage_uniq_webpage\"",
             detail: Some( "Key (webpage)=(test) already exists.", ),
-            where_: Some( "SQL statement \"insert into webpage ( \"id\", webpage)\nvalues (_id, _webpage)\"\nPL/pgSQL function webpage_hits_insert(integer,text,integer) line 6 at SQL statement", ),
+            where_: Some( "SQL statement \"insert into webpage ( \"id\", webpage)\nvalues (_id, _webpage)\"\nPL/pgSQL function webpage_hits_insert(int4,text,int4) line 6 at SQL statement", ),
         */
         let err_code = err.code().unwrap().clone();
         match err_code {
@@ -84,51 +84,55 @@ pub async fn run_sql_select_query_pool(
     })
 }
 
-/// Vector of all function input params with data types.
+/// Vector of all function input params with "udt" data type names.
 /// Call it once on application start and store the result in a global variable.
 /// Postgres input variables can be prefixed with "in_" or just "_". Take it into consideration.
 pub async fn get_for_cache_all_function_input_params(
     db_pool: &deadpool_postgres::Pool,
 ) -> (SqlFunctionInputParams, SqlFunctionInputParamsOrder) {
-    let query = "SELECT proname, args_def from a_list_all_function_input_params;";
+    let query = "select routine_name, parameter_name, udt_name from a_list_all_function_input_params order by routine_name, ordinal_position;";
     let vec_row = run_sql_select_query_pool(db_pool, query, &vec![])
         .await
         .unwrap();
+
     let mut all_function_input_params: SqlFunctionInputParams = HashMap::new();
     let mut all_function_input_params_order: SqlFunctionInputParamsOrder = HashMap::new();
+    let mut old_function_name = FunctionName(String::new());
+    let mut function_name: FunctionName;
+    let mut hm_name_type: ParamsNameType = HashMap::new();
+    let mut params_order = vec![];
     for row in vec_row.iter() {
-        // newtype
-        let function_name = FunctionName(row.get(0));
-        //dbg!(&function_name);
-        let args_def: String = row.get(1);
-        //dbg!(&args_def);
-        let mut hm_name_type: ParamsNameType = HashMap::new();
-        let mut params_order = vec![];
-        if !args_def.is_empty() {
-            for name_and_type in args_def.split(", ") {
-                let mut spl = name_and_type.split(' ');
-                let param_name = ParamName(spl.next().unwrap().to_string());
-                // ignore OUT parameters, only input parameters
-                if param_name.0 != "OUT" {
-                    let arg_type = spl.next().unwrap().to_string();
-                    use std::str::FromStr;
-                    let arg_type = PostgresInputType::from_str(&arg_type).unwrap();
-                    hm_name_type.insert(param_name.clone(), arg_type);
-                    params_order.push(param_name);
-                }
+        function_name = FunctionName(row.get(0));
+        if function_name != old_function_name {
+            if !old_function_name.0.is_empty() {
+                all_function_input_params.insert(old_function_name.clone(), hm_name_type);
+                all_function_input_params_order.insert(old_function_name, params_order);
             }
+            old_function_name = function_name;
+            hm_name_type = HashMap::new();
+            params_order = vec![];
         }
+        let param_name = ParamName(row.get(1));
+        use std::str::FromStr;
+        let udt_name = row.get(2);
+        dbg!(&udt_name);
+        let arg_type = PostgresUdtType::from_str(udt_name).unwrap();
+        hm_name_type.insert(param_name.clone(), arg_type);
+        params_order.push(param_name);
         //dbg!(&vec_name_type);
-        all_function_input_params.insert(function_name.clone(), hm_name_type);
-        all_function_input_params_order.insert(function_name, params_order);
     }
+    if !old_function_name.0.is_empty() {
+        all_function_input_params.insert(old_function_name.clone(), hm_name_type);
+        all_function_input_params_order.insert(old_function_name, params_order);
+    }
+
     (all_function_input_params, all_function_input_params_order)
 }
 
-/// Hashmap of all view fields with data types. I use it to construct the WHERE clause.
+/// Hashmap of all view fields with data types. I use it to construct the where clause.
 /// Call it once on application start and store the result in a global variable.
 pub async fn get_for_cache_all_view_fields(db_pool: &deadpool_postgres::Pool) -> SqlViewFields {
-    let query = "SELECT relname, attname, typname from a_list_all_view_fields order by relname;";
+    let query = "select table_name, column_name, udt_name from a_list_all_view_fields order by table_name;";
     let vec_row = run_sql_select_query_pool(db_pool, query, &vec![])
         .await
         .unwrap();
@@ -136,28 +140,28 @@ pub async fn get_for_cache_all_view_fields(db_pool: &deadpool_postgres::Pool) ->
     let mut all_view_fields: SqlViewFields = HashMap::new();
     let mut hm_name_type = HashMap::new();
 
-    let mut old_relname = ViewName(String::new());
-    let mut relname: ViewName;
+    let mut old_table_name = ViewName(String::new());
+    let mut table_name: ViewName;
     for row in vec_row.iter() {
-        relname = ViewName(row.get(0));
-        if relname != old_relname {
-            if !old_relname.0.is_empty() {
+        table_name = ViewName(row.get(0));
+        if table_name != old_table_name {
+            if !old_table_name.0.is_empty() {
                 //dbg!(&vec_name_type);
-                all_view_fields.insert(old_relname, hm_name_type);
+                all_view_fields.insert(old_table_name, hm_name_type);
                 hm_name_type = HashMap::new();
             }
-            old_relname = relname;
+            old_table_name = table_name;
         }
         dbg!(&row);
-        let attname = FieldName(row.get(1));
-        let typname: String = row.get(2);
+        let column_name = FieldName(row.get(1));
+        let udt_name: String = row.get(2);
         use std::str::FromStr;
-        let arg_type = PostgresFieldType::from_str(&typname).unwrap();
-        hm_name_type.insert(attname, arg_type);
+        let arg_type = PostgresUdtType::from_str(&udt_name).unwrap();
+        hm_name_type.insert(column_name, arg_type);
     }
-    if !old_relname.0.is_empty() {
+    if !old_table_name.0.is_empty() {
         //dbg!(&vec_name_type);
-        all_view_fields.insert(old_relname, hm_name_type);
+        all_view_fields.insert(old_table_name, hm_name_type);
     }
     // dbg!(&view_fields);
     all_view_fields

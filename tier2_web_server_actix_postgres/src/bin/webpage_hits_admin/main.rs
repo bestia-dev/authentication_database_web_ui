@@ -24,7 +24,7 @@ async fn main() -> std::io::Result<()> {
     let (all_sql_function_input_params, all_sql_function_input_params_order) =
         tier2::get_for_cache_all_function_input_params(&db_pool).await;
 
-    // I need the view fields and types to construct the WHERE clause
+    // I need the view fields and types to construct the where clause
     let sql_view_fields = tier2::get_for_cache_all_view_fields(&db_pool).await;
 
     // Create web::Data outside of closure HttpServer::new.

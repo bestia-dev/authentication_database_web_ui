@@ -5,13 +5,13 @@
 select a_migrate_table('webpage',
 $source_code$
 
-CREATE TABLE webpage
+create table webpage
 (
-    id int4 NOT NULL,
-    CONSTRAINT webpage_pkey PRIMARY KEY (id)
+    id int4 not null,
+    constraint webpage_pkey primary key (id)
 );
 
 $source_code$);
 
-select a_migrate_column('webpage','webpage','varchar(100)','','NOT NULL');
-SELECT a_add_constraint_unique_if_not_exists_one_column('webpage', 'webpage');
+select a_migrate_column('webpage','webpage','varchar(100)','','not null');
+select a_migrate_constraint_unique('webpage', 'webpage');

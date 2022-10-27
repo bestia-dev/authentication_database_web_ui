@@ -9,11 +9,18 @@
 # To create the new database and initialize or bootstrap the migration mechanism use:
 # tier3_database_postgres/init/create_database_and_migration_mechanism.sql
 # After bootstrap, all subsequent migration/update code will work, because the migration mechanism is already installed.
-echo "start tier3_database_postgres/migrate_update_database.sh"
-echo ""
-sh tier3_database_postgres/level10_system/migrate_update_database_level10.sh
-sh tier3_database_postgres/level20_authn/migrate_update_database_level20.sh
-sh tier3_database_postgres/level30_webpage_hits/migrate_update_database_level30.sh
+echo "Started tier3_database_postgres/migrate_update_database.sh ..."
+rm tier3_database_postgres/tmp_migration_result.txt
+echo "Only the actual changes are listed here. The complete output is in tier3_database_postgres/tmp_migration_result.txt." >> tier3_database_postgres/tmp_migration_result.txt
 
-# TODO: the output is horrible !!!
-# I need to process this output and show only the part that is NOT OK.
+sh tier3_database_postgres/level10_system/migrate_update_database_level10.sh >> tier3_database_postgres/tmp_migration_result.txt
+sh tier3_database_postgres/level20_authn/migrate_update_database_level20.sh >> tier3_database_postgres/tmp_migration_result.txt
+sh tier3_database_postgres/level30_webpage_hits/migrate_update_database_level30.sh >> tier3_database_postgres/tmp_migration_result.txt
+
+
+# The original output is horrible !!!
+# I will process this output and show only the part that show any actual change.
+grep -v "^$\|(1 row)\|Up to date.*\|a_migrate.*\|----[-]*" tier3_database_postgres/tmp_migration_result.txt
+
+echo "Ended tier3_database_postgres/migrate_update_database.sh"
+echo ""
