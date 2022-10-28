@@ -1,0 +1,31 @@
+-- tier3_database_postgres/c1_webpage_hits_mod/c1_webpage_hits_insert.sql_fn
+
+select a2_migrate_function('c1_webpage_hits_insert',
+$source_code$
+
+create function  c1_webpage_hits_insert(
+_id int4,
+_webpage varchar(100),
+_hit_count int4)
+returns table(id int4, webpage varchar(100), hit_count int4) 
+language plpgsql as
+$$
+declare
+
+begin
+
+insert into webpage ( "id", webpage)
+values (_id, _webpage);
+
+insert into c1_hit_counter(webpage_id, "count")
+values(_id,_hit_count);
+
+return query 
+select w.id, w.webpage, w.hit_count
+from c1_webpage_hits w
+where w.id=_id;
+
+end; 
+$$;
+
+$source_code$);

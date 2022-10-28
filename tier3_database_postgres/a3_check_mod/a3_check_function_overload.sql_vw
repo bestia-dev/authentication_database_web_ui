@@ -1,0 +1,19 @@
+-- tier3_database_postgres/a3_check_mod/a3_check_function_overload.sql_vw
+
+select a2_migrate_view('a3_check_function_overload',
+$source_code$
+
+create view a3_check_function_overload
+as
+-- Function overloading is a bad bad bad idea. It confuses everybody.
+-- Sadly in Postgres it is not possible to disable. 
+-- I must test and check there is no overloaded function, because it can make problems.
+-- select * from a3_check_function_overload ;
+
+ select routine_name, count(*)::int4, 
+ format('select a1_drop_function_any_param(''%I'');',routine_name) as drop_statement
+ from a1_list_all_functions
+ group by routine_name
+ HAVING count(*)>1
+
+$source_code$);

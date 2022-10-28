@@ -1,0 +1,26 @@
+-- tier3_database_postgres/c1_webpage_hits_mod/c1_webpage_hits_delete.sql_fn
+
+select a2_migrate_function('c1_webpage_hits_delete',
+$source_code$
+
+create function c1_webpage_hits_delete(
+_id int4)
+returns table(deleted_rows int4) 
+language plpgsql as
+$$
+declare
+begin
+
+delete from c1_hit_counter h
+where h.webpage_id = _id;
+
+delete from webpage w
+where w.id = _id;
+
+return query 
+select 1 as deleted_rows;
+
+end; 
+$$;
+
+$source_code$);

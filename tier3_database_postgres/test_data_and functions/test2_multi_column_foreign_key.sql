@@ -23,9 +23,9 @@ alter table test2_b add constraint test2_b_foreign foreign key (ref_b1,ref_b2) r
 ----------------------------------------------------------------------------
 -- check to avoid this type of multiple columns for my simple database example
 
-select * from a_check_multi_column_unique ;
+select * from a3_check_multi_column_unique ;
 
-select * from a_check_multi_column_foreign ;
+select * from a3_check_multi_column_foreign ;
 
 ----------------------------------------------------------------------------
 

@@ -1,0 +1,21 @@
+-- tier3_database_postgres/a1_list_mod/a1_list_all_function_input_params.sql_vw
+
+select a2_migrate_view('a1_list_all_function_input_params',
+$source_code$
+
+create view a1_list_all_function_input_params
+as
+-- select * from a1_list_all_function_input_params ;
+
+select 
+r.routine_name::name,
+p.ordinal_position::int4,
+p.parameter_name::name,
+p.udt_name::name
+from information_schema.routines r
+join information_schema.parameters p 
+on p.specific_name=r.specific_name and p.parameter_mode='IN'
+where r.routine_schema='public' and r.routine_type='FUNCTION'
+order by r.routine_name, p.ordinal_position;
+
+$source_code$);

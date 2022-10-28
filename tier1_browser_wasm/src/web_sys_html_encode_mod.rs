@@ -172,7 +172,7 @@ mod tests {
     <html>
     <head>
     <meta charset="utf-8" />
-    <title>authn_login</title>
+    <title>b2_authn_login</title>
     </head>
     <body>
     <div id="&amp;&quot;&apos;&lt;&gt;&quot;"></div>

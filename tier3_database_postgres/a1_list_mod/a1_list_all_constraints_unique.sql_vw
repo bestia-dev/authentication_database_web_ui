@@ -1,0 +1,18 @@
+-- tier3_database_postgres/a1_list_mod/a1_list_all_constraints_unique.sql_vw
+
+select a2_migrate_view('a1_list_all_constraints_unique',
+$source_code$
+
+create view a1_list_all_constraints_unique
+as
+-- select * from a1_list_all_constraints_unique ;
+-- namespace or schema 2200 = public
+
+select t.constraint_name::name, 
+t.table_name::name, 
+c.column_name::name
+from information_schema.table_constraints t
+join information_schema.constraint_column_usage c on c.constraint_name=t.constraint_name
+where t.constraint_schema='public' and t.constraint_type='UNIQUE'
+
+$source_code$);

@@ -1,0 +1,22 @@
+-- tier3_database_postgres/c1_webpage_hits_mod/c1_webpage_hits_edit.sql_fn
+
+select a2_migrate_function('c1_webpage_hits_edit',
+$source_code$
+
+create function  c1_webpage_hits_edit(
+_id int)
+returns table(id int4, webpage varchar(100), hit_count int4) 
+language plpgsql as
+$$
+declare
+begin
+
+return query 
+select w.id, w.webpage, w.hit_count
+from c1_webpage_hits w
+where w.id=_id;
+
+end; 
+$$;
+
+$source_code$);

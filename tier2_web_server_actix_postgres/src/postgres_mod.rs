@@ -46,11 +46,11 @@ pub async fn run_sql_select_query_pool(
         code: SqlState( E42804, ), DATATYPE_MISMATCH
             message: "structure of query does not match function result type",
             detail: Some( "Returned type character varying(100) does not match expected type text in column 2.", ),
-            where_: Some( "PL/pgSQL function webpage_hits_insert(int4,text,int4) line 12 at RETURN QUERY", ),
+            where_: Some( "PL/pgSQL function c1_webpage_hits_insert(int4,text,int4) line 12 at RETURN QUERY", ),
         code: SqlState( E23505, ), SqlState::UNIQUE_VIOLATION
             message: "duplicate key value violates unique constraint \"webpage_uniq_webpage\"",
             detail: Some( "Key (webpage)=(test) already exists.", ),
-            where_: Some( "SQL statement \"insert into webpage ( \"id\", webpage)\nvalues (_id, _webpage)\"\nPL/pgSQL function webpage_hits_insert(int4,text,int4) line 6 at SQL statement", ),
+            where_: Some( "SQL statement \"insert into webpage ( \"id\", webpage)\nvalues (_id, _webpage)\"\nPL/pgSQL function c1_webpage_hits_insert(int4,text,int4) line 6 at SQL statement", ),
         */
         let err_code = err.code().unwrap().clone();
         match err_code {
@@ -90,7 +90,7 @@ pub async fn run_sql_select_query_pool(
 pub async fn get_for_cache_all_function_input_params(
     db_pool: &deadpool_postgres::Pool,
 ) -> (SqlFunctionInputParams, SqlFunctionInputParamsOrder) {
-    let query = "select routine_name, parameter_name, udt_name from a_list_all_function_input_params order by routine_name, ordinal_position;";
+    let query = "select routine_name, parameter_name, udt_name from a1_list_all_function_input_params order by routine_name, ordinal_position;";
     let vec_row = run_sql_select_query_pool(db_pool, query, &vec![])
         .await
         .unwrap();
@@ -133,7 +133,7 @@ pub async fn get_for_cache_all_function_input_params(
 /// Call it once on application start and store the result in a global variable.
 pub async fn get_for_cache_all_view_fields(db_pool: &deadpool_postgres::Pool) -> SqlViewFields {
     let query =
-        "select view_name, column_name, udt_name from a_list_all_view_fields order by view_name;";
+        "select view_name, column_name, udt_name from a1_list_all_view_fields order by view_name;";
     let vec_row = run_sql_select_query_pool(db_pool, query, &vec![])
         .await
         .unwrap();
@@ -153,10 +153,10 @@ pub async fn get_for_cache_all_view_fields(db_pool: &deadpool_postgres::Pool) ->
             }
             old_view_name = view_name;
         }
-        dbg!(&row);
+        //dbg!(&row);
         let column_name = FieldName(row.get(1));
         let udt_name: String = row.get(2);
-        dbg!(&udt_name);
+        //dbg!(&udt_name);
         use std::str::FromStr;
         let arg_type = PostgresUdtType::from_str(&udt_name).unwrap();
         hm_name_type.insert(column_name, arg_type);

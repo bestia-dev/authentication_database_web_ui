@@ -1,0 +1,20 @@
+-- tier3_database_postgres/a2_migrate_mod/a2_source_code.sql_tb
+
+-- On database migration/update I want to install only the source code that is new or changed.
+-- Postgres does not store the exact source code of the views and functions I install. 
+-- This makes it difficult to know if the new source code is different from the old source code.
+-- I don't want to drop and recreate a view or function, if the source code is completely the same.
+-- Sadly I need to solve this problem on my own. I need a new table, to store the installed source code.
+
+select a2_migrate_table('a2_source_code',
+$source_code$
+
+create table a2_source_code
+(
+    object_name name,
+    constraint a_source_code_pkey primary key (object_name)
+);
+
+$source_code$);
+
+select a2_migrate_column('a2_source_code','definition','text','','not null');

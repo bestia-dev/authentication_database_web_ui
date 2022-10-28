@@ -1,0 +1,18 @@
+-- tier3_database_postgres/a3_check_mod/a3_check_multi_column_unique.sql_vw
+
+select a2_migrate_view('a3_check_multi_column_unique',
+$source_code$
+
+create view a3_check_multi_column_unique
+as
+-- Unique constraint is simple if it uses only one column.
+-- There are instances where could be easier to use more columns, but this complicates everything very much.
+-- I must test and check there is no unique constraint with multiple columns, because it can make problems.
+-- select * from a3_check_multi_column_unique ;
+
+ select constraint_name, count(*)::int4
+ from a1_list_all_constraints_unique
+ group by constraint_name
+ HAVING count(*)>1
+
+$source_code$);

@@ -1,0 +1,21 @@
+-- tier3_database_postgres/a1_list_mod/a1_list_all_view_fields.sql_vw
+
+
+select a2_migrate_view('a1_list_all_view_fields',
+$source_code$
+
+create view a1_list_all_view_fields
+as
+-- select * from a1_list_all_view_fields ;
+-- types: int4, varchar, name, text,...
+
+select
+    t.table_name::name as view_name,
+    c.column_name::name,
+    c.udt_name::name
+from information_schema.tables t
+join information_schema.columns c on c.table_name=t.table_name
+where t.table_schema='public' and t.table_type = 'VIEW'
+order by t.table_name, c.column_name
+
+$source_code$);

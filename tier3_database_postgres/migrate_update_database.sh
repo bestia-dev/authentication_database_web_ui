@@ -7,15 +7,21 @@
 # The order of execution is important. 
 
 # To create the new database and initialize or bootstrap the migration mechanism use:
-# tier3_database_postgres/init/create_database_and_migration_mechanism.sql
+# tier3_database_postgres/init/a0_init_database_and_migration_mechanism.sql
 # After bootstrap, all subsequent migration/update code will work, because the migration mechanism is already installed.
 echo "Started tier3_database_postgres/migrate_update_database.sh ..."
 rm tier3_database_postgres/tmp_migration_result.txt
 echo "Only the actual changes are listed here. The complete output is in tier3_database_postgres/tmp_migration_result.txt." >> tier3_database_postgres/tmp_migration_result.txt
 
-sh tier3_database_postgres/level10_system/migrate_update_database_level10.sh >> tier3_database_postgres/tmp_migration_result.txt
-sh tier3_database_postgres/level20_authn/migrate_update_database_level20.sh >> tier3_database_postgres/tmp_migration_result.txt
-sh tier3_database_postgres/level30_webpage_hits/migrate_update_database_level30.sh >> tier3_database_postgres/tmp_migration_result.txt
+sh tier3_database_postgres/a1_list_mod/a1_migrate_update_database.sh >> tier3_database_postgres/tmp_migration_result.txt
+sh tier3_database_postgres/a2_migrate_mod/a2_migrate_update_database.sh >> tier3_database_postgres/tmp_migration_result.txt
+sh tier3_database_postgres/a3_check_mod/a3_migrate_update_database.sh >> tier3_database_postgres/tmp_migration_result.txt
+sh tier3_database_postgres/a4_system_mod/a4_migrate_update_database.sh >> tier3_database_postgres/tmp_migration_result.txt
+
+sh tier3_database_postgres/b1_authn_signup_mod/b1_migrate_update_database.sh >> tier3_database_postgres/tmp_migration_result.txt
+sh tier3_database_postgres/b2_authn_login_mod/b2_migrate_update_database.sh >> tier3_database_postgres/tmp_migration_result.txt
+
+sh tier3_database_postgres/c1_webpage_hits_mod/c1_migrate_update_database.sh >> tier3_database_postgres/tmp_migration_result.txt
 
 
 # The original output is horrible !!!

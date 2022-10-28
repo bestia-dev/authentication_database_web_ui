@@ -1,0 +1,17 @@
+-- tier3_database_postgres/a1_list_mod/a1_list_all_tables.sql_vw
+
+
+select a2_migrate_view('a1_list_all_tables',
+$source_code$
+
+create view a1_list_all_tables
+as
+-- only public tables
+-- select * from a1_list_all_tables ;
+
+select t.table_name::name
+from information_schema.tables t
+where t.table_schema='public' and t.table_type='BASE TABLE'
+order by t.table_name
+
+$source_code$);

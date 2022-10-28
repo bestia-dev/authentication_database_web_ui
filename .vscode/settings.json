@@ -3,11 +3,11 @@
         "actix",
         "Alla",
         "apos",
-
         "bestia",
         "bindgen",
         "buildah",
         "cdylib",
+        "computerish",
         "createdb",
         "crev",
         "DBNAME",
@@ -35,7 +35,6 @@
         "proname",
         "Prost",
         "psql",
-
         "rustflags",
         "rustfmt",
         "rustlang",
@@ -47,9 +46,9 @@
         "stylesheet",
         "templating",
         "thiserror",
-
         "unambiguity",
         "usize",
+        "varchar",
         "Webassembly",
         "zdravje"
     ],

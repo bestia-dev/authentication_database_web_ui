@@ -1,0 +1,21 @@
+-- tier3_database_postgres/a3_check_mod/a3_check_table_field_type.sql_vw
+
+-- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/a3_check_mod/a3_check_table_field_type.sql_vw
+
+select a2_migrate_view('a3_check_table_field_type',
+$source_code$
+
+create view a3_check_table_field_type
+as
+-- There is absolutely too much different types (even with multiple synonims) in Postgres.
+-- For a simple database application I need just a few types. Limiting types this way makes everything much easier.
+-- I must test and check there is no strange types.
+-- select * from a3_check_table_field_type ;
+
+ select *
+ from a1_list_all_table_field_definition
+ where installed_type not in ('name','text','int4','timestamp','bool')
+ and installed_type not like 'varchar(%)'
+ 
+
+$source_code$);

@@ -1,0 +1,17 @@
+-- tier3_database_postgres/c1_webpage_hits_mod/c1_webpage_hits.sql_vw
+
+select a2_migrate_view('c1_webpage_hits',
+$source_code$
+
+create view c1_webpage_hits
+as
+
+select w.id,
+w.webpage,
+h.count as hit_count
+from webpage w
+join c1_hit_counter h on h.webpage_id = w.id
+where w.id = h.webpage_id
+order by w.webpage;
+
+$source_code$);

@@ -2,8 +2,8 @@
 
 mod actix_mod;
 mod app_state_mod;
-mod authn_login_mod;
-mod authn_signup_mod;
+mod b2_authn_login_mod;
+mod b1_authn_signup_mod;
 mod deadpool_mod;
 mod error_mod;
 mod html_templating_mod;

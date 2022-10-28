@@ -1,0 +1,21 @@
+-- tier3_database_postgres/b2_authn_login_mod/b2_authn_login.sql_tb
+-- create table but column by column, so I can extend it later with new columns and constraints
+
+select a2_migrate_table('b2_authn_login',
+$source_code$
+
+create table b2_authn_login
+(
+    authn_login_id serial,
+    constraint authn_login_pkey primary key (authn_login_id)
+);
+
+$source_code$);
+
+select a2_migrate_column('b2_authn_login','user_email','varchar(100)','','not null');
+select a2_migrate_constraint_unique('b2_authn_login', 'user_email');
+
+select a2_migrate_column('b2_authn_login','password_hash','varchar(100)','','not null');
+select a2_migrate_column('b2_authn_login','failed_attempts','int4','0', 'not null');
+select a2_migrate_column('b2_authn_login','blocked','bool','FALSE', 'not null');
+ 

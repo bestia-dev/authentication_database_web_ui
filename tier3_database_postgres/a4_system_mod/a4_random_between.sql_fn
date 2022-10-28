@@ -1,0 +1,21 @@
+-- tier3_database_postgres/a4_system_mod/a4_random_between.sql_fn
+
+-- select a1_drop_function_any_param('a4_random_between');
+-- psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/a4_system_mod/a4_random_between.sql_fn
+
+select a2_migrate_function('a4_random_between',
+$source_code$
+
+create function a4_random_between(_low int4, _high int4)
+returns int4
+strict as 
+$$
+begin
+
+return floor(random()* (_high-_low + 1) + _low);
+
+end;
+$$ language plpgsql;
+
+$source_code$);
+

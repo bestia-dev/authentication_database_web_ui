@@ -180,7 +180,7 @@ fn task_build() {
     After `cargo auto build`, run the compiled binary, examples and/or tests
 cd web_server_folder ; ../tier2_web_server_actix_postgres/target/debug/{APP_MAIN_ROUTE} ; cd ..
     In the browser or in curl open 
-http://localhost:8080/{APP_MAIN_ROUTE}/webpage_hits/webpage_hits_list
+http://localhost:8080/{APP_MAIN_ROUTE}/c1_webpage_hits_mod/c1_webpage_hits_list
     if ok, then
 cargo auto release
 {RESET}"#
@@ -215,7 +215,7 @@ fn task_release() {
     After `cargo auto release`, run the compiled binary, examples and/or tests
 cd web_server_folder ; ../target/release/{APP_MAIN_ROUTE}; cd ..
     In the browser or in curl open 
-http://localhost:8080/{APP_MAIN_ROUTE}/webpage_hits/webpage_hits_list
+http://localhost:8080/{APP_MAIN_ROUTE}/c1_webpage_hits_mod/c1_webpage_hits_list
     if ok, then
 cargo auto doc
 {RESET}"#,

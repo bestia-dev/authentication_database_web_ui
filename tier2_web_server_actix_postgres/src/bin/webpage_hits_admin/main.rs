@@ -14,7 +14,7 @@ async fn main() -> std::io::Result<()> {
 
     log::info!("Actix web server started on localhost:8080!");
     log::info!("Test it with curl or browser:");
-    log::info!("http://localhost:8080/{APP_MAIN_ROUTE}/webpage_hits/webpage_hits_list");
+    log::info!("http://localhost:8080/{APP_MAIN_ROUTE}/c1_webpage_hits_mod/c1_webpage_hits_list");
 
     // connection pool for postgres to reuse connections for better performance
     let db_pool = tier2::deadpool_start_and_check().await;

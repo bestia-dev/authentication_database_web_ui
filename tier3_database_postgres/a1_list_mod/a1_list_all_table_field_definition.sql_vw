@@ -1,0 +1,55 @@
+-- tier3_database_postgres/a1_list_mod/a1_list_all_table_field_definition.sql_vw
+
+select a2_migrate_view('a1_list_all_table_field_definition',
+$source_code$
+
+create view a1_list_all_table_field_definition
+as
+-- select * from a1_list_all_table_field_definition ;
+
+select
+c.table_name::name,
+c.column_name::name,
+s.definition as souce_code_definition,
+format('%s%s%s%s',c.udt_name,
+    case when c.udt_name='varchar' 
+    then format('(%s)',c.character_maximum_length)
+    else ''
+    end,
+    case when c.column_default is not null
+    then format(' default(%s)', c.column_default)
+    else ''
+    end,    
+    case when c.is_nullable='NO' 
+    then ' not null'
+    else ''
+    end
+) as installed_definition,
+format('%s%s',c.udt_name,
+    case when c.udt_name='varchar' 
+    then format('(%s)',c.character_maximum_length)
+    else ''
+    end
+) as installed_type,
+format('%s', 
+    case when c.column_default is not null
+    then format('default(%s)', c.column_default)
+    else ''
+    end  
+) as installed_default,
+format('%s', 
+    case when c.is_nullable='NO' 
+    then ' not null'
+    else ''
+    end   
+) as installed_not_null
+
+from information_schema.tables t
+join information_schema.columns c on c.table_name=t.table_name
+left join a2_source_code s on s.object_name = format('%I.%I', c.table_name, c.column_name)
+where t.table_schema='public' and t.table_type = 'BASE TABLE'
+-- don't compare the primary key (1), because its definition is stored as table (pk) inside a2_source_code
+and c.ordinal_position > 1
+order by t.table_name, c.ordinal_position
+
+$source_code$);

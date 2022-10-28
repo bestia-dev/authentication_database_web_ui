@@ -1,0 +1,16 @@
+-- tier3_database_postgres/a1_list_mod/a1_list_all_views.sql_vw
+
+select a2_migrate_view('a1_list_all_views',
+$source_code$
+
+create view a1_list_all_views
+as
+-- only public views
+-- select * from a1_list_all_views ;
+
+select t.table_name::name as view_name
+from information_schema.views t
+where t.table_schema='public'
+order by t.table_name;
+
+$source_code$);

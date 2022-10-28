@@ -24,12 +24,12 @@ pub fn config_route_main(cfg: &mut actix_web::web::ServiceConfig) {
             &format!("./{APP_MAIN_ROUTE}/images/"),
         ))
         .service(
-            actix_web::web::scope(&format!("/{APP_MAIN_ROUTE}/webpage_hits"))
+            actix_web::web::scope(&format!("/{APP_MAIN_ROUTE}/c1_webpage_hits"))
                 .configure(crate::webpage_hits_mod::config_route_webpage_hits),
         )
         .service(
             actix_web::web::scope(&format!("/{APP_MAIN_ROUTE}/authn"))
-                .configure(crate::authn_login_mod::config_route_authn),
+                .configure(crate::b2_authn_login_mod::config_route_authn),
         )
     ;
 }
@@ -140,7 +140,7 @@ pub fn redirect_to_login_page(
     log::warn!("Request with no correct session cookie. Redirect it to the login page.");
     let host = req.connection_info().host().to_owned();
     let scheme = req.connection_info().scheme().to_owned();
-    let url = format!("{scheme}://{host}/{APP_MAIN_ROUTE}/authn/authn_login");
+    let url = format!("{scheme}://{host}/{APP_MAIN_ROUTE}/authn/b2_authn_login");
     req.into_response(
         // code "Found" 302 is the de-facto standard for redirects for login
         actix_web::HttpResponse::Found()
