@@ -195,7 +195,8 @@ a -d-> p
 
 @enduml
 ```
-![plantuml_database_objects](https://img.shields.io/badge/Lines_in_Rust-230-green.svg)
+
+![plantuml_database_objects](https://github.com/bestia-dev/authentication_database_web_ui-/raw/main/images/plantuml_database_objects.png)
 
 ## cargo crev reviews and advisory
 
