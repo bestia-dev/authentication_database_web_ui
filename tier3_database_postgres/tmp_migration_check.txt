@@ -1,0 +1,24 @@
+ a3_check_function_overload 
+----------------------------
+(0 rows)
+
+ a3_check_multi_column_unique 
+------------------------------
+(0 rows)
+
+ a3_check_multi_column_foreign 
+-------------------------------
+(0 rows)
+
+ a3_check_parameter_types 
+--------------------------
+(0 rows)
+
+ a3_check_table_field_type 
+---------------------------
+(0 rows)
+
+ a3_check_view_field_type 
+--------------------------
+(0 rows)
+

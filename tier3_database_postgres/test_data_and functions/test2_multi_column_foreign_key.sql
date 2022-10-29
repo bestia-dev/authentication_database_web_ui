@@ -1,5 +1,7 @@
 -- tier3_database_postgres/test_data_and functions/fn_test2_multi_column_foreign_key.sql
 
+-- For this simple database application I limit the foreign key only to 1 column. For simplicity.
+
 create table test2_a(
   id_a serial,
   ref_a1 varchar(3),

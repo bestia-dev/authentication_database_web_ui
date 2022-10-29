@@ -150,6 +150,52 @@ It is wise to have a strict hierarchy where higher level modules can call lower 
 It is also very handy for search the same name in the entire workspace with many different languages and modules. The name becomes so specific that there cannot be false positives at all.  
 The lower objects will be level 0
 
+```plantuml
+@startuml
+top to bottom direction
+skinparam componentStyle rectangle
+
+component "database objects" as x{
+    component "Level c" as c {        
+        [c1_webpage_hits_mod]
+    }
+
+    component "Level b" as b {
+        [b1_authn_signup_mod]
+        [b2_authn_login_mod]   
+    }    
+    [b1_authn_signup_mod] -[hidden]> [b2_authn_login_mod]
+
+    component "Level a" as a {
+        [a0_init_mod]
+        [a1_list_mod]
+        [a2_migrate_mod]
+        [a3_check_mod]
+        [a4_system_mod] 
+    }    
+    [a0_init_mod] -[hidden]> [a1_list_mod]
+    [a1_list_mod] -[hidden]> [a2_migrate_mod]
+    [a2_migrate_mod] -[hidden]> [a3_check_mod]
+    [a3_check_mod] -[hidden]> [a4_system_mod]
+
+    component [Postgres] as p {
+        [tables]
+        [constraints]
+        [views]
+        [functions]
+    }
+    [tables] -[hidden]> [constraints]
+    [constraints] -[hidden]> [views]
+    [views] -[hidden]> [functions]
+}
+
+c -d-> b
+b -d-> a
+a -d-> p
+
+@enduml
+```
+![plantuml_database_objects](https://img.shields.io/badge/Lines_in_Rust-230-green.svg)
 
 ## cargo crev reviews and advisory
 

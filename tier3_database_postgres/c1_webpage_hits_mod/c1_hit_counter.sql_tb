@@ -14,6 +14,6 @@ create table c1_hit_counter
 $source_code$);
 
 select a2_migrate_column('c1_hit_counter','webpage_id','int4','','not null');
-select a2_migrate_constraint_foreign('c1_hit_counter','webpage_id','webpage', 'id');
+select a2_migrate_constraint_foreign('c1_hit_counter','webpage_id','c1_webpage', 'id');
 
 select a2_migrate_column('c1_hit_counter','count','int4','0','not null');

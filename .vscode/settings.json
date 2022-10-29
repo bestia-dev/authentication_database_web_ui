@@ -40,6 +40,8 @@
         "rustlang",
         "Sendgrid",
         "serde",
+        "signup",
+        "skinparam",
         "ssmr",
         "sssr",
         "startuml",

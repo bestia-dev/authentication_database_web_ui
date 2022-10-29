@@ -1,5 +1,8 @@
 -- tier3_database_postgres/test_data_and functions/test1_overloading_and_droping_function.sql
 
+-- I think function overloading is dificult to maintain. 
+-- For this simple database application I limit function to NOT use overloading. For simplicity.
+
 create or replace function  test1()
 returns table(routine_name name) 
 language plpgsql as

@@ -1,12 +1,12 @@
 -- tier3_database_postgres/test_data_and functions/insert_test_data.sql
 
-insert into webpage(id, webpage)
+insert into c1_webpage(id, webpage)
 values(555555, 'test');
 
 insert into c1_hit_counter(webpage_id, count)
 values(555555, 3);
 
-insert into webpage(id, webpage)
+insert into c1_webpage(id, webpage)
 values(777777, 'test2');
 
 insert into c1_hit_counter(webpage_id, count)

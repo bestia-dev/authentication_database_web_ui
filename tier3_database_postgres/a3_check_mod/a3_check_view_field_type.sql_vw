@@ -12,9 +12,9 @@ as
 -- I must test and check there is no strange types.
 -- select * from a3_check_view_field_type ;
 
- select *
- from a1_list_all_view_fields
- where udt_name not in ('name','text','int4','timestamp','bool','varchar')
+ select t.view_name, t.column_name, t.udt_name
+ from a1_list_all_view_fields t
+ where t.udt_name not in ('name','text','int4','timestamp','bool','varchar')
  
 
 $source_code$);

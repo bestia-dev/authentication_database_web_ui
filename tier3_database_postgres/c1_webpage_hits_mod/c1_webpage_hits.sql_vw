@@ -9,7 +9,7 @@ as
 select w.id,
 w.webpage,
 h.count as hit_count
-from webpage w
+from c1_webpage w
 join c1_hit_counter h on h.webpage_id = w.id
 where w.id = h.webpage_id
 order by w.webpage;
