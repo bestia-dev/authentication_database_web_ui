@@ -1,4 +1,4 @@
-//! postgres_mod.rs
+// tier2_web_server_actix_postgres/src/a0_library_mod/postgres_mod.rs
 
 // type alias to make it more concise, precise and readable
 /// params are mostly searched by param name
@@ -24,7 +24,7 @@ pub struct ViewName(pub String);
 #[derive(Eq, Hash, PartialEq)]
 pub struct FieldName(pub String);
 
-use crate::{
+use super::{
     error_mod::{file_line_column, LibError},
     postgres_type_mod::PostgresUdtType,
 };
@@ -38,7 +38,7 @@ pub async fn run_sql_select_query_pool(
     query: &str,
     params: &SqlParamsForPostgres<'_>,
 ) -> Result<Vec<tokio_postgres::Row>, LibError> {
-    let postgres_client = crate::deadpool_mod::get_postgres_client_from_pool(db_pool).await?;
+    let postgres_client = super::deadpool_mod::get_postgres_client_from_pool(db_pool).await?;
     postgres_client.query(query, params).await.map_err(|err| {
         /*
         many different sql errors:
@@ -90,7 +90,11 @@ pub async fn run_sql_select_query_pool(
 pub async fn get_for_cache_all_function_input_params(
     db_pool: &deadpool_postgres::Pool,
 ) -> (SqlFunctionInputParams, SqlFunctionInputParamsOrder) {
-    let query = "select routine_name, parameter_name, udt_name from a1_list_all_function_input_params order by routine_name, ordinal_position;";
+    let query = "
+    select routine_name, parameter_name, udt_name 
+    from a1_list_all_function_input_params 
+    order by routine_name, ordinal_position;
+    ";
     let vec_row = run_sql_select_query_pool(db_pool, query, &vec![])
         .await
         .unwrap();
@@ -132,8 +136,11 @@ pub async fn get_for_cache_all_function_input_params(
 /// Hashmap of all view fields with data types. I use it to construct the where clause.
 /// Call it once on application start and store the result in a global variable.
 pub async fn get_for_cache_all_view_fields(db_pool: &deadpool_postgres::Pool) -> SqlViewFields {
-    let query =
-        "select view_name, column_name, udt_name from a1_list_all_view_fields order by view_name;";
+    let query = "
+        select view_name, column_name, udt_name 
+        from a1_list_all_view_fields 
+        order by view_name;
+        ";
     let vec_row = run_sql_select_query_pool(db_pool, query, &vec![])
         .await
         .unwrap();

@@ -1,17 +1,17 @@
-//! webpage_hits_mod.rs
+// tier2_web_server_actix_postgres/src/c1_webpage_hits_mod.rs
 
 // type aliases: for less verbose types and better readability of the code
 
-use crate::actix_mod::{RequestAndPayload, ResultResponse};
-use crate::server_side_multi_row_mod::ServerSideMultiRow;
-use crate::server_side_single_row_mod::ServerSideSingleRow;
+use crate::a0_library_mod::actix_mod::{RequestAndPayload, ResultResponse};
+use crate::a0_library_mod::server_side_multi_row_mod::ServerSideMultiRow;
+use crate::a0_library_mod::server_side_single_row_mod::ServerSideSingleRow;
 use actix_web::web::resource;
 use actix_web::web::to;
 
-const SCOPE: &'static str = "c1_webpage_hits";
+const SCOPE: &'static str = "c1_webpage_hits_mod";
 
 /// scoped actix routing near the implementation code
-/// scope is already "/webpage_hits_admin/c1_webpage_hits"
+/// scope is already "/webpage_hits_admin/c1_webpage_hits_mod"
 #[rustfmt::skip]
 pub fn config_route_webpage_hits(cfg: &mut actix_web::web::ServiceConfig) {
     cfg

@@ -1,4 +1,4 @@
-// server_side_single_row.rs
+// tier2_web_server_actix_postgres/src/a0_library_mod/server_side_single_row_mod.rs
 
 // Structs and methods for server side rendering in web server functions
 // for single row: (new, insert, show, edit, update, delete):
@@ -9,9 +9,9 @@
 // 5. mix presentation and data, because this is server-side rendering
 // 6. return a response with no cache (because data in database can change fast)
 
-use crate::actix_mod::{RequestAndPayload, ResultResponse};
-use crate::postgres_function_mod::PostgresFunction;
-use crate::postgres_mod::FunctionName;
+use super::actix_mod::{RequestAndPayload, ResultResponse};
+use super::postgres_function_mod::PostgresFunction;
+use super::postgres_mod::FunctionName;
 
 /// the main ServerSideSingleRow object (struct with implementation)
 pub struct ServerSideSingleRow<'a> {
@@ -55,16 +55,16 @@ impl<'a> ServerSideSingleRow<'a> {
         // endregion
 
         // region: 4. read html template (presentation) from disk or cache
-        let body = crate::html_templating_mod::read_template(self.scope, &self.function_name.0);
+        let body = super::html_templating_mod::read_template(self.scope, &self.function_name.0);
         // endregion
 
         // region: 5. mix presentation and data, because this is server-side rendering
         let body =
-            crate::html_templating_mod::template_replace_fields_from_single_row(&body, single_row);
+            super::html_templating_mod::template_replace_fields_from_single_row(&body, single_row);
         // endregion
 
         // region: 6. return a response with no cache (because data in database can change fast)
-        Ok(crate::actix_mod::return_html_response_no_cache(body))
+        Ok(super::actix_mod::return_html_response_no_cache(body))
         // endregion
     }
 }

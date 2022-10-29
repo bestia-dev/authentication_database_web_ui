@@ -1,4 +1,5 @@
-// web_sys_mod.rs
+// tier1_browser_wasm/src/web_sys_mod.rs
+
 //! helper functions for web_sys, window, document, dom, console,
 //! local_storage, session_storage,...
 

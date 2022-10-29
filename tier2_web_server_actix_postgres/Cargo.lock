@@ -371,7 +371,7 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "common_code"
-version = "2022.1022.1130"
+version = "2022.1029.1940"
 dependencies = [
  "serde",
  "serde_json",
@@ -1372,7 +1372,7 @@ dependencies = [
 
 [[package]]
 name = "tier2_web_server_actix_postgres"
-version = "2022.1027.2159"
+version = "2022.1029.2018"
 dependencies = [
  "actix-files",
  "actix-utils",

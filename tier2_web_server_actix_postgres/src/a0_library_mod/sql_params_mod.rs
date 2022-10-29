@@ -1,11 +1,11 @@
-// sql_params_mod.rs
+// tier2_web_server_actix_postgres/src/a0_library_mod/sql_params_mod.rs
 
 use std::collections::HashMap;
 
-use crate::actix_mod::DataAppState;
-use crate::postgres_mod::{FunctionName, SqlParamsForPostgres};
-use crate::postgres_type_mod::PostgresValueMultiType;
-use crate::web_params_mod::WebParams;
+use super::actix_mod::DataAppState;
+use super::postgres_mod::{FunctionName, SqlParamsForPostgres};
+use super::postgres_type_mod::PostgresValueMultiType;
+use super::web_params_mod::WebParams;
 
 /// SqlParams are just a key-value collection: HashMap(String,PostgresValue)
 #[derive(Debug)]

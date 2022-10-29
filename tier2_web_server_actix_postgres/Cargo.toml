@@ -1,6 +1,6 @@
 [package]
 name = "tier2_web_server_actix_postgres"
-version = "2022.1027.2159"
+version = "2022.1029.2018"
 description = "09. Tutorial to code authentication for database_web_ui (2022-10)"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"

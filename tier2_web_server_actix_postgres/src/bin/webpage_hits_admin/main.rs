@@ -1,4 +1,4 @@
-// authentication_database_web_ui/tier2_web_server_actix_postgres/src/bin/webpage_hits_admin/main.rs
+// tier2_web_server_actix_postgres/src/bin/webpage_hits_admin/main.rs
 
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};

@@ -1,6 +1,6 @@
-//! deadpool_mod.rs
+// tier2_web_server_actix_postgres/src/a0_library_mod/deadpool_mod.rs
 
-use crate::error_mod::LibError;
+use super::error_mod::LibError;
 
 /// create and start the connection pool
 pub async fn deadpool_postgres_start() -> deadpool_postgres::Pool {
@@ -26,7 +26,7 @@ pub async fn deadpool_postgres_start() -> deadpool_postgres::Pool {
 
 /// start and check the connection pool to postgres
 pub async fn deadpool_start_and_check() -> deadpool_postgres::Pool {
-    let pool = crate::deadpool_mod::deadpool_postgres_start().await;
+    let pool = deadpool_postgres_start().await;
     // Check the connection to postgres database and panic if error
     let _postgres_client: deadpool_postgres::Client = pool.get().await.unwrap();
     pool
@@ -39,5 +39,5 @@ pub async fn get_postgres_client_from_pool(
     db_pool
         .get()
         .await
-        .map_err(|_| crate::error_mod::LibError::DatabaseConnection)
+        .map_err(|_| super::error_mod::LibError::DatabaseConnection)
 }

@@ -1,4 +1,4 @@
-// server_side_multi_row.rs
+// tier2_web_server_actix_postgres/src/a0_library_mod/server_side_multi_row_mod.rs
 
 // Structs and methods for server side rendering in web server functions
 // for multi row: (list):
@@ -17,11 +17,11 @@
 use lazy_static::lazy_static;
 use regex::Regex;
 
-use crate::actix_mod::{DataAppState, RequestAndPayload, ResultResponse};
-use crate::postgres_mod::{FieldName, SqlParamsForPostgres, ViewName};
-use crate::postgres_type_mod::PostgresValueMultiType;
-use crate::sql_params_mod::SqlParams;
-use crate::web_params_mod::WebParams;
+use super::actix_mod::{DataAppState, RequestAndPayload, ResultResponse};
+use super::postgres_mod::{FieldName, SqlParamsForPostgres, ViewName};
+use super::postgres_type_mod::PostgresValueMultiType;
+use super::sql_params_mod::SqlParams;
+use super::web_params_mod::WebParams;
 
 lazy_static! {
     static ref RGX_01: Regex = Regex::new(r###"\{(.+?)}"###).unwrap();
@@ -81,7 +81,7 @@ impl ServerSideMultiRow {
         // endregion
 
         // region: 5. read html template (presentation) from disk or cache
-        let mut body = crate::html_templating_mod::read_template(self.scope, &self.view_name.0);
+        let mut body = super::html_templating_mod::read_template(self.scope, &self.view_name.0);
         // endregion
 
         // region: 6. extract the fragment from <!--row_start--> to <!--row_end-->. It will be repeated for every Row.
@@ -96,7 +96,7 @@ impl ServerSideMultiRow {
         let mut replaced_with_multi_row = String::new();
         for single_row in multi_row {
             let replaced_fragment =
-                crate::html_templating_mod::template_replace_fields_from_single_row(
+                super::html_templating_mod::template_replace_fields_from_single_row(
                     fragment_for_single_row,
                     single_row,
                 );
@@ -114,7 +114,7 @@ impl ServerSideMultiRow {
         // endregion
 
         // region: 8. return a response with no cache (because data in database can change fast)
-        Ok(crate::actix_mod::return_html_response_no_cache(body))
+        Ok(super::actix_mod::return_html_response_no_cache(body))
         // endregion
     }
 
@@ -188,7 +188,7 @@ impl ServerSideMultiRow {
         sql_params: SqlParamsForPostgres<'_>,
     ) -> Vec<tokio_postgres::Row> {
         let postgres_client =
-            crate::deadpool_mod::get_postgres_client_from_pool(&self.app_state.db_pool)
+            super::deadpool_mod::get_postgres_client_from_pool(&self.app_state.db_pool)
                 .await
                 .unwrap();
 

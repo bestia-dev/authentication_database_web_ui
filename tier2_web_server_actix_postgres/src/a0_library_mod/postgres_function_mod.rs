@@ -1,11 +1,11 @@
-// postgres_function_mod.rs
+// tier2_web_server_actix_postgres/src/a0_library_mod/postgres_function_mod.rs
 
-use crate::actix_mod::DataAppState;
-use crate::error_mod::LibError;
-use crate::postgres_mod::FunctionName;
-use crate::postgres_type_mod::PostgresValueMultiType;
-use crate::sql_params_mod::SqlParams;
-use crate::web_params_mod::WebParams;
+use super::actix_mod::DataAppState;
+use super::error_mod::LibError;
+use super::postgres_mod::FunctionName;
+use super::postgres_type_mod::PostgresValueMultiType;
+use super::sql_params_mod::SqlParams;
+use super::web_params_mod::WebParams;
 
 // Struct with methods (object) for calling postgres functions
 // 1. prepare sql_params for sql function with correct data types from web_params
@@ -77,7 +77,7 @@ impl PostgresFunction {
         );
 
         // This function will return Result with LibError
-        let multi_row = crate::postgres_mod::run_sql_select_query_pool(
+        let multi_row = super::postgres_mod::run_sql_select_query_pool(
             &self.app_state.db_pool,
             &query,
             &ref_to_sql_params,

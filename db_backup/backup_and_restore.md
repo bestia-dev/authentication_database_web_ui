@@ -41,7 +41,7 @@ psql -U admin -h localhost -p 5432 -d webpage_hit_counter
 \q     Exit psql shell
 
 -- every sql statement must end with semicolon !
-select * from webpage;
+select * from c1_webpage;
 select * from c1_hit_counter h;
 
 ```

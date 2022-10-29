@@ -1,4 +1,4 @@
-// error_mod.rs
+// tier2_web_server_actix_postgres/src/a0_library_mod/error_mod.rs
 
 /// enum for all library errors with thiserror \
 /// thiserror generates the Display trait for enum variants \
@@ -100,7 +100,7 @@ impl actix_web::ResponseError for LibError {
 
         // only the user-friendly error for the user
         let error_text = format!("{time} {}", self);
-        let body = crate::html_templating_mod::read_template("error", "error");
+        let body = super::html_templating_mod::read_template("error", "error");
         let body = body.replace("{error_text}", &error_text);
 
         actix_web::HttpResponse::build(status_code).body(body)

@@ -1,38 +1,11 @@
-// authentication_database_web_ui/tier2_web_server_actix_postgres/src/actix_mod.rs
+// tier2_web_server_actix_postgres/src/a0_library_mod/actix_mod.rs
 
 // type aliases: for less verbose types and better readability of the code
 pub type ResultResponse = actix_web::Result<actix_web::HttpResponse>;
-pub type DataAppState = actix_web::web::Data<crate::AppState>;
+pub type DataAppState = actix_web::web::Data<super::AppState>;
 
-use crate::{error_mod::time_epoch_as_millis, APP_MAIN_ROUTE};
-
-/// configure the route with scope
-/// so the routing code is near to the implementation code
-#[rustfmt::skip]
-pub fn config_route_main(cfg: &mut actix_web::web::ServiceConfig) {
-    cfg
-        .service(actix_files::Files::new(
-            &format!("/{APP_MAIN_ROUTE}/css"),
-                &format!("./{APP_MAIN_ROUTE}/css/"),
-        ))
-        .service(actix_files::Files::new(
-            &format!("/{APP_MAIN_ROUTE}/pkg"),
-            &format!("./{APP_MAIN_ROUTE}/pkg/"),
-        ))
-        .service(actix_files::Files::new(
-            &format!("/{APP_MAIN_ROUTE}/images"),
-            &format!("./{APP_MAIN_ROUTE}/images/"),
-        ))
-        .service(
-            actix_web::web::scope(&format!("/{APP_MAIN_ROUTE}/c1_webpage_hits"))
-                .configure(crate::webpage_hits_mod::config_route_webpage_hits),
-        )
-        .service(
-            actix_web::web::scope(&format!("/{APP_MAIN_ROUTE}/authn"))
-                .configure(crate::b2_authn_login_mod::config_route_authn),
-        )
-    ;
-}
+use super::error_mod::time_epoch_as_millis;
+use crate::APP_MAIN_ROUTE;
 
 /// fn to return a response when we have the body
 /// web apps modify data all the time, so caching is not good
@@ -78,7 +51,9 @@ pub fn return_json_resp_from_object_with_cookie(
 pub fn on_request_received_is_session_cookie_ok(req: &actix_web::dev::ServiceRequest) -> bool {
     log::info!("{}", req.path());
     // Some resources must not be redirected
-    if req.path().starts_with(&format!("/{APP_MAIN_ROUTE}/authn/"))
+    if req
+        .path()
+        .starts_with(&format!("/{APP_MAIN_ROUTE}/b2_authn_login_mod/"))
         || req.path().starts_with(&format!("/{APP_MAIN_ROUTE}/css/"))
         || req.path().starts_with(&format!("/{APP_MAIN_ROUTE}/pkg/"))
         || req
@@ -92,7 +67,7 @@ pub fn on_request_received_is_session_cookie_ok(req: &actix_web::dev::ServiceReq
             Some(cookie) => {
                 // lock the mutex until it goes out of scope at end of function
                 let mut sessions = req
-                    .app_data::<actix_web::web::Data<crate::AppState>>()
+                    .app_data::<actix_web::web::Data<super::AppState>>()
                     .unwrap()
                     .active_sessions
                     .lock()
@@ -121,7 +96,7 @@ pub fn on_request_received_is_session_cookie_ok(req: &actix_web::dev::ServiceReq
                             // log::info!("update last_access_time");
                             sessions.insert(
                                 cookie.value().to_string(),
-                                (user_email, crate::error_mod::time_epoch_as_millis()),
+                                (user_email, super::error_mod::time_epoch_as_millis()),
                             );
 
                             return true;
@@ -140,7 +115,7 @@ pub fn redirect_to_login_page(
     log::warn!("Request with no correct session cookie. Redirect it to the login page.");
     let host = req.connection_info().host().to_owned();
     let scheme = req.connection_info().scheme().to_owned();
-    let url = format!("{scheme}://{host}/{APP_MAIN_ROUTE}/authn/b2_authn_login");
+    let url = format!("{scheme}://{host}/{APP_MAIN_ROUTE}/b2_authn_login_mod/b2_authn_login");
     req.into_response(
         // code "Found" 302 is the de-facto standard for redirects for login
         actix_web::HttpResponse::Found()
@@ -180,11 +155,11 @@ impl actix_web::FromRequest for RequestAndPayload {
 use actix_web::FromRequest;
 
 impl RequestAndPayload {
-    pub async fn web_params(&mut self) -> crate::web_params_mod::WebParams {
-        crate::web_params_mod::WebParams::from_request_and_payload(self).await
+    pub async fn web_params(&mut self) -> super::web_params_mod::WebParams {
+        super::web_params_mod::WebParams::from_request_and_payload(self).await
     }
 
-    pub async fn app_state(&mut self) -> Data<crate::AppState> {
+    pub async fn app_state(&mut self) -> Data<super::AppState> {
         actix_web::web::Data::from_request(&self.req, &mut self.payload)
             .await
             .unwrap()

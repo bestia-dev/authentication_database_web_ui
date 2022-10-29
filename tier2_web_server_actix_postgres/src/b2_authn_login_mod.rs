@@ -1,33 +1,33 @@
-//! b2_authn_login_mod.rs
+// tier2_web_server_actix_postgres/src/b2_authn_login_mod.rs
 
-use crate::actix_mod::DataAppState;
-use crate::actix_mod::ResultResponse;
-use crate::error_mod::LibError;
-use crate::postgres_function_mod::PostgresFunction;
-use crate::postgres_mod::get_string_from_row;
-use crate::postgres_type_mod::PostgresValueMultiType;
+use crate::a0_library_mod::actix_mod::DataAppState;
+use crate::a0_library_mod::actix_mod::ResultResponse;
+use crate::a0_library_mod::error_mod::LibError;
+use crate::a0_library_mod::postgres_function_mod::PostgresFunction;
+use crate::a0_library_mod::postgres_mod::get_string_from_row;
+use crate::a0_library_mod::postgres_type_mod::PostgresValueMultiType;
 use actix_web::web::resource;
 use actix_web::web::to;
 
 use crate::APP_MAIN_ROUTE;
-const SCOPE: &'static str = "authn";
+const SCOPE: &'static str = "b2_authn_login_mod";
 
 /// scoped actix routing near the implementation code
-/// scope is already "/webpage_hits_admin/authn"
+/// scope is already "/webpage_hits_admin/b2_authn_login_mod"
 #[rustfmt::skip]
 pub fn config_route_authn(cfg: &mut actix_web::web::ServiceConfig) {
     cfg
         .service(resource("/b2_authn_login").route(to(b2_authn_login)))
-        .service(resource("/authn_login_process_email").route(to(authn_login_process_email)))
-        .service(resource("/authn_login_process_hash").route(to(authn_login_process_hash)))
+        .service(resource("/b2_authn_login_process_email").route(to(b2_authn_login_process_email)))
+        .service(resource("/b2_authn_login_process_hash").route(to(b2_authn_login_process_hash)))
     ;
 }
 
 /// Show the input form. I choose the short name because the url looks nice in the address bar.
 #[function_name::named]
 pub async fn b2_authn_login() -> ResultResponse {
-    let body = crate::html_templating_mod::read_template(SCOPE, function_name!());
-    Ok(crate::actix_mod::return_html_response_no_cache(body))
+    let body = crate::a0_library_mod::html_templating_mod::read_template(SCOPE, function_name!());
+    Ok(crate::a0_library_mod::actix_mod::return_html_response_no_cache(body))
 }
 
 /// read data from postgres database table b2_authn_login for email_user
@@ -35,7 +35,7 @@ async fn call_pg_func_auth_login_show(
     user_email: &str,
     app_state: DataAppState,
 ) -> Result<tokio_postgres::Row, LibError> {
-    let mut sql_params = crate::sql_params_mod::SqlParams::new();
+    let mut sql_params = crate::a0_library_mod::sql_params_mod::SqlParams::new();
     sql_params.insert(
         "_user_email",
         PostgresValueMultiType::String(user_email.to_string()),
@@ -50,7 +50,7 @@ async fn call_pg_func_auth_login_show(
 /// Finds the salt from database and return it to the browser as json.
 /// I don't want the client to know, that the email is wrong. Because of brute force attacks.
 /// If email does not exist return a random salt.
-pub async fn authn_login_process_email(
+pub async fn b2_authn_login_process_email(
     app_state: DataAppState,
     data_req: actix_web::web::Json<common_code::DataReqAuthnLoginProcessEmail>,
 ) -> ResultResponse {
@@ -65,7 +65,7 @@ pub async fn authn_login_process_email(
             let password_hash = get_string_from_row(&single_row, "password_hash")?;
             // extract salt
             let password_hash = password_hash::PasswordHash::new(&password_hash)
-                .map_err(|_| crate::error_mod::LibError::PasswordHash)?;
+                .map_err(|_| crate::a0_library_mod::error_mod::LibError::PasswordHash)?;
 
             let salt = password_hash
                 .salt
@@ -77,11 +77,11 @@ pub async fn authn_login_process_email(
     };
 
     let data_resp = common_code::DataRespAuthnLoginProcessEmail { salt };
-    crate::actix_mod::return_json_resp_from_object(data_resp)
+    crate::a0_library_mod::actix_mod::return_json_resp_from_object(data_resp)
 }
 
-/// authn_login_process_hash
-pub async fn authn_login_process_hash(
+/// b2_authn_login_process_hash
+pub async fn b2_authn_login_process_hash(
     app_state: DataAppState,
     data_req: actix_web::web::Json<common_code::DataReqAuthnLoginProcessHash>,
 ) -> ResultResponse {
@@ -104,7 +104,7 @@ pub async fn authn_login_process_hash(
                 uuid.clone(),
                 (
                     data_req.user_email.clone(),
-                    crate::error_mod::time_epoch_as_millis(),
+                    crate::a0_library_mod::error_mod::time_epoch_as_millis(),
                 ),
             );
         // endregion: add random session_id as UUID into app_state active_sessions
@@ -134,6 +134,8 @@ pub async fn authn_login_process_hash(
         let data_resp = common_code::DataRespAuthnLoginProcessHash {
             login_success: is_login_success,
         };
-        crate::actix_mod::return_json_resp_from_object_with_cookie(data_resp, cookie)
+        crate::a0_library_mod::actix_mod::return_json_resp_from_object_with_cookie(
+            data_resp, cookie,
+        )
     }
 }
