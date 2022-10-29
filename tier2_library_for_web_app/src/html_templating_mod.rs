@@ -1,10 +1,8 @@
 // tier2_library_for_web_app/src/html_templating_mod.rs
 
-const APP_MAIN_ROUTE: &'static str = "webpage_hits_admin";
-
 /// struct fields scope and function name are used as the folder and file name for the template
 pub fn read_template(scope: &str, name: &str) -> String {
-    let path = format!("{APP_MAIN_ROUTE}/{scope}/{name}.html");
+    let path = format!("{}/{scope}/{name}.html", common_code::APP_MAIN_ROUTE);
     let template = std::fs::read_to_string(path).unwrap();
     // Add DOCTYPE declaration only to complete html5 files.
     // I want to have the html files without the 'declaration'

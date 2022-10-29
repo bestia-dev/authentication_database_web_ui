@@ -1,5 +1,6 @@
 //! automation_tasks_rs for authentication_database_web_ui workspace
-//! The workspace contains 3 members: tier1_browser_wasm, tier2_web_server_actix_postgres, tier3_database_postgres
+//! The workspace contains 4 members: common_code, tier1_browser_wasm, tier2_library_for_web_app, tier2_webpage_hits_admin
+//! Every member has its own automation_tasks_rs. This workspace automation just calls the automation of the members.
 
 use cargo_auto_lib::*;
 
@@ -81,12 +82,12 @@ fn build_cargo_auto_for_members(){
      std::env::set_current_dir("tier2_library_for_web_app").unwrap();    
      run_shell_command("cargo auto;"); 
      std::env::set_current_dir(&workspace_dir).unwrap();  
-     
-     println!("Processing member tier2_web_server_actix_postgres");    
-     std::env::set_current_dir("tier2_web_server_actix_postgres").unwrap();    
+ 
+     println!("Processing member tier2_webpage_hits_admin");    
+     std::env::set_current_dir("tier2_webpage_hits_admin").unwrap();    
      run_shell_command("cargo auto;"); 
      std::env::set_current_dir(&workspace_dir).unwrap();  
- 
+
      println!("Processing member tier1_browser_wasm");    
      std::env::set_current_dir("tier1_browser_wasm").unwrap();    
      run_shell_command("cargo auto;"); 
@@ -96,8 +97,8 @@ fn build_cargo_auto_for_members(){
      run_shell_command("rm -rf ./common_code/automation_tasks_rs/target/debug/.fingerprint/");
      run_shell_command("rm -rf ./tier2_library_for_web_app/automation_tasks_rs/target/debug/*/");
      run_shell_command("rm -rf ./tier2_library_for_web_app/automation_tasks_rs/target/debug/.fingerprint/");
-     run_shell_command("rm -rf ./tier2_web_server_actix_postgres/automation_tasks_rs/target/debug/*/");
-     run_shell_command("rm -rf ./tier2_web_server_actix_postgres/automation_tasks_rs/target/debug/.fingerprint/");
+     run_shell_command("rm -rf ./tier2_webpage_hits_admin/automation_tasks_rs/target/debug/*/");
+     run_shell_command("rm -rf ./tier2_webpage_hits_admin/automation_tasks_rs/target/debug/.fingerprint/");
      run_shell_command("rm -rf ./tier1_browser_wasm/automation_tasks_rs/target/debug/*/");
      run_shell_command("rm -rf ./tier1_browser_wasm/automation_tasks_rs/target/debug/.fingerprint/");
      run_shell_command("rm -rf ./automation_tasks_rs/target/debug/*/");
@@ -167,8 +168,8 @@ fn task_build() {
 
     // when I use --exclude tier1_browser_wasm, cargo rebuilds a bunch of dependencies !?!
     // to debug why cargo rebuilds I used: CARGO_LOG=cargo::core::compiler::fingerprint=info cargo build
-    println!("Processing member tier2_web_server_actix_postgres");    
-    std::env::set_current_dir("tier2_web_server_actix_postgres").unwrap();    
+    println!("Processing member tier2_webpage_hits_admin");    
+    std::env::set_current_dir("tier2_webpage_hits_admin").unwrap();    
     run_shell_command("cargo auto build;"); 
     std::env::set_current_dir(&workspace_dir).unwrap();  
 
@@ -184,7 +185,7 @@ fn task_build() {
     println!(
         r#"{YELLOW}
     After `cargo auto build`, run the compiled binary, examples and/or tests
-cd web_server_folder ; ../tier2_web_server_actix_postgres/target/debug/{APP_MAIN_ROUTE} ; cd ..
+cd web_server_folder ; ../tier2_webpage_hits_admin/target/debug/{APP_MAIN_ROUTE} ; cd ..
     In the browser or in curl open 
 http://localhost:8080/{APP_MAIN_ROUTE}/c1_webpage_hits_mod/c1_webpage_hits_list
     if ok, then

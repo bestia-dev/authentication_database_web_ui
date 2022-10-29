@@ -1,6 +1,8 @@
 // tier1_browser_wasm/lib.rs
 // wasm module name: tier1_browser_wasm
 
+#![deny(unused_crate_dependencies)]
+
 use std::env;
 //use unwrap::unwrap;
 use wasm_bindgen::prelude::*;
@@ -11,8 +13,6 @@ mod b1_authn_signup_mod;
 mod b2_authn_login_mod;
 mod web_sys_html_encode_mod;
 mod web_sys_mod;
-
-pub const APP_MAIN_ROUTE: &'static str = "webpage_hits_admin";
 
 // I want to make this function available to javascript
 pub use b2_authn_login_mod::authn_login_on_start;

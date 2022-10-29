@@ -3,6 +3,8 @@
 // This module contains all the "libraries" needed to work with the "content" of the web app
 // Maybe one day this will be extracted in a stand-alone crate.
 
+#![deny(unused_crate_dependencies)]
+
 pub mod actix_mod;
 pub mod app_state_mod;
 pub mod deadpool_mod;

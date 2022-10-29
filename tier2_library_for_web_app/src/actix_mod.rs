@@ -5,7 +5,6 @@ pub type ResultResponse = actix_web::Result<actix_web::HttpResponse>;
 pub type DataAppState = actix_web::web::Data<super::AppState>;
 
 use super::error_mod::time_epoch_as_millis;
-const APP_MAIN_ROUTE: &'static str = "webpage_hits_admin";
 
 /// fn to return a response when we have the body
 /// web apps modify data all the time, so caching is not good
@@ -51,14 +50,18 @@ pub fn return_json_resp_from_object_with_cookie(
 pub fn on_request_received_is_session_cookie_ok(req: &actix_web::dev::ServiceRequest) -> bool {
     log::info!("{}", req.path());
     // Some resources must not be redirected
-    if req
+    if req.path().starts_with(&format!(
+        "/{}/b2_authn_login_mod/",
+        common_code::APP_MAIN_ROUTE
+    )) || req
         .path()
-        .starts_with(&format!("/{APP_MAIN_ROUTE}/b2_authn_login_mod/"))
-        || req.path().starts_with(&format!("/{APP_MAIN_ROUTE}/css/"))
-        || req.path().starts_with(&format!("/{APP_MAIN_ROUTE}/pkg/"))
+        .starts_with(&format!("/{}/css/", common_code::APP_MAIN_ROUTE))
         || req
             .path()
-            .starts_with(&format!("/{APP_MAIN_ROUTE}/images/"))
+            .starts_with(&format!("/{}/pkg/", common_code::APP_MAIN_ROUTE))
+        || req
+            .path()
+            .starts_with(&format!("/{}/images/", common_code::APP_MAIN_ROUTE))
     {
         true
     } else {
@@ -115,7 +118,10 @@ pub fn redirect_to_login_page(
     log::warn!("Request with no correct session cookie. Redirect it to the login page.");
     let host = req.connection_info().host().to_owned();
     let scheme = req.connection_info().scheme().to_owned();
-    let url = format!("{scheme}://{host}/{APP_MAIN_ROUTE}/b2_authn_login_mod/b2_authn_login");
+    let url = format!(
+        "{scheme}://{host}/{}/b2_authn_login_mod/b2_authn_login",
+        common_code::APP_MAIN_ROUTE
+    );
     req.into_response(
         // code "Found" 302 is the de-facto standard for redirects for login
         actix_web::HttpResponse::Found()

@@ -1,4 +1,4 @@
-//! automation_tasks_rs for member tier2_web_server_actix_postgres of authentication_database_web_ui
+//! automation_tasks_rs for member tier2_webpage_hits_admin of authentication_database_web_ui
 //! it creates the binary webpage_hits_admin
 
 use cargo_auto_lib::*;

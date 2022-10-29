@@ -1,7 +1,8 @@
-// tier2_web_server_actix_postgres/src/b2_authn_login_mod.rs
+// tier2_webpage_hits_admin/src/b2_authn_login_mod.rs
 
 use actix_web::web::resource;
 use actix_web::web::to;
+use common_code::APP_MAIN_ROUTE;
 use tier2_library_for_web_app::actix_mod::DataAppState;
 use tier2_library_for_web_app::actix_mod::ResultResponse;
 use tier2_library_for_web_app::error_mod::LibError;
@@ -9,7 +10,6 @@ use tier2_library_for_web_app::postgres_function_mod::PostgresFunction;
 use tier2_library_for_web_app::postgres_mod::get_string_from_row;
 use tier2_library_for_web_app::postgres_type_mod::PostgresValueMultiType;
 
-use crate::APP_MAIN_ROUTE;
 const SCOPE: &'static str = "b2_authn_login_mod";
 
 /// scoped actix routing near the implementation code

@@ -1,4 +1,4 @@
-// tier2_web_server_actix_postgres/src/c1_webpage_hits_mod.rs
+// tier2_webpage_hits_admin/src/c1_webpage_hits_mod.rs
 
 // type aliases: for less verbose types and better readability of the code
 

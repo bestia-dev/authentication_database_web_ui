@@ -6,9 +6,9 @@
 use crate::on_click;
 use crate::on_input;
 use crate::web_sys_mod::*;
-use crate::APP_MAIN_ROUTE;
 use common_code::DataRespAuthnLoginProcessEmail;
 use common_code::DataRespAuthnLoginProcessHash;
+use common_code::APP_MAIN_ROUTE;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 

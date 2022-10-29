@@ -57,10 +57,9 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "common_code"
-version = "2022.1029.1940"
+version = "2022.1029.2120"
 dependencies = [
  "serde",
- "serde_json",
 ]
 
 [[package]]
@@ -225,14 +224,12 @@ dependencies = [
 
 [[package]]
 name = "tier1_browser_wasm"
-version = "2022.1029.2000"
+version = "2022.1029.2130"
 dependencies = [
  "anyhow",
  "argon2",
  "common_code",
  "console_error_panic_hook",
- "js-sys",
- "password-hash",
  "serde",
  "serde_json",
  "unwrap",

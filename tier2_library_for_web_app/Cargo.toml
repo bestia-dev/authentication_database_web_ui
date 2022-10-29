@@ -1,6 +1,6 @@
 [package]
 name = "tier2_library_for_web_app"
-version = "2022.1029.2058"
+version = "2022.1029.2120"
 description = "library for web app"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"
@@ -15,24 +15,24 @@ publish = false
 [dependencies]
 common_code = { path = "../common_code" }
 log = "0.4"
-pretty_env_logger="0.4.0"
+# pretty_env_logger="0.4.0"
 thiserror = "1.0.30"
-anyhow="1.0.56"
+# anyhow="1.0.56"
 actix-web = "4.1.0"
 mime="0.3.16"
 tokio-postgres="0.7.6"
 dotenv="0.15.0"
 deadpool-postgres = "0.10.2"
-actix-files = "0.6.2"
-function_name = "0.3.0"
-const_format = "0.2.26"
+# actix-files = "0.6.2"
+# function_name = "0.3.0"
+# const_format = "0.2.26"
 html-escape = "0.2.11"
 strum = { version = "0.24", features = ["derive"] }
 regex="1.6.0"
 lazy_static="1.4.0"
-futures = "0.3.24"
+# futures = "0.3.24"
 serde = { version = "1.0.145", features = ["derive"] }
 serde_json = "1.0.86"
-password-hash = "0.4.2"
-uuid = {version = "1.2.1", features = ["v4","fast-rng"]}
+#password-hash = "0.4.2"
+# uuid = {version = "1.2.1", features = ["v4","fast-rng"]}
 actix-utils = "3.0.1"
