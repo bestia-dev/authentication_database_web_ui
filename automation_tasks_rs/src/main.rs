@@ -71,36 +71,37 @@ fn match_arguments_and_call_tasks(mut args: std::env::Args) {
 /// delete the unnecessary target files to save disk space
 fn build_cargo_auto_for_members(){
     let workspace_dir = std::env::current_dir().unwrap();
-    
-
-     // build every member separately. 
+         
      println!("Processing member: common_code");    
      std::env::set_current_dir("common_code").unwrap();
      run_shell_command("cargo auto;");      
      std::env::set_current_dir(&workspace_dir).unwrap();  
  
-     // when I use --exclude tier1_browser_wasm, cargo rebuilds a bunch of dependencies !?!
-     // to debug why cargo rebuilds I used: CARGO_LOG=cargo::core::compiler::fingerprint=info cargo build
+     println!("Processing member tier2_library_for_web_app");    
+     std::env::set_current_dir("tier2_library_for_web_app").unwrap();    
+     run_shell_command("cargo auto;"); 
+     std::env::set_current_dir(&workspace_dir).unwrap();  
+     
      println!("Processing member tier2_web_server_actix_postgres");    
      std::env::set_current_dir("tier2_web_server_actix_postgres").unwrap();    
      run_shell_command("cargo auto;"); 
      std::env::set_current_dir(&workspace_dir).unwrap();  
  
-     // wasm-pack changes something in the folder target, so the next build unnecessarily rebuilds dependencies
-     // I will try to use --release to force wasm-pack to use a different folder
      println!("Processing member tier1_browser_wasm");    
      std::env::set_current_dir("tier1_browser_wasm").unwrap();    
      run_shell_command("cargo auto;"); 
      std::env::set_current_dir(&workspace_dir).unwrap();  
 
-     run_shell_command("rm -rf ./automation_tasks_rs/target/debug/*/");
-     run_shell_command("rm -rf ./automation_tasks_rs/target/debug/.fingerprint/");
      run_shell_command("rm -rf ./common_code/automation_tasks_rs/target/debug/*/");
      run_shell_command("rm -rf ./common_code/automation_tasks_rs/target/debug/.fingerprint/");
+     run_shell_command("rm -rf ./tier2_library_for_web_app/automation_tasks_rs/target/debug/*/");
+     run_shell_command("rm -rf ./tier2_library_for_web_app/automation_tasks_rs/target/debug/.fingerprint/");
      run_shell_command("rm -rf ./tier2_web_server_actix_postgres/automation_tasks_rs/target/debug/*/");
      run_shell_command("rm -rf ./tier2_web_server_actix_postgres/automation_tasks_rs/target/debug/.fingerprint/");
      run_shell_command("rm -rf ./tier1_browser_wasm/automation_tasks_rs/target/debug/*/");
      run_shell_command("rm -rf ./tier1_browser_wasm/automation_tasks_rs/target/debug/.fingerprint/");
+     run_shell_command("rm -rf ./automation_tasks_rs/target/debug/*/");
+     run_shell_command("rm -rf ./automation_tasks_rs/target/debug/.fingerprint/");
 }
 
 /// write a comprehensible help for user defined tasks
@@ -156,6 +157,11 @@ fn task_build() {
     // build every member separately. 
     println!("Processing member common_code");    
     std::env::set_current_dir("common_code").unwrap();
+    run_shell_command("cargo auto build;"); 
+    std::env::set_current_dir(&workspace_dir).unwrap();  
+
+    println!("Processing member tier2_library_for_web_app");    
+    std::env::set_current_dir("tier2_library_for_web_app").unwrap();    
     run_shell_command("cargo auto build;"); 
     std::env::set_current_dir(&workspace_dir).unwrap();  
 

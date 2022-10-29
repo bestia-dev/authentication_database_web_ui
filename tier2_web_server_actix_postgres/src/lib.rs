@@ -1,18 +1,17 @@
 // tier2_web_server_actix_postgres/src/lib.rs
 
-pub mod a0_library_mod;
 mod b1_authn_signup_mod;
 mod b2_authn_login_mod;
 mod c1_webpage_hits_mod;
 
 pub const APP_MAIN_ROUTE: &'static str = "webpage_hits_admin";
 
-pub use a0_library_mod::actix_mod::on_request_received_is_session_cookie_ok;
-pub use a0_library_mod::actix_mod::redirect_to_login_page;
-pub use a0_library_mod::app_state_mod::AppState;
-pub use a0_library_mod::deadpool_mod::deadpool_start_and_check;
-pub use a0_library_mod::postgres_mod::get_for_cache_all_function_input_params;
-pub use a0_library_mod::postgres_mod::get_for_cache_all_view_fields;
+pub use tier2_library_for_web_app::actix_mod::on_request_received_is_session_cookie_ok;
+pub use tier2_library_for_web_app::actix_mod::redirect_to_login_page;
+pub use tier2_library_for_web_app::app_state_mod::AppState;
+pub use tier2_library_for_web_app::deadpool_mod::deadpool_start_and_check;
+pub use tier2_library_for_web_app::postgres_mod::get_for_cache_all_function_input_params;
+pub use tier2_library_for_web_app::postgres_mod::get_for_cache_all_view_fields;
 
 /// configure the route with scope
 /// so the routing code is near to the implementation code

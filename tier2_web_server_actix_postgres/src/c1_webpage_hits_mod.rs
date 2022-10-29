@@ -2,11 +2,11 @@
 
 // type aliases: for less verbose types and better readability of the code
 
-use crate::a0_library_mod::actix_mod::{RequestAndPayload, ResultResponse};
-use crate::a0_library_mod::server_side_multi_row_mod::ServerSideMultiRow;
-use crate::a0_library_mod::server_side_single_row_mod::ServerSideSingleRow;
 use actix_web::web::resource;
 use actix_web::web::to;
+use tier2_library_for_web_app::actix_mod::{RequestAndPayload, ResultResponse};
+use tier2_library_for_web_app::server_side_multi_row_mod::ServerSideMultiRow;
+use tier2_library_for_web_app::server_side_single_row_mod::ServerSideSingleRow;
 
 const SCOPE: &'static str = "c1_webpage_hits_mod";
 

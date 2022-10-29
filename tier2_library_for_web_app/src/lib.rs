@@ -1,4 +1,4 @@
-// tier2_web_server_actix_postgres/src/a0_library_mod/mod.rs
+// tier2_library_for_web_app/src/lib.rs
 
 // This module contains all the "libraries" needed to work with the "content" of the web app
 // Maybe one day this will be extracted in a stand-alone crate.

@@ -1,4 +1,4 @@
-// tier2_web_server_actix_postgres/src/a0_library_mod/postgres_mod.rs
+// tier2_library_for_web_app/src/postgres_mod.rs
 
 // type alias to make it more concise, precise and readable
 /// params are mostly searched by param name

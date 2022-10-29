@@ -1,4 +1,4 @@
-// tier2_web_server_actix_postgres/src/a0_library_mod/error_mod.rs
+// tier2_library_for_web_app/src/error_mod.rs
 
 /// enum for all library errors with thiserror \
 /// thiserror generates the Display trait for enum variants \

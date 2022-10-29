@@ -1,6 +1,6 @@
-// tier2_web_server_actix_postgres/src/a0_library_mod/html_templating_mod.rs
+// tier2_library_for_web_app/src/html_templating_mod.rs
 
-use crate::APP_MAIN_ROUTE;
+const APP_MAIN_ROUTE: &'static str = "webpage_hits_admin";
 
 /// struct fields scope and function name are used as the folder and file name for the template
 pub fn read_template(scope: &str, name: &str) -> String {

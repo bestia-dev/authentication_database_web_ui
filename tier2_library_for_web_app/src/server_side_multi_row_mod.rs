@@ -1,4 +1,4 @@
-// tier2_web_server_actix_postgres/src/a0_library_mod/server_side_multi_row_mod.rs
+// tier2_library_for_web_app/src/server_side_multi_row_mod.rs
 
 // Structs and methods for server side rendering in web server functions
 // for multi row: (list):

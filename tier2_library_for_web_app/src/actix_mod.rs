@@ -1,11 +1,11 @@
-// tier2_web_server_actix_postgres/src/a0_library_mod/actix_mod.rs
+// tier2_library_for_web_app/src/actix_mod.rs
 
 // type aliases: for less verbose types and better readability of the code
 pub type ResultResponse = actix_web::Result<actix_web::HttpResponse>;
 pub type DataAppState = actix_web::web::Data<super::AppState>;
 
 use super::error_mod::time_epoch_as_millis;
-use crate::APP_MAIN_ROUTE;
+const APP_MAIN_ROUTE: &'static str = "webpage_hits_admin";
 
 /// fn to return a response when we have the body
 /// web apps modify data all the time, so caching is not good
