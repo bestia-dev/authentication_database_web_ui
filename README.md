@@ -150,13 +150,15 @@ It is wise to have a strict hierarchy where higher level modules can call lower 
 It is also very handy for search the same name in the entire workspace with many different languages and modules. The name becomes so specific that there cannot be false positives at all.  
 The lower objects will be level 0
 
+<details><summary>plantuml code:</summary>
+
 ```plantuml
 @startuml
 top to bottom direction
 skinparam componentStyle rectangle
 
 component "database objects" as x{
-    component "Level c" as c {        
+    component "Level c" as c {
         [c1_webpage_hits_mod]
     }
 
@@ -195,6 +197,8 @@ a -d-> p
 
 @enduml
 ```
+
+</details>
 
 ![plantuml_database_objects](https://github.com/bestia-dev/authentication_database_web_ui-/raw/main/images/plantuml_database_objects.png)
 
