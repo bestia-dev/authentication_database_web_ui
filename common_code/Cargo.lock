@@ -4,7 +4,7 @@ version = 3
 
 [[package]]
 name = "common_code"
-version = "2022.1029.2120"
+version = "2022.1029.2211"
 dependencies = [
  "serde",
 ]
