@@ -56,13 +56,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
-name = "common_code"
-version = "2022.1029.2211"
-dependencies = [
- "serde",
-]
-
-[[package]]
 name = "console_error_panic_hook"
 version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -223,15 +216,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "tier0_common_code"
+version = "2022.1103.921"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "tier1_browser_wasm"
-version = "2022.1029.2211"
+version = "2022.1103.921"
 dependencies = [
  "anyhow",
  "argon2",
- "common_code",
  "console_error_panic_hook",
  "serde",
  "serde_json",
+ "tier0_common_code",
  "unwrap",
  "wasm-bindgen",
  "wasm-bindgen-futures",

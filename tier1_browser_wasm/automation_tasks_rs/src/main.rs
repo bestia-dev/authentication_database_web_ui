@@ -116,6 +116,8 @@ fn task_build() {
     // let cargo_toml = CargoToml::read();
     auto_version_increment_semver_or_date();
     run_shell_command("cargo fmt");
+    // wasm-pack changes something in the folder target, so the next build unnecessarily rebuilds dependencies
+    // I will try to use --release to force wasm-pack to use a different folder
     run_shell_command("wasm-pack build --target web --release");
     println!(
         r#"{YELLOW}

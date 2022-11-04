@@ -3,13 +3,6 @@
 version = 3
 
 [[package]]
-name = "common_code"
-version = "2022.1029.2211"
-dependencies = [
- "serde",
-]
-
-[[package]]
 name = "proc-macro2"
 version = "1.0.47"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -56,6 +49,13 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
+]
+
+[[package]]
+name = "tier0_common_code"
+version = "2022.1103.921"
+dependencies = [
+ "serde",
 ]
 
 [[package]]

@@ -2,7 +2,7 @@
 
 use actix_web::web::resource;
 use actix_web::web::to;
-use common_code::APP_MAIN_ROUTE;
+use tier0_common_code::APP_MAIN_ROUTE;
 use tier2_library_for_web_app::actix_mod::DataAppState;
 use tier2_library_for_web_app::actix_mod::ResultResponse;
 use tier2_library_for_web_app::error_mod::LibError;
@@ -53,7 +53,7 @@ async fn call_pg_func_auth_login_show(
 /// If email does not exist return a random salt.
 pub async fn b2_authn_login_process_email(
     app_state: DataAppState,
-    data_req: actix_web::web::Json<common_code::DataReqAuthnLoginProcessEmail>,
+    data_req: actix_web::web::Json<tier0_common_code::DataReqAuthnLoginProcessEmail>,
 ) -> ResultResponse {
     let salt = match call_pg_func_auth_login_show(&data_req.user_email, app_state).await {
         Err(_err) => {
@@ -77,14 +77,14 @@ pub async fn b2_authn_login_process_email(
         }
     };
 
-    let data_resp = common_code::DataRespAuthnLoginProcessEmail { salt };
+    let data_resp = tier0_common_code::DataRespAuthnLoginProcessEmail { salt };
     tier2_library_for_web_app::actix_mod::return_json_resp_from_object(data_resp)
 }
 
 /// b2_authn_login_process_hash
 pub async fn b2_authn_login_process_hash(
     app_state: DataAppState,
-    data_req: actix_web::web::Json<common_code::DataReqAuthnLoginProcessHash>,
+    data_req: actix_web::web::Json<tier0_common_code::DataReqAuthnLoginProcessHash>,
 ) -> ResultResponse {
     // check data_req.hash   in database
     let single_row = call_pg_func_auth_login_show(&data_req.user_email, app_state.clone()).await?;
@@ -132,7 +132,7 @@ pub async fn b2_authn_login_process_hash(
         // endregion: create cookie to add to response
 
         // if successful return response with new session cookie
-        let data_resp = common_code::DataRespAuthnLoginProcessHash {
+        let data_resp = tier0_common_code::DataRespAuthnLoginProcessHash {
             login_success: is_login_success,
         };
         tier2_library_for_web_app::actix_mod::return_json_resp_from_object_with_cookie(

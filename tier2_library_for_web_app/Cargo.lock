@@ -318,13 +318,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
-name = "common_code"
-version = "2022.1029.2211"
-dependencies = [
- "serde",
-]
-
-[[package]]
 name = "convert_case"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1174,12 +1167,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "tier0_common_code"
+version = "2022.1103.921"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "tier2_library_for_web_app"
-version = "2022.1029.2211"
+version = "2022.1104.1326"
 dependencies = [
  "actix-utils",
  "actix-web",
- "common_code",
  "deadpool-postgres",
  "dotenv",
  "html-escape",
@@ -1191,6 +1190,7 @@ dependencies = [
  "serde_json",
  "strum",
  "thiserror",
+ "tier0_common_code",
  "tokio-postgres",
 ]
 

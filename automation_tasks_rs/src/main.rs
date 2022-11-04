@@ -1,5 +1,5 @@
 //! automation_tasks_rs for authentication_database_web_ui workspace
-//! The workspace contains 4 members: common_code, tier1_browser_wasm, tier2_library_for_web_app, tier2_webpage_hits_admin
+//! The workspace contains 4 members: tier0_common_code, tier1_browser_wasm, tier2_library_for_web_app, tier2_webpage_hits_admin
 //! Every member has its own automation_tasks_rs. This workspace automation just calls the automation of the members.
 
 use cargo_auto_lib::*;
@@ -7,6 +7,13 @@ use cargo_auto_lib::*;
 // the server executable binary is called "webpage_hits_admin"
 // and it is the main url route
 const APP_MAIN_ROUTE: &'static str = "webpage_hits_admin";
+// TODO: this could be read from Cargo-auto.toml in the future
+const MEMBERS:&'static [&'static str] =&[
+    "tier0_common_code", 
+    "tier1_browser_wasm",
+    "tier2_library_for_web_app",
+    "tier2_webpage_hits_admin", 
+];
 
 // ANSI colors for Linux terminal
 // https://github.com/shiena/ansicolor/blob/master/README.md
@@ -48,6 +55,7 @@ fn match_arguments_and_call_tasks(mut args: std::env::Args) {
                 println!("{YELLOW}Running automation task: {task}{RESET}");
                 if &task == "build" {
                     task_build();
+                    /*
                 } else if &task == "release" {
                     task_release();
                 } else if &task == "doc" {
@@ -59,6 +67,7 @@ fn match_arguments_and_call_tasks(mut args: std::env::Args) {
                     task_commit_and_push(arg_2);
                 } else if &task == "publish_to_web" {
                     task_publish_to_web();
+                     */
                 } else {
                     println!("{RED}Error: Task {task} is unknown.{RESET}");
                     print_help();
@@ -71,38 +80,21 @@ fn match_arguments_and_call_tasks(mut args: std::env::Args) {
 /// build all automation_tasks_rs for every member and 
 /// delete the unnecessary target files to save disk space
 fn build_cargo_auto_for_members(){
-    let workspace_dir = std::env::current_dir().unwrap();
-         
-     println!("Processing member: common_code");    
-     std::env::set_current_dir("common_code").unwrap();
-     run_shell_command("cargo auto;");      
-     std::env::set_current_dir(&workspace_dir).unwrap();  
- 
-     println!("Processing member tier2_library_for_web_app");    
-     std::env::set_current_dir("tier2_library_for_web_app").unwrap();    
-     run_shell_command("cargo auto;"); 
-     std::env::set_current_dir(&workspace_dir).unwrap();  
- 
-     println!("Processing member tier2_webpage_hits_admin");    
-     std::env::set_current_dir("tier2_webpage_hits_admin").unwrap();    
-     run_shell_command("cargo auto;"); 
-     std::env::set_current_dir(&workspace_dir).unwrap();  
-
-     println!("Processing member tier1_browser_wasm");    
-     std::env::set_current_dir("tier1_browser_wasm").unwrap();    
-     run_shell_command("cargo auto;"); 
-     std::env::set_current_dir(&workspace_dir).unwrap();  
-
-     run_shell_command("rm -rf ./common_code/automation_tasks_rs/target/debug/*/");
-     run_shell_command("rm -rf ./common_code/automation_tasks_rs/target/debug/.fingerprint/");
-     run_shell_command("rm -rf ./tier2_library_for_web_app/automation_tasks_rs/target/debug/*/");
-     run_shell_command("rm -rf ./tier2_library_for_web_app/automation_tasks_rs/target/debug/.fingerprint/");
-     run_shell_command("rm -rf ./tier2_webpage_hits_admin/automation_tasks_rs/target/debug/*/");
-     run_shell_command("rm -rf ./tier2_webpage_hits_admin/automation_tasks_rs/target/debug/.fingerprint/");
-     run_shell_command("rm -rf ./tier1_browser_wasm/automation_tasks_rs/target/debug/*/");
-     run_shell_command("rm -rf ./tier1_browser_wasm/automation_tasks_rs/target/debug/.fingerprint/");
-     run_shell_command("rm -rf ./automation_tasks_rs/target/debug/*/");
-     run_shell_command("rm -rf ./automation_tasks_rs/target/debug/.fingerprint/");
+    fn internal_fn_cd_member_cargo_auto(member:&str) {
+        let workspace_dir = std::env::current_dir().unwrap();
+        println!("Processing member: {member}");
+        std::env::set_current_dir(member).unwrap();
+        run_shell_command("cargo auto;");
+        run_shell_command("rm -rf ./automation_tasks_rs/target/debug/*/");
+        run_shell_command("rm -rf ./automation_tasks_rs/target/debug/.fingerprint/");
+        std::env::set_current_dir(workspace_dir).unwrap();
+    }
+    for member in MEMBERS.iter(){
+        internal_fn_cd_member_cargo_auto(member);  
+    }
+            
+    run_shell_command("rm -rf ./automation_tasks_rs/target/debug/*/");
+    run_shell_command("rm -rf ./automation_tasks_rs/target/debug/.fingerprint/");
 }
 
 /// write a comprehensible help for user defined tasks
@@ -153,32 +145,18 @@ fn completion() {
 /// I am not using the original cargo workspace functionality. The automation task will take care of all members.
 /// One is wasm project, so instead of cargo build, I use wam-pack build.
 fn task_build() {
-    let workspace_dir = std::env::current_dir().unwrap();
+    fn internal_fn_cd_member_cargo_auto_build(member:&str) {
+        let workspace_dir = std::env::current_dir().unwrap();
+        println!("Processing member {member}");
+        std::env::set_current_dir(member).unwrap();
+        run_shell_command("cargo auto build;");
+        std::env::set_current_dir(workspace_dir).unwrap();
+    }
             
     // build every member separately. 
-    println!("Processing member common_code");    
-    std::env::set_current_dir("common_code").unwrap();
-    run_shell_command("cargo auto build;"); 
-    std::env::set_current_dir(&workspace_dir).unwrap();  
-
-    println!("Processing member tier2_library_for_web_app");    
-    std::env::set_current_dir("tier2_library_for_web_app").unwrap();    
-    run_shell_command("cargo auto build;"); 
-    std::env::set_current_dir(&workspace_dir).unwrap();  
-
-    // when I use --exclude tier1_browser_wasm, cargo rebuilds a bunch of dependencies !?!
-    // to debug why cargo rebuilds I used: CARGO_LOG=cargo::core::compiler::fingerprint=info cargo build
-    println!("Processing member tier2_webpage_hits_admin");    
-    std::env::set_current_dir("tier2_webpage_hits_admin").unwrap();    
-    run_shell_command("cargo auto build;"); 
-    std::env::set_current_dir(&workspace_dir).unwrap();  
-
-    // wasm-pack changes something in the folder target, so the next build unnecessarily rebuilds dependencies
-    // I will try to use --release to force wasm-pack to use a different folder
-    println!("Processing member tier1_browser_wasm");    
-    std::env::set_current_dir("tier1_browser_wasm").unwrap();    
-    run_shell_command("cargo auto build;"); 
-    std::env::set_current_dir(&workspace_dir).unwrap();  
+    for member in MEMBERS.iter(){
+        internal_fn_cd_member_cargo_auto_build(member);  
+    }
     
     run_shell_command(&format!("rsync -a --info=progress2 --delete-after tier1_browser_wasm/pkg/ web_server_folder/{APP_MAIN_ROUTE}/pkg/"));
             
@@ -193,6 +171,8 @@ cargo auto release
 {RESET}"#
     );
 }
+
+/*
 /// build release every member of workspace. One is wasm project, so instead of cargo build, I use wam-pack build
 /// this workspace is basically one single application splitted into 3 projects
 /// it deserves the same version number for the release build. It means that it will build all members. 
@@ -321,4 +301,5 @@ curl https://bestia.dev/{APP_MAIN_ROUTE}/get_svg_image/555555.svg
 {RESET}"#
     );
 }
+ */
 // endregion: tasks

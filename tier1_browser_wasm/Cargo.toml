@@ -1,6 +1,6 @@
 [package]
 name = "tier1_browser_wasm"
-version = "2022.1029.2211"
+version = "2022.1103.921"
 description = "09. Tutorial to code authentication for database_web_ui (2022-10)"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"
@@ -25,7 +25,7 @@ console_error_panic_hook = "0.1.7"
 # js-sys = "0.3.60"
 serde = { version = "1.0.145", features = ["derive"] }
 serde_json = "1.0.86"
-common_code = { path = "../common_code" }
+tier0_common_code = { path = "../tier0_common_code" }
 argon2 = "0.4.1"
 
 [dependencies.web-sys]

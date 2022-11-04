@@ -6,9 +6,9 @@
 use crate::on_click;
 use crate::on_input;
 use crate::web_sys_mod::*;
-use common_code::DataRespAuthnLoginProcessEmail;
-use common_code::DataRespAuthnLoginProcessHash;
-use common_code::APP_MAIN_ROUTE;
+use tier0_common_code::DataRespAuthnLoginProcessEmail;
+use tier0_common_code::DataRespAuthnLoginProcessHash;
+use tier0_common_code::APP_MAIN_ROUTE;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
@@ -45,7 +45,7 @@ pub async fn btn_submit() {
     if let Ok(resp1_obj) = send_obj_get_obj::<DataRespAuthnLoginProcessEmail>(
         SCOPE,
         "b2_authn_login_process_email",
-        common_code::DataReqAuthnLoginProcessEmail {
+        tier0_common_code::DataReqAuthnLoginProcessEmail {
             user_email: user_email.clone(),
         },
     )
@@ -56,7 +56,7 @@ pub async fn btn_submit() {
         if let Ok(resp2_obj) = send_obj_get_obj::<DataRespAuthnLoginProcessHash>(
             SCOPE,
             "b2_authn_login_process_hash",
-            common_code::DataReqAuthnLoginProcessHash {
+            tier0_common_code::DataReqAuthnLoginProcessHash {
                 user_email: user_email.clone(),
                 hash,
             },

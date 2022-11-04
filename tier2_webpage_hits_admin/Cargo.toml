@@ -1,6 +1,6 @@
 [package]
 name = "webpage_hits_admin"
-version = "2022.1029.2211"
+version = "2022.1103.921"
 description = "09. Tutorial to code authentication for database_web_ui (2022-10)"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"
@@ -13,7 +13,7 @@ keywords = ["tutorials"]
 publish = false
 
 [dependencies]
-common_code = { path = "../common_code" }
+tier0_common_code = { path = "../tier0_common_code" }
 tier2_library_for_web_app = { path = "../tier2_library_for_web_app" }
 log = "0.4"
 pretty_env_logger="0.4.0"

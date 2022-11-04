@@ -1,4 +1,4 @@
-// common_code/lib.rs
+// tier0_common_code/lib.rs
 
 // common types are used as json messages
 

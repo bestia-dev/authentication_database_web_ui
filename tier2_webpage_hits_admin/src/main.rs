@@ -9,7 +9,7 @@ mod b1_authn_signup_mod;
 mod b2_authn_login_mod;
 mod c1_webpage_hits_mod;
 
-use common_code::APP_MAIN_ROUTE;
+use tier0_common_code::APP_MAIN_ROUTE;
 use tier2_library_for_web_app::actix_mod::on_request_received_is_session_cookie_ok;
 use tier2_library_for_web_app::actix_mod::redirect_to_login_page;
 use tier2_library_for_web_app::app_state_mod::AppState;
@@ -87,23 +87,23 @@ async fn main() -> std::io::Result<()> {
 pub fn config_route_main(cfg: &mut actix_web::web::ServiceConfig) {
     cfg
         .service(actix_files::Files::new(
-            &format!("/{}/css",common_code::APP_MAIN_ROUTE),
-                &format!("./{}/css/",common_code::APP_MAIN_ROUTE),
+            &format!("/{}/css",tier0_common_code::APP_MAIN_ROUTE),
+                &format!("./{}/css/",tier0_common_code::APP_MAIN_ROUTE),
         ))
         .service(actix_files::Files::new(
-            &format!("/{}/pkg",common_code::APP_MAIN_ROUTE),
-            &format!("./{}/pkg/",common_code::APP_MAIN_ROUTE),
+            &format!("/{}/pkg",tier0_common_code::APP_MAIN_ROUTE),
+            &format!("./{}/pkg/",tier0_common_code::APP_MAIN_ROUTE),
         ))
         .service(actix_files::Files::new(
-            &format!("/{}/images",common_code::APP_MAIN_ROUTE),
-            &format!("./{}/images/",common_code::APP_MAIN_ROUTE),
+            &format!("/{}/images",tier0_common_code::APP_MAIN_ROUTE),
+            &format!("./{}/images/",tier0_common_code::APP_MAIN_ROUTE),
         ))
         .service(
-            actix_web::web::scope(&format!("/{}/c1_webpage_hits_mod",common_code::APP_MAIN_ROUTE))
+            actix_web::web::scope(&format!("/{}/c1_webpage_hits_mod",tier0_common_code::APP_MAIN_ROUTE))
                 .configure(crate::c1_webpage_hits_mod::config_route_webpage_hits),
         )
         .service(
-            actix_web::web::scope(&format!("/{}/b2_authn_login_mod",common_code::APP_MAIN_ROUTE))
+            actix_web::web::scope(&format!("/{}/b2_authn_login_mod",tier0_common_code::APP_MAIN_ROUTE))
                 .configure(crate::b2_authn_login_mod::config_route_authn),
         )
     ;

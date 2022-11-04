@@ -69,22 +69,31 @@ The user opens the "b2_authn_login page" with 2 input strings: user_email and pa
 If successful the server inserts a new random session_id into the table user_session and sends a cookie to the client (and updates failed_login to 0). The session is ephemeral. It expires after 5 minutes of the last request.  
 This session cookie will be attached to every request sent from this client. The server will check in the table user_session that the session_id is alive and grant access. The session_id has an expiration date_time and this is updated on every request. If the session_id expires it is deleted from the table and subsequent requests will fail. The user will need to log in again. Session_id does not need to be saved in a persistent table for now. I will use some kind of cache in memory for performance. Alternatively, we could use [Redis distributed cache](https://redis.io/), which is faster than database access.
 
+## Sign up
+
+
 ## Sending email
 
 It is not easy to send emails over SMTP anymore because of spam. There is so much spam, that big email providers invented the "email deliverability reputation" system, which makes it difficult for smaller senders to not be flagged as spam. So the solution is to use some free email providers like MailGun, MailJet, Mailersend or Sendgrid. The email communication between a web app and its user is called "transactional email" and is specific because it needs to be fast and reliable. A transactional email is a type of email message that’s triggered by a specific action on a website or mobile app. Some common examples of transactional emails include password resets, order confirmations, automated abandoned cart emails, account notifications, social media updates, welcome emails, and any other confirmation emails that are sent via automation. These automated emails are typically sent programmatically through an email API or SMTP server.
 
+## Log in
 
-Save your html files in UTF-8 encoding without the byte-order mark (BOM).
-
-The declaration is not an HTML tag. It is an "information" to the browser about what document type to expect.
 
 TODO: random salt, random session_id 2022-10-21
 
 ## Debugger
 
+I want to debug the tier2 web app inside VSCode. I want to see the variables and what is going on.  
+The debugger inside VSCode should be better than "print debugging".  
 In VSCode install the extension CodeLLDB.  
 The container must be run with some config that allows debugging.
+
+```bash
 --cap-add=SYS_PTRACE --security-opt seccomp=unconfined
+```
+
+I created a new pod with these config called "pod_with_rust_pg_vscode_debugger". The container images are unchanged by this.
+Yes, the debugger needs some pretty high privileges and seccomp is disabled, but still I think that the isolation with the container is better than without it.
 
 # PostgreSql aka Postgres
 
@@ -201,6 +210,13 @@ a -d-> p
 </details>
 
 ![plantuml_database_objects](https://github.com/bestia-dev/authentication_database_web_ui-/raw/main/images/plantuml_database_objects.png)
+
+## Other observations
+
+Save your html files in UTF-8 encoding without the byte-order mark (BOM).
+
+   // when I use --exclude tier1_browser_wasm, cargo rebuilds a bunch of dependencies !?!
+    // to debug why cargo rebuilds I used: CARGO_LOG=cargo::core::compiler::fingerprint=info cargo build
 
 ## cargo crev reviews and advisory
 

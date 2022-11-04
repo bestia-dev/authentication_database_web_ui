@@ -1,6 +1,6 @@
 [package]
 name = "tier2_library_for_web_app"
-version = "2022.1029.2211"
+version = "2022.1104.1326"
 description = "library for web app"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"
@@ -13,7 +13,7 @@ keywords = ["tutorials"]
 publish = false
 
 [dependencies]
-common_code = { path = "../common_code" }
+tier0_common_code = { path = "../tier0_common_code" }
 log = "0.4"
 thiserror = "1.0.30"
 actix-web = "4.1.0"
