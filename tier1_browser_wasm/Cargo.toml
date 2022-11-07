@@ -1,6 +1,6 @@
 [package]
 name = "tier1_browser_wasm"
-version = "2022.1103.921"
+version = "2022.1104.1901"
 description = "09. Tutorial to code authentication for database_web_ui (2022-10)"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"

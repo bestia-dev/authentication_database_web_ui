@@ -9,7 +9,8 @@ use serde::de::DeserializeOwned;
 use serde::Serialize;
 // region: use
 use anyhow::anyhow;
-use tier0_common_code::APP_MAIN_ROUTE;
+use t0::APP_MAIN_ROUTE;
+use tier0_common_code as t0;
 use unwrap::unwrap;
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
@@ -157,15 +158,15 @@ where
     .await;
     match serde_json::from_str::<T>(&resp_string) {
         Err(err) => {
-            msg_authentication_failed(&format!("Error {}", err));
+            msg_div_alert_and_debug(&format!("Error {}", err), &format!("Error {}", err));
             return Err(anyhow!("error"));
         }
         Ok(resp_obj) => Ok(resp_obj),
     }
 }
 
-pub fn msg_authentication_failed(debug_text: &str) {
+pub fn msg_div_alert_and_debug(user_text: &str, debug_text: &str) {
     debug_write(debug_text);
     let div_alert = get_html_element_by_id("div_alert");
-    div_alert.set_text_content(Some("Authentication failed !"));
+    div_alert.set_text_content(Some(user_text));
 }

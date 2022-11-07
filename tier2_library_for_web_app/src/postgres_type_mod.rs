@@ -31,4 +31,5 @@ pub enum PostgresUdtType {
 pub enum PostgresValueMultiType {
     String(String),
     I32(i32),
+    Bool(bool),
 }

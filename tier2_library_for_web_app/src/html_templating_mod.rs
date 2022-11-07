@@ -1,8 +1,11 @@
 // tier2_library_for_web_app/src/html_templating_mod.rs
 
+use t0::APP_MAIN_ROUTE;
+use tier0_common_code as t0;
+
 /// struct fields scope and function name are used as the folder and file name for the template
 pub fn read_template(scope: &str, name: &str) -> String {
-    let path = format!("{}/{scope}/{name}.html", tier0_common_code::APP_MAIN_ROUTE);
+    let path = format!("{APP_MAIN_ROUTE}/{scope}/{name}.html");
     let template = std::fs::read_to_string(path).unwrap();
     // Add DOCTYPE declaration only to complete html5 files.
     // I want to have the html files without the 'declaration'

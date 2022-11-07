@@ -1,6 +1,6 @@
 [package]
 name = "tier2_library_for_web_app"
-version = "2022.1104.1326"
+version = "2022.1104.1848"
 description = "library for web app"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"

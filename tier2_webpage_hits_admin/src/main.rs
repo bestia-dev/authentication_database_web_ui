@@ -2,6 +2,10 @@
 
 #![deny(unused_crate_dependencies)]
 
+use tier0_common_code as t0;
+
+use tier2_library_for_web_app as t2;
+
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 
@@ -9,13 +13,13 @@ mod b1_authn_signup_mod;
 mod b2_authn_login_mod;
 mod c1_webpage_hits_mod;
 
-use tier0_common_code::APP_MAIN_ROUTE;
-use tier2_library_for_web_app::actix_mod::on_request_received_is_session_cookie_ok;
-use tier2_library_for_web_app::actix_mod::redirect_to_login_page;
-use tier2_library_for_web_app::app_state_mod::AppState;
-use tier2_library_for_web_app::deadpool_mod::deadpool_start_and_check;
-use tier2_library_for_web_app::postgres_mod::get_for_cache_all_function_input_params;
-use tier2_library_for_web_app::postgres_mod::get_for_cache_all_view_fields;
+use t0::APP_MAIN_ROUTE;
+use t2::actix_mod::on_request_received_is_session_cookie_ok;
+use t2::actix_mod::redirect_to_login_page;
+use t2::app_state_mod::AppState;
+use t2::deadpool_mod::deadpool_start_and_check;
+use t2::postgres_mod::get_for_cache_all_function_input_params;
+use t2::postgres_mod::get_for_cache_all_view_fields;
 
 /// the binary executable entry point
 #[actix_web::main]
@@ -55,7 +59,9 @@ async fn main() -> std::io::Result<()> {
             .wrap_fn(|req, srv| {
                 // region: authn pre-process request
                 // I cannot extract this code into a function because AppRouting (srv) is private
-                if on_request_received_is_session_cookie_ok(&req) {
+                if do_not_check_session_cookie(&req)
+                    || on_request_received_is_session_cookie_ok(&req)
+                {
                     // add in scope the trait for call()
                     use actix_web::dev::Service;
                     // if it is needed to change the response after the function, then use .map(|res| res) and use futures::FutureExt;  // trait for map()
@@ -81,30 +87,48 @@ async fn main() -> std::io::Result<()> {
     http_server_result
 }
 
+/// paths that don't need to check the session cookie
+fn do_not_check_session_cookie(req: &actix_web::dev::ServiceRequest) -> bool {
+    req.path()
+        .starts_with(&format!("/{APP_MAIN_ROUTE}/b1_authn_signup_mod/"))
+        || req
+            .path()
+            .starts_with(&format!("/{APP_MAIN_ROUTE}/b2_authn_login_mod/"))
+        || req.path().starts_with(&format!("/{APP_MAIN_ROUTE}/css/"))
+        || req.path().starts_with(&format!("/{APP_MAIN_ROUTE}/pkg/"))
+        || req
+            .path()
+            .starts_with(&format!("/{APP_MAIN_ROUTE}/images/"))
+}
+
 /// configure the route with scope
 /// so the routing code is near to the implementation code
 #[rustfmt::skip]
-pub fn config_route_main(cfg: &mut actix_web::web::ServiceConfig) {
+fn config_route_main(cfg: &mut actix_web::web::ServiceConfig) {
     cfg
         .service(actix_files::Files::new(
-            &format!("/{}/css",tier0_common_code::APP_MAIN_ROUTE),
-                &format!("./{}/css/",tier0_common_code::APP_MAIN_ROUTE),
+            &format!("/{APP_MAIN_ROUTE}/css"),
+                &format!("./{APP_MAIN_ROUTE}/css/"),
         ))
         .service(actix_files::Files::new(
-            &format!("/{}/pkg",tier0_common_code::APP_MAIN_ROUTE),
-            &format!("./{}/pkg/",tier0_common_code::APP_MAIN_ROUTE),
+            &format!("/{APP_MAIN_ROUTE}/pkg"),
+            &format!("./{APP_MAIN_ROUTE}/pkg/"),
         ))
         .service(actix_files::Files::new(
-            &format!("/{}/images",tier0_common_code::APP_MAIN_ROUTE),
-            &format!("./{}/images/",tier0_common_code::APP_MAIN_ROUTE),
+            &format!("/{APP_MAIN_ROUTE}/images"),
+            &format!("./{APP_MAIN_ROUTE}/images/"),
         ))
         .service(
-            actix_web::web::scope(&format!("/{}/c1_webpage_hits_mod",tier0_common_code::APP_MAIN_ROUTE))
-                .configure(crate::c1_webpage_hits_mod::config_route_webpage_hits),
+            actix_web::web::scope(&format!("/{APP_MAIN_ROUTE}/b1_authn_signup_mod"))
+                .configure(crate::b1_authn_signup_mod::config_route_authn),
         )
         .service(
-            actix_web::web::scope(&format!("/{}/b2_authn_login_mod",tier0_common_code::APP_MAIN_ROUTE))
+            actix_web::web::scope(&format!("/{APP_MAIN_ROUTE}/b2_authn_login_mod"))
                 .configure(crate::b2_authn_login_mod::config_route_authn),
+        )
+        .service(
+            actix_web::web::scope(&format!("/{APP_MAIN_ROUTE}/c1_webpage_hits_mod"))
+                .configure(crate::c1_webpage_hits_mod::config_route_webpage_hits),
         )
     ;
 }

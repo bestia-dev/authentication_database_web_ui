@@ -1,11 +1,19 @@
 //! automation_tasks_rs for authentication_database_web_ui workspace
+//! This is not a standard cargo workspace. It does not have Cargo.toml in the workspace folder.
+//! Because of one WASM project I cannot use the profile panic="abort" on all the members.
+//! There is no workaround as of 2022-10-20.
+//! We can use cargo-auto to automate the tasks for every member individually.
+//! Then we code the automation_tasks_rs on the workspace level to call all members tasks together.
+//! The presence of Cargo-auto.toml or Cargo.toml is used by cargo-auto to recognize project folders.
+//! No config exist for now for Cargo-auto.toml. Maybe one day we will need to add something.
 //! The workspace contains 4 members: tier0_common_code, tier1_browser_wasm, tier2_library_for_web_app, tier2_webpage_hits_admin
 //! Every member has its own automation_tasks_rs. This workspace automation just calls the automation of the members.
+//! I am not using the original cargo workspace functionality. The automation task will take care of all members.
 
 use cargo_auto_lib::*;
 
 // the server executable binary is called "webpage_hits_admin"
-// and it is the main url route
+// and it is also the main url route
 const APP_MAIN_ROUTE: &'static str = "webpage_hits_admin";
 // TODO: this could be read from Cargo-auto.toml in the future
 const MEMBERS:&'static [&'static str] =&[
@@ -89,6 +97,7 @@ fn build_cargo_auto_for_members(){
         run_shell_command("rm -rf ./automation_tasks_rs/target/debug/.fingerprint/");
         std::env::set_current_dir(workspace_dir).unwrap();
     }
+    
     for member in MEMBERS.iter(){
         internal_fn_cd_member_cargo_auto(member);  
     }
@@ -105,17 +114,19 @@ fn print_help() {
     This program automates your custom tasks when developing a Rust project.{RESET}
 
     User defined tasks in automation_tasks_rs:{RESET}{GREEN}
+cargo auto{RESET}{YELLOW} - builds the automation_tasks_rs for every member{RESET}{GREEN}
 cargo auto build{RESET}{YELLOW} - builds the crate in debug mode, fmt, increment version{RESET}{GREEN}
-cargo auto release{RESET}{YELLOW} - builds the crate in release mode, fmt, increment version{RESET}{GREEN}
+    © 2022 bestia.dev  MIT License github.com/bestia-dev/cargo-auto
+"#
+    );
+    /*
+    cargo auto release{RESET}{YELLOW} - builds the crate in release mode, fmt, increment version{RESET}{GREEN}
 cargo auto doc{RESET}{YELLOW} - builds the docs, copy to docs directory{RESET}{GREEN}
 cargo auto test{RESET}{YELLOW} - runs all the tests{RESET}{GREEN}
 cargo auto commit_and_push "message"{RESET}{YELLOW} - commits with message and push with mandatory message
     (If you use SSH, it is easy to start the ssh-agent in the background and ssh-add your credentials for git.){RESET}{GREEN}
 cargo auto publish_to_web{RESET}{YELLOW} - publish to my google VM, git tag
-    (You need credentials for publishing. I use ssh-agent and ssh-add to store my credentials for SSH.){RESET}
-    © 2022 bestia.dev  MIT License github.com/bestia-dev/cargo-auto
-"#
-    );
+    (You need credentials for publishing. I use ssh-agent and ssh-add to store my credentials for SSH.){RESET} */
 }
 
 /// sub-command for bash auto-completion of `cargo auto` using the crate `dev_bestia_cargo_completion`
@@ -125,7 +136,8 @@ fn completion() {
     let last_word = args[3].as_str();
 
     if last_word == "cargo-auto" || last_word == "auto" {
-        let sub_commands = vec!["build", "release", "doc", "test", "commit_and_push","publish_to_web"];
+        let sub_commands = vec!["build"];
+        /*, "release", "doc", "test", "commit_and_push","publish_to_web" */
         completion_return_one_or_more_sub_commands(sub_commands, word_being_completed);
     }
     /*
@@ -142,8 +154,6 @@ fn completion() {
 // region: tasks
 
 /// Build every member of pseudo-workspace. 
-/// I am not using the original cargo workspace functionality. The automation task will take care of all members.
-/// One is wasm project, so instead of cargo build, I use wam-pack build.
 fn task_build() {
     fn internal_fn_cd_member_cargo_auto_build(member:&str) {
         let workspace_dir = std::env::current_dir().unwrap();
@@ -165,7 +175,7 @@ fn task_build() {
     After `cargo auto build`, run the compiled binary, examples and/or tests
 cd web_server_folder ; ../tier2_webpage_hits_admin/target/debug/{APP_MAIN_ROUTE} ; cd ..
     In the browser or in curl open 
-http://localhost:8080/{APP_MAIN_ROUTE}/c1_webpage_hits_mod/c1_webpage_hits_list
+http://localhost:8080/{APP_MAIN_ROUTE}/b1_authn_signup_mod/b1_authn_signup
     if ok, then
 cargo auto release
 {RESET}"#

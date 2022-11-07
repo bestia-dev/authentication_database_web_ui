@@ -1,14 +1,15 @@
 // tier2_webpage_hits_admin/src/b2_authn_login_mod.rs
 
-use actix_web::web::resource;
-use actix_web::web::to;
-use tier0_common_code::APP_MAIN_ROUTE;
-use tier2_library_for_web_app::actix_mod::DataAppState;
-use tier2_library_for_web_app::actix_mod::ResultResponse;
-use tier2_library_for_web_app::error_mod::LibError;
-use tier2_library_for_web_app::postgres_function_mod::PostgresFunction;
-use tier2_library_for_web_app::postgres_mod::get_string_from_row;
-use tier2_library_for_web_app::postgres_type_mod::PostgresValueMultiType;
+use tier0_common_code as t0;
+use tier2_library_for_web_app as t2;
+
+use t0::APP_MAIN_ROUTE;
+use t2::actix_mod::DataAppState;
+use t2::actix_mod::ResultResponse;
+use t2::error_mod::LibError;
+use t2::postgres_function_mod::PostgresFunction;
+use t2::postgres_mod::get_string_from_row;
+use t2::postgres_type_mod::PostgresValueMultiType;
 
 const SCOPE: &'static str = "b2_authn_login_mod";
 
@@ -16,6 +17,8 @@ const SCOPE: &'static str = "b2_authn_login_mod";
 /// scope is already "/webpage_hits_admin/b2_authn_login_mod"
 #[rustfmt::skip]
 pub fn config_route_authn(cfg: &mut actix_web::web::ServiceConfig) {
+    use actix_web::web::resource;
+use actix_web::web::to;
     cfg
         .service(resource("/b2_authn_login").route(to(b2_authn_login)))
         .service(resource("/b2_authn_login_process_email").route(to(b2_authn_login_process_email)))
@@ -26,9 +29,8 @@ pub fn config_route_authn(cfg: &mut actix_web::web::ServiceConfig) {
 /// Show the input form. I choose the short name because the url looks nice in the address bar.
 #[function_name::named]
 pub async fn b2_authn_login() -> ResultResponse {
-    let body =
-        tier2_library_for_web_app::html_templating_mod::read_template(SCOPE, function_name!());
-    Ok(tier2_library_for_web_app::actix_mod::return_html_response_no_cache(body))
+    let body = t2::html_templating_mod::read_template(SCOPE, function_name!());
+    Ok(t2::actix_mod::return_html_response_no_cache(body))
 }
 
 /// read data from postgres database table b2_authn_login for email_user
@@ -36,7 +38,7 @@ async fn call_pg_func_auth_login_show(
     user_email: &str,
     app_state: DataAppState,
 ) -> Result<tokio_postgres::Row, LibError> {
-    let mut sql_params = tier2_library_for_web_app::sql_params_mod::SqlParams::new();
+    let mut sql_params = t2::sql_params_mod::SqlParams::new();
     sql_params.insert(
         "_user_email",
         PostgresValueMultiType::String(user_email.to_string()),
@@ -53,7 +55,7 @@ async fn call_pg_func_auth_login_show(
 /// If email does not exist return a random salt.
 pub async fn b2_authn_login_process_email(
     app_state: DataAppState,
-    data_req: actix_web::web::Json<tier0_common_code::DataReqAuthnLoginProcessEmail>,
+    data_req: actix_web::web::Json<t0::DataReqAuthnLoginProcessEmail>,
 ) -> ResultResponse {
     let salt = match call_pg_func_auth_login_show(&data_req.user_email, app_state).await {
         Err(_err) => {
@@ -66,7 +68,7 @@ pub async fn b2_authn_login_process_email(
             let password_hash = get_string_from_row(&single_row, "password_hash")?;
             // extract salt
             let password_hash = password_hash::PasswordHash::new(&password_hash)
-                .map_err(|_| tier2_library_for_web_app::error_mod::LibError::PasswordHash)?;
+                .map_err(|_| t2::error_mod::LibError::PasswordHash)?;
 
             let salt = password_hash
                 .salt
@@ -77,14 +79,14 @@ pub async fn b2_authn_login_process_email(
         }
     };
 
-    let data_resp = tier0_common_code::DataRespAuthnLoginProcessEmail { salt };
-    tier2_library_for_web_app::actix_mod::return_json_resp_from_object(data_resp)
+    let data_resp = t0::DataRespAuthnLoginProcessEmail { salt };
+    t2::actix_mod::return_json_resp_from_object(data_resp)
 }
 
 /// b2_authn_login_process_hash
 pub async fn b2_authn_login_process_hash(
     app_state: DataAppState,
-    data_req: actix_web::web::Json<tier0_common_code::DataReqAuthnLoginProcessHash>,
+    data_req: actix_web::web::Json<t0::DataReqAuthnLoginProcessHash>,
 ) -> ResultResponse {
     // check data_req.hash   in database
     let single_row = call_pg_func_auth_login_show(&data_req.user_email, app_state.clone()).await?;
@@ -105,7 +107,7 @@ pub async fn b2_authn_login_process_hash(
                 uuid.clone(),
                 (
                     data_req.user_email.clone(),
-                    tier2_library_for_web_app::error_mod::time_epoch_as_millis(),
+                    t2::error_mod::time_epoch_as_millis(),
                 ),
             );
         // endregion: add random session_id as UUID into app_state active_sessions
@@ -132,11 +134,9 @@ pub async fn b2_authn_login_process_hash(
         // endregion: create cookie to add to response
 
         // if successful return response with new session cookie
-        let data_resp = tier0_common_code::DataRespAuthnLoginProcessHash {
+        let data_resp = t0::DataRespAuthnLoginProcessHash {
             login_success: is_login_success,
         };
-        tier2_library_for_web_app::actix_mod::return_json_resp_from_object_with_cookie(
-            data_resp, cookie,
-        )
+        t2::actix_mod::return_json_resp_from_object_with_cookie(data_resp, cookie)
     }
 }

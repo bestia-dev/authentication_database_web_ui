@@ -59,24 +59,24 @@ No config exist for now for Cargo-auto.toml. Maybe one day we will need to add s
 
 The topic of authentication can get very complicated very quickly. For this tutorial, we will use a very "simple" method with sessions and cookies. It sounds old-school and it is, but it is simple, effective and it has been strengthened lately. All communication must be secured by SSL/TLS because otherwise a hacker can intercept and read secrets. The cookies MUST be SameSite to avoid nasty hacker attacks. This session cookie is a "necessary cookie" and is exempt from the European Privacy GDPR Laws.
 
-A new user will sign up on a "user_sign_up page" with 3 input strings: user_email and 2 times the same password.  
+A new user will signup on a "user_signup page" with 3 input strings: user_email and 2 times the same password.  
 The client (WASM) checks that the fields are not empty, if the user_email looks like an email, if the 2 passwords are identical and if they are complicated enough.  
 The password is salted and hashed as described in the mechanism [SCRAM](https://en.wikipedia.org/wiki/Salted_Challenge_Response_Authentication_Mechanism).  
 The user_email and hashed password are sent to the server. Only the user knows the password. The administrator or hacker will see only the salted hash.  
-The data is temporarily stored in table "user_sign_up".  
-The server sends an email to the user with a link for verification. After verification, the record is updated as verified and an email is sent to the administrator for the new sign_up. The administrator can choose to manually grant access to the new user or not. This step can later be automated if needed. Now the user data is moved to the table b2_authn_login. The app sends an email to the user to inform him/her that access is granted.  
+The data is temporarily stored in table "user_signup".  
+The server sends an email to the user with a link for verification. After verification, the record is updated as verified and an email is sent to the administrator for the new signup. The administrator can choose to manually grant access to the new user or not. This step can later be automated if needed. Now the user data is moved to the table b2_authn_login. The app sends an email to the user to inform him/her that access is granted.  
 The user opens the "b2_authn_login page" with 2 input strings: user_email and password. The client checks that the fields are not empty and if the user_email looks like an email. The client sends the first msg to the server with the user_email. The server returns the salt for hashing. The client calculates the salted hash and sends it. The server checks if the hash is the same as in the database. If not, a red alert is shown, but the user_email and password are not deleted from the authn_login_page. The failed login updates the field failed_logins in b2_authn_login. If failed logins are more than 3 then the speed of returning alerts is drastically slowed down to slow down dictionary or brute force attacks. After 20 failed logins, the user is blocked and an email is sent to him and the administrator. The administrator will contact the user and eventually manually unblock the user.  
 If successful the server inserts a new random session_id into the table user_session and sends a cookie to the client (and updates failed_login to 0). The session is ephemeral. It expires after 5 minutes of the last request.  
-This session cookie will be attached to every request sent from this client. The server will check in the table user_session that the session_id is alive and grant access. The session_id has an expiration date_time and this is updated on every request. If the session_id expires it is deleted from the table and subsequent requests will fail. The user will need to log in again. Session_id does not need to be saved in a persistent table for now. I will use some kind of cache in memory for performance. Alternatively, we could use [Redis distributed cache](https://redis.io/), which is faster than database access.
+This session cookie will be attached to every request sent from this client. The server will check in the table user_session that the session_id is alive and grant access. The session_id has an expiration date_time and this is updated on every request. If the session_id expires it is deleted from the table and subsequent requests will fail. The user will need to login again. Session_id does not need to be saved in a persistent table for now. I will use some kind of cache in memory for performance. Alternatively, we could use [Redis distributed cache](https://redis.io/), which is faster than database access.
 
-## Sign up
+## Signup
 
 
 ## Sending email
 
 It is not easy to send emails over SMTP anymore because of spam. There is so much spam, that big email providers invented the "email deliverability reputation" system, which makes it difficult for smaller senders to not be flagged as spam. So the solution is to use some free email providers like MailGun, MailJet, Mailersend or Sendgrid. The email communication between a web app and its user is called "transactional email" and is specific because it needs to be fast and reliable. A transactional email is a type of email message that’s triggered by a specific action on a website or mobile app. Some common examples of transactional emails include password resets, order confirmations, automated abandoned cart emails, account notifications, social media updates, welcome emails, and any other confirmation emails that are sent via automation. These automated emails are typically sent programmatically through an email API or SMTP server.
 
-## Log in
+## Login
 
 
 TODO: random salt, random session_id 2022-10-21

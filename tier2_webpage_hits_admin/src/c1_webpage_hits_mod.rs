@@ -2,11 +2,11 @@
 
 // type aliases: for less verbose types and better readability of the code
 
-use actix_web::web::resource;
-use actix_web::web::to;
-use tier2_library_for_web_app::actix_mod::{RequestAndPayload, ResultResponse};
-use tier2_library_for_web_app::server_side_multi_row_mod::ServerSideMultiRow;
-use tier2_library_for_web_app::server_side_single_row_mod::ServerSideSingleRow;
+use tier2_library_for_web_app as t2;
+
+use t2::actix_mod::{RequestAndPayload, ResultResponse};
+use t2::server_side_multi_row_mod::ServerSideMultiRow;
+use t2::server_side_single_row_mod::ServerSideSingleRow;
 
 const SCOPE: &'static str = "c1_webpage_hits_mod";
 
@@ -14,6 +14,8 @@ const SCOPE: &'static str = "c1_webpage_hits_mod";
 /// scope is already "/webpage_hits_admin/c1_webpage_hits_mod"
 #[rustfmt::skip]
 pub fn config_route_webpage_hits(cfg: &mut actix_web::web::ServiceConfig) {
+    use actix_web::web::resource;
+use actix_web::web::to;
     cfg
         .service(resource("/c1_webpage_hits_list").route(to(c1_webpage_hits_list)))
         .service(resource("/c1_webpage_hits_new").route(to(c1_webpage_hits_new)))

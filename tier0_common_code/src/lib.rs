@@ -33,3 +33,23 @@ pub struct DataReqAuthnLoginProcessHash {
 pub struct DataRespAuthnLoginProcessHash {
     pub login_success: bool,
 }
+
+/// json request data for b1_authn_signup_process_email
+#[derive(Serialize, Deserialize)]
+pub struct DataReqAuthnSignupProcessEmail {
+    pub user_email: String,
+}
+
+/// json response data for b1_authn_signup_process_email
+#[derive(Serialize, Deserialize)]
+pub struct DataRespAuthnSignupProcessEmail {
+    pub salt: String,
+}
+
+/// json request data for b1_authn_signup_insert
+#[derive(Serialize, Deserialize)]
+pub struct DataReqAuthnSignupInsert {
+    pub user_email: String,
+    pub hash: String,
+}
+

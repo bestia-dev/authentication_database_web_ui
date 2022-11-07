@@ -15,7 +15,8 @@ mod web_sys_html_encode_mod;
 mod web_sys_mod;
 
 // I want to make this function available to javascript
-pub use b2_authn_login_mod::authn_login_on_start;
+pub use b1_authn_signup_mod::b1_authn_signup_on_start;
+pub use b2_authn_login_mod::b2_authn_login_on_start;
 
 /// To start the Wasm application, wasm_bindgen runs this function.
 /// Wasm-bindgen creates a javascript wrapper around this function called init().
