@@ -75,16 +75,15 @@ pub fn debug_write(text: &str) {
 /// get element by id
 pub fn get_element_by_id(element_id: &str) -> web_sys::Element {
     let document = unwrap!(window().document());
-    match document.get_element_by_id(element_id) {
-        Some(el) => el,
-        None => {
-            debug_write(&format!(
-                "Error: not found get_element_by_id {}",
-                element_id
-            ));
-            panic!("Error: not found get_element_by_id")
-        }
-    }
+    let Some(el) = document.get_element_by_id(element_id)
+    else {
+        debug_write(&format!(
+            "Error: not found get_element_by_id {}",
+            element_id
+        ));
+        panic!("Error: not found get_element_by_id")
+    };
+    el
 }
 
 /// get html element by id
@@ -158,7 +157,7 @@ where
     .await;
     match serde_json::from_str::<T>(&resp_string) {
         Err(err) => {
-            msg_div_alert_and_debug(&format!("Error {}", err), &format!("Error {}", err));
+            msg_div_alert_and_debug_1(&format!("Error {}", err));
             return Err(anyhow!("error"));
         }
         Ok(resp_obj) => Ok(resp_obj),
@@ -169,4 +168,8 @@ pub fn msg_div_alert_and_debug(user_text: &str, debug_text: &str) {
     debug_write(debug_text);
     let div_alert = get_html_element_by_id("div_alert");
     div_alert.set_text_content(Some(user_text));
+}
+
+pub fn msg_div_alert_and_debug_1(text: &str) {
+    msg_div_alert_and_debug(text, text);
 }

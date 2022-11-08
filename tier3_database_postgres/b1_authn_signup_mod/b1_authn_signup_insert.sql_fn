@@ -14,15 +14,19 @@ declare
 
 begin
 
--- created_at default is now()
+-- delete if already exists. Only the last attempt may be succesful.
+if exists (select * from b1_authn_signup a where a.user_email=_user_email) then
+    delete from b1_authn_signup a
+    where a.user_email=_user_email;
+end if;
 
 insert into b1_authn_signup(user_email, password_hash, verified)
 values(_user_email,_password_hash, _verified);
 
 return query 
-select a.user_email, a.password_hash, a.verified, created_at
+select a.user_email, a.password_hash, a.verified, a.created_at
 from b1_authn_signup a
-where w.user_email=_user_email;
+where a.user_email=_user_email;
 
 end; 
 $$;

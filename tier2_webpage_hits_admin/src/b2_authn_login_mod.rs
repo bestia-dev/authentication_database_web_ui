@@ -9,7 +9,7 @@ use t2::actix_mod::ResultResponse;
 use t2::error_mod::LibError;
 use t2::postgres_function_mod::PostgresFunction;
 use t2::postgres_mod::get_string_from_row;
-use t2::postgres_type_mod::PostgresValueMultiType;
+use t2::postgres_type_mod::PostgresValueMultiType as PosType;
 
 const SCOPE: &'static str = "b2_authn_login_mod";
 
@@ -39,10 +39,7 @@ async fn call_pg_func_auth_login_show(
     app_state: DataAppState,
 ) -> Result<tokio_postgres::Row, LibError> {
     let mut sql_params = t2::sql_params_mod::SqlParams::new();
-    sql_params.insert(
-        "_user_email",
-        PostgresValueMultiType::String(user_email.to_string()),
-    );
+    sql_params.insert("_user_email", PosType::String(user_email.to_string()));
     let mut pg_func =
         PostgresFunction::new_with_sql_params(app_state, "b2_authn_login_show", sql_params);
     let single_row = pg_func.run_sql_function_return_single_row().await?;

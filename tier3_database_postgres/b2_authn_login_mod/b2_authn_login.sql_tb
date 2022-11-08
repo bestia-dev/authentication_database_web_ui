@@ -15,7 +15,7 @@ $source_code$);
 select a2_migrate_column('b2_authn_login','user_email','varchar(100)','','not null');
 select a2_migrate_constraint_unique('b2_authn_login', 'user_email');
 
-select a2_migrate_column('b2_authn_login','password_hash','varchar(100)','','not null');
+select a2_migrate_column('b2_authn_login','password_hash','varchar(200)','','not null');
 select a2_migrate_column('b2_authn_login','failed_attempts','int4','0', 'not null');
 select a2_migrate_column('b2_authn_login','blocked','bool','FALSE', 'not null');
  

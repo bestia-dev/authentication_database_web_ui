@@ -74,12 +74,20 @@ This session cookie will be attached to every request sent from this client. The
 
 ## Sending email
 
-It is not easy to send emails over SMTP anymore because of spam. There is so much spam, that big email providers invented the "email deliverability reputation" system, which makes it difficult for smaller senders to not be flagged as spam. So the solution is to use some free email providers like MailGun, MailJet, Mailersend or Sendgrid. The email communication between a web app and its user is called "transactional email" and is specific because it needs to be fast and reliable. A transactional email is a type of email message that’s triggered by a specific action on a website or mobile app. Some common examples of transactional emails include password resets, order confirmations, automated abandoned cart emails, account notifications, social media updates, welcome emails, and any other confirmation emails that are sent via automation. These automated emails are typically sent programmatically through an email API or SMTP server.
+It is not easy to send emails over SMTP anymore because of spam. There is so much spam, that big email providers invented the "email deliverability reputation" system, which makes it difficult for smaller senders to not be flagged as spam. So the solution is to use some free email providers like MailGun, MailJet, Mailersend or Sendgrid. The email communication between a web app and its user is called "transactional email" and is specific because it needs to be fast and reliable. A transactional email is a type of email message that’s triggered by a specific action on a website or mobile app. Some common examples of transactional emails include password resets, order confirmations, automated abandoned cart emails, account notifications, social media updates, welcome emails, and any other confirmation emails that are sent via automation. These automated emails are typically sent programmatically through an email API or SMTP server.  
+I will try Twilio Sendgrid free plan with 100 emails per day forever. Enough for developers. Integrate using our Web API v3. There is no official Rust library, but the unofficial is on <https://crates.io/crates/sendgrid>. Create an API key with restricted permissions just to send emails. Create a single sender identity.  
+
+ export SENDGRID_API_KEY="SG.my.api.key"
 
 ## Login
 
 
 TODO: random salt, random session_id 2022-10-21
+
+## Early return
+
+The programming concept of "early return" makes the code much more readable. The "happy path" goes straight through the code till the end of the function. If something is wrong we make an early return from the function. The new language construct "let else statement" is great for this. It is syntactical sugar for match and simplifies some very common error-handling patterns. Before that we had the "if let" and "match" constructs, but they both force "rightward drift" introduce excessive nesting.
+It was added just a few days ago in the rustc version 1.65.0. Nice!  
 
 ## Debugger
 

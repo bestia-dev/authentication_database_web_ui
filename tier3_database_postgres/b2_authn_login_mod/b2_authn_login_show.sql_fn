@@ -7,7 +7,7 @@ create function b2_authn_login_show(
 _user_email varchar(100))
 returns table( authn_login_id int4,
     user_email varchar(100),
-    password_hash varchar(100),
+    password_hash varchar(200),
     failed_attempts int4,
     blocked bool) 
 language plpgsql as 

@@ -45,27 +45,39 @@ pub async fn b1_authn_signup_btn_submit() {
         return ();
     }
 
-    match send_obj_get_obj::<t0::DataRespAuthnSignupProcessEmail>(
+    let Ok(resp1_obj) = send_obj_get_obj::<t0::DataRespAuthnSignupProcessEmail>(
         SCOPE,
         "b1_authn_signup_process_email",
         t0::DataReqAuthnSignupProcessEmail {
             user_email: user_email.clone(),
         },
-    )
-    .await
-    {
-        Err(_err) => {
-            msg_div_alert_and_debug("Signup failed !", "Signup failed !");
+    ).await
+    else {
+            msg_div_alert_and_debug_1("Signup failed !");
             return ();
-        }
-        Ok(resp1_obj) => {
-            
-            let hash = crate::b2_authn_login_mod::calculate_hash(
-                user_email.clone(),
-                password_1,
-                resp1_obj.salt,
-            );
-            
-        }
+    };
+
+    let hash =
+        crate::b2_authn_login_mod::calculate_hash(user_email.clone(), password_1, resp1_obj.salt);
+
+    let Ok(resp2_obj) = send_obj_get_obj::<t0::DataRespAuthnSignupInsert>(
+        SCOPE,
+        "b1_authn_signup_insert",
+        t0::DataReqAuthnSignupInsert {
+            user_email: user_email.clone(),
+            hash: hash,
+        },
+    ).await
+    else {
+            msg_div_alert_and_debug_1("Signup failed !");
+            return ();
+    };
+
+    if resp2_obj.signup_success == false {
+        msg_div_alert_and_debug_1("Signup failed !");
+        return ();
     }
+    msg_div_alert_and_debug_1(
+        "Please take a moment to verify your email so that we know it's you!",
+    );
 }

@@ -3,7 +3,7 @@
 use super::actix_mod::DataAppState;
 use super::error_mod::LibError;
 use super::postgres_mod::FunctionName;
-use super::postgres_type_mod::PostgresValueMultiType;
+use super::postgres_type_mod::PostgresValueMultiType as PosType;
 use super::sql_params_mod::SqlParams;
 use super::web_params_mod::WebParams;
 
@@ -19,7 +19,7 @@ pub struct PostgresFunction {
     app_state: DataAppState,
     function_name: FunctionName,
     /// this params are in correct order for calling the sql function
-    sql_params_in_order: Vec<PostgresValueMultiType>,
+    sql_params_in_order: Vec<PosType>,
     /// placeholders for calling sql function with postgres_client
     placeholders: String,
 }

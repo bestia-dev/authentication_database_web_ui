@@ -42,57 +42,45 @@ pub async fn b2_authn_login_btn_submit() {
         return ();
     }
 
-    match send_obj_get_obj::<t0::DataRespAuthnLoginProcessEmail>(
+    let Ok(resp1_obj) = send_obj_get_obj::<t0::DataRespAuthnLoginProcessEmail>(
         SCOPE,
         "b2_authn_login_process_email",
         t0::DataReqAuthnLoginProcessEmail {
             user_email: user_email.clone(),
         },
     )
-    .await
+    .await else
     {
-        Err(_err) => {
-            msg_div_alert_and_debug("Authentication failed !", "Authentication failed !");
+            msg_div_alert_and_debug_1("Authentication failed !");
             return ();
-        }
-        Ok(resp1_obj) => {
-            let hash = calculate_hash(user_email.clone(), password, resp1_obj.salt);
+    };
 
-            match send_obj_get_obj::<t0::DataRespAuthnLoginProcessHash>(
-                SCOPE,
-                "b2_authn_login_process_hash",
-                t0::DataReqAuthnLoginProcessHash {
-                    user_email: user_email.clone(),
-                    hash,
-                },
-            )
-            .await
-            {
-                Err(_err) => {
-                    msg_div_alert_and_debug("Authentication failed !", "Authentication failed !");
-                    return ();
-                }
-                Ok(resp2_obj) => {
-                    if resp2_obj.login_success == false {
-                        msg_div_alert_and_debug(
-                            "Authentication failed !",
-                            "Authentication failed !",
-                        );
-                        return ();
-                    } else {
-                        window()
-                            .open_with_url_and_target(
-                                &format!(
-                                    "/{APP_MAIN_ROUTE}/c1_webpage_hits_mod/c1_webpage_hits_list"
-                                ),
-                                "_self",
-                            )
-                            .unwrap();
-                    }
-                }
-            }
-        }
+    let hash = calculate_hash(user_email.clone(), password, resp1_obj.salt);
+
+    let Ok(resp2_obj) = send_obj_get_obj::<t0::DataRespAuthnLoginProcessHash>(
+        SCOPE,
+        "b2_authn_login_process_hash",
+        t0::DataReqAuthnLoginProcessHash {
+            user_email: user_email.clone(),
+            hash,
+        },
+    )
+    .await else
+    {
+        msg_div_alert_and_debug_1("Authentication failed !");
+        return ();
+    };
+
+    if resp2_obj.login_success == false {
+        msg_div_alert_and_debug_1("Authentication failed !");
+        return ();
     }
+    window()
+        .open_with_url_and_target(
+            &format!("/{APP_MAIN_ROUTE}/c1_webpage_hits_mod/c1_webpage_hits_list"),
+            "_self",
+        )
+        .unwrap();
 }
 
 pub fn calculate_hash(user_email: String, password: String, salt: String) -> String {

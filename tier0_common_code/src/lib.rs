@@ -21,35 +21,40 @@ pub struct DataRespAuthnLoginProcessEmail {
     pub salt: String,
 }
 
-/// json request data for b2_authn_login_process_hash
+/// json request data for b2_authn_login_process_hash()
 #[derive(Serialize, Deserialize)]
 pub struct DataReqAuthnLoginProcessHash {
     pub user_email: String,
     pub hash: String,
 }
 
-/// json response data for b2_authn_login_process_hash
+/// json response data for b2_authn_login_process_hash()
 #[derive(Serialize, Deserialize)]
 pub struct DataRespAuthnLoginProcessHash {
     pub login_success: bool,
 }
 
-/// json request data for b1_authn_signup_process_email
+/// json request data for b1_authn_signup_process_email()
 #[derive(Serialize, Deserialize)]
 pub struct DataReqAuthnSignupProcessEmail {
     pub user_email: String,
 }
 
-/// json response data for b1_authn_signup_process_email
+/// json response data for b1_authn_signup_process_email()
 #[derive(Serialize, Deserialize)]
 pub struct DataRespAuthnSignupProcessEmail {
     pub salt: String,
 }
 
-/// json request data for b1_authn_signup_insert
+/// json request data for b1_authn_signup_insert()
 #[derive(Serialize, Deserialize)]
 pub struct DataReqAuthnSignupInsert {
     pub user_email: String,
     pub hash: String,
 }
 
+/// json response data for b1_authn_signup_insert()
+#[derive(Serialize, Deserialize)]
+pub struct DataRespAuthnSignupInsert {
+    pub signup_success: bool,
+}

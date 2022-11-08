@@ -123,9 +123,9 @@
  Up to date Table (pk): b1_authn_signup
 (1 row)
 
-                 a2_migrate_column                  
-----------------------------------------------------
- Up to date Column: "b1_authn_signup.password_hash"
+                a2_migrate_column                
+-------------------------------------------------
+ Updated column: "b1_authn_signup.password_hash"
 (1 row)
 
                a2_migrate_column               
@@ -138,9 +138,9 @@
  Up to date Column: "b1_authn_signup.created_at"
 (1 row)
 
-             a2_migrate_function             
----------------------------------------------
- Up to date Function: b1_authn_signup_insert
+           a2_migrate_function            
+------------------------------------------
+ Updated function: b1_authn_signup_insert
 (1 row)
 
              a2_migrate_function             
@@ -163,9 +163,9 @@
  Up to date Constraint: b2_authn_login_uniq_user_email
 (1 row)
 
-                 a2_migrate_column                 
----------------------------------------------------
- Up to date Column: "b2_authn_login.password_hash"
+               a2_migrate_column                
+------------------------------------------------
+ Updated column: "b2_authn_login.password_hash"
 (1 row)
 
                   a2_migrate_column                  
@@ -178,9 +178,9 @@
  Up to date Column: "b2_authn_login.blocked"
 (1 row)
 
-           a2_migrate_function            
-------------------------------------------
- Up to date Function: b2_authn_login_show
+          a2_migrate_function          
+---------------------------------------
+ Updated function: b2_authn_login_show
 (1 row)
 
          a2_migrate_table          

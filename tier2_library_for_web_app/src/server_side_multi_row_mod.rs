@@ -19,7 +19,7 @@ use regex::Regex;
 
 use super::actix_mod::{DataAppState, RequestAndPayload, ResultResponse};
 use super::postgres_mod::{FieldName, SqlParamsForPostgres, ViewName};
-use super::postgres_type_mod::PostgresValueMultiType;
+use super::postgres_type_mod::PostgresValueMultiType as PosType;
 use super::sql_params_mod::SqlParams;
 use super::web_params_mod::WebParams;
 
@@ -33,7 +33,7 @@ pub struct ServerSideMultiRow {
     scope: &'static str,
     view_name: ViewName,
     web_params: WebParams,
-    sql_params_in_order: Vec<PostgresValueMultiType>,
+    sql_params_in_order: Vec<PosType>,
     pub where_clause: Vec<&'static str>,
     sql_where: String,
     sql_order_by: String,
@@ -150,7 +150,7 @@ impl ServerSideMultiRow {
                             single_line_of_where.replace(&param_name_placeholder, &placeholder_str);
                         self.sql_where.push_str(&where_clause);
                         self.sql_params_in_order
-                            .push(PostgresValueMultiType::String(param_from_web.1.to_string()));
+                            .push(PosType::String(param_from_web.1.to_string()));
                     }
                 }
             }

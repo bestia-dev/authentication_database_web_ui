@@ -53,48 +53,47 @@ pub fn return_json_resp_from_object_with_cookie(
 /// we already exempt some paths from the need to check the session cookie
 pub fn on_request_received_is_session_cookie_ok(req: &actix_web::dev::ServiceRequest) -> bool {
     log::info!("{}", req.path());
-    match req.cookie("session_id") {
-        None => false,
-        Some(cookie) => {
-            // lock the mutex until it goes out of scope at end of function
-            let mut sessions = req
-                .app_data::<actix_web::web::Data<super::AppState>>()
-                .unwrap()
-                .active_sessions
-                .lock()
-                .unwrap();
-            // cloned() transforms Option<&T> to Option<T>
-            let cookie_opt = sessions.get(cookie.value()).cloned();
-            match cookie_opt {
-                None => false,
-                Some((user_email, last_access_time_in_millis)) => {
-                    // log::info!( "session: {} {} {}", cookie.value(), &user_email, last_access_time_in_millis );
-                    // expires in 10 minutes of inactivity
-                    if time_epoch_as_millis() - last_access_time_in_millis > 600_000 {
-                        log::info!("The cookie has expired after 10 minutes.");
-                        // remove it from sessions
-                        sessions.remove(cookie.value());
-                        return false;
-                    } else {
-                        // add local data to this request with req.extension. It can then be retrieved later from request.
-                        // this map does not differentiate by name, but by type???
-                        // so instead of String, I should use a special type for user_email??
-                        // this use is to the bring extensions_mut into scope
-                        use actix_web::HttpMessage;
-                        req.extensions_mut().insert(user_email.clone());
+    let Some(cookie) = req.cookie("session_id") 
+    else{
+        return false;
+    };
 
-                        // update last_access_time
-                        // log::info!("update last_access_time");
-                        sessions.insert(
-                            cookie.value().to_string(),
-                            (user_email, super::error_mod::time_epoch_as_millis()),
-                        );
+    // lock the mutex until it goes out of scope at end of function
+    let mut sessions = req
+        .app_data::<actix_web::web::Data<super::AppState>>()
+        .unwrap()
+        .active_sessions
+        .lock()
+        .unwrap();
+    // cloned() transforms Option<&T> to Option<T>
+    let cookie_opt = sessions.get(cookie.value()).cloned();
+    let Some((user_email, last_access_time_in_millis)) = cookie_opt
+    else {
+        return false;
+    };
+    // log::info!( "session: {} {} {}", cookie.value(), &user_email, last_access_time_in_millis );
+    // expires in 10 minutes of inactivity
+    if time_epoch_as_millis() - last_access_time_in_millis > 600_000 {
+        log::info!("The cookie has expired after 10 minutes.");
+        // remove it from sessions
+        sessions.remove(cookie.value());
+        return false;
+    } else {
+        // add local data to this request with req.extension. It can then be retrieved later from request.
+        // this map does not differentiate by name, but by type???
+        // so instead of String, I should use a special type for user_email??
+        // this use is to the bring extensions_mut into scope
+        use actix_web::HttpMessage;
+        req.extensions_mut().insert(user_email.clone());
 
-                        return true;
-                    }
-                }
-            }
-        }
+        // update last_access_time
+        // log::info!("update last_access_time");
+        sessions.insert(
+            cookie.value().to_string(),
+            (user_email, super::error_mod::time_epoch_as_millis()),
+        );
+
+        return true;
     }
 }
 
