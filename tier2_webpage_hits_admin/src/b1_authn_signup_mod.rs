@@ -68,12 +68,12 @@ pub async fn b1_authn_signup_insert(
     );
     let _single_row = pg_func.run_sql_function_return_single_row().await?;
 
-    // TODO: send verification mail. 
+    // TODO: send verification mail.
     // It must be async and not blocking, because of reqwest!
     let api_key_check = std::env::vars().find(|var| var.0 == "SENDGRID_API_KEY");
     let Some(key) = api_key_check
     else{
-        panic!("Must supply API key in environment variables to use!")
+        panic!("Must supply SENDGRID_API_KEY in environment variables to use sendgrid!")
     };
     let api_key = key.1;
 

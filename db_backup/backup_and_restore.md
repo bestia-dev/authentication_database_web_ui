@@ -5,7 +5,7 @@
 Run this from the VSCode terminal inside the project folder.
 
 ```bash
-pg_dump -F t -U admin -h localhost -p 5432 webpage_hit_counter > db_backup/webpage_hit_counter_2022_10_26.tar
+pg_dump -F t -U admin -h localhost -p 5432 webpage_hit_counter > db_backup/webpage_hit_counter_2022_11_09.tar
 ```
 
 ## Restore

@@ -1,6 +1,6 @@
 [package]
 name = "webpage_hits_admin"
-version = "2022.1108.1648"
+version = "2022.1109.925"
 description = "09. Tutorial to code authentication for database_web_ui (2022-10)"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"
