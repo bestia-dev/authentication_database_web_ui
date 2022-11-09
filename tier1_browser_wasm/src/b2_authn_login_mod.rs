@@ -84,7 +84,7 @@ pub async fn b2_authn_login_btn_submit() {
 }
 
 pub fn calculate_hash(user_email: String, password: String, salt: String) -> String {
-    let input_password = format!("{user_email}_{password}");    
+    let input_password = format!("{user_email}_{password}");
     let argon2 = argon2::Argon2::default();
     let hash = argon2::PasswordHasher::hash_password(&argon2, &input_password.as_bytes(), &salt)
         .unwrap()

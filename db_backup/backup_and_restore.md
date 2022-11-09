@@ -14,7 +14,7 @@ Run this from the VSCode terminal inside the project folder.
 
 ```bash
 createdb -U admin -h localhost -p 5432 webpage_hit_counter; 
-pg_restore -c -U admin -h localhost -p 5432 -d webpage_hit_counter db_backup/webpage_hit_counter_2022_11_07.tar
+pg_restore -c -U admin -h localhost -p 5432 -d webpage_hit_counter db_backup/webpage_hit_counter_2022_11_09.tar
 ```
 
 ## psql connection
