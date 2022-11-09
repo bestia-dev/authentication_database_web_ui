@@ -68,17 +68,8 @@ pub async fn b1_authn_signup_insert(
     );
     let _single_row = pg_func.run_sql_function_return_single_row().await?;
 
-    // TODO: send verification mail. It must be async and not blocking, because of reqwest!
-
-    /*
-    curl --request POST \
-  --url https://api.sendgrid.com/v3/mail/send \
-  --header 'Authorization: Bearer YOUR_API_KEY' \
-  --header 'Content-Type: application/json' \
-  --data '{"personalizations": [{"to": [{"email": "recipient@example.com"}]}],"from": {"email": "sendeexampexample@example.com"},"subject": "Hello, World!","content": [{"type": "text/plain", "value": "Heya!"}]}'
-
-    */
-
+    // TODO: send verification mail. 
+    // It must be async and not blocking, because of reqwest!
     let api_key_check = std::env::vars().find(|var| var.0 == "SENDGRID_API_KEY");
     let Some(key) = api_key_check
     else{
@@ -86,27 +77,38 @@ pub async fn b1_authn_signup_insert(
     };
     let api_key = key.1;
 
-    //let mut cool_header = std::collections::HashMap::with_capacity(2);
-    //cool_header.insert(String::from("x-cool"), String::from("indeed"));
-    //cool_header.insert(String::from("x-cooler"), String::from("cold"));
-
-    let p = sendgrid::v3::Personalization::new(sendgrid::v3::Email::new("info@bestia.dev"));
-        //.add_headers(cool_header);
-
-    let m = sendgrid::v3::Message::new(sendgrid::v3::Email::new("luciano.bestia@gmail.com"))
-        .set_subject("Subject")
-        .add_content(
-            sendgrid::v3::Content::new()
-                .set_content_type("text/html")
-                .set_value("Test"),
-        )
-        .add_personalization(p);
-
-    let sender = sendgrid::v3::Sender::new(api_key);
-
-    match sender.send(&m).await {
+    let req = reqwest::Client::new()
+        .post("https://api.sendgrid.com/v3/mail/send")
+        .header("Authorization", &format!("Bearer {api_key}"))
+        .header("Content-Type", "application/json")
+        .json(&serde_json::json!({
+        "personalizations": [
+            {
+                "to": [
+                    {
+                        "email": "luciano.bestia@gmail.com"
+                    }
+                ]
+            }
+        ],
+        "from": {
+            "email": "info@bestia.dev"
+        },
+        "subject": "Hello, World!",
+        "content": [
+            {
+                "type": "text/plain",
+                "value": "Hey!"
+            }
+            ]
+        }));
+    /*
+        .json::<std::collections::HashMap<String, String>>()
+    .await.unwrap()
+    */
+    match req.send().await {
         Err(err) => println!("Error: {}", err),
-        Ok(body) => println!("Response: {:?}", body),
+        Ok(body) => println!("Response: {:#?}", body),
     };
 
     let data_resp = t0::DataRespAuthnSignupInsert {

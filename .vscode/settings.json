@@ -37,6 +37,7 @@
         "Prost",
         "psql",
         "PTRACE",
+        "reqwest",
         "rustc",
         "rustflags",
         "rustfmt",
