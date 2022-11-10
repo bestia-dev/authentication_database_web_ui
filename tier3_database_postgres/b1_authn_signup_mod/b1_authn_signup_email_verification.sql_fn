@@ -1,0 +1,33 @@
+-- tier3_database_postgres/b1_authn_signup_mod/b1_authn_signup_email_verification.sql_fn
+
+select a2_migrate_function('b1_authn_signup_email_verification',
+$source_code$
+
+-- select * from b1_authn_signup
+-- select * from b1_authn_signup_email_verification('ee148934d3f448b5832f8bd5ce1bc8e6')
+
+create function  b1_authn_signup_email_verification(
+_uuid varchar(100))
+returns table(verification_h1 text, verification_p text) 
+language plpgsql as
+$$
+declare
+
+begin
+
+if exists (select * from b1_authn_signup a where a.verification_uuid=_uuid) then
+    update b1_authn_signup 
+    set verified=true
+    where verification_uuid=_uuid;
+
+    return query select 'Verification of your email successful' as verification_h1, 
+    'Please, wait for an email of our administrators to grant you access to the web app.' as verification_p;
+else
+    return query select 'Verification of your email failed' as verification_h1, 
+    '' as verification_p;
+end if;
+
+end; 
+$$;
+
+$source_code$);

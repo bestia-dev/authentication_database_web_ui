@@ -2,10 +2,7 @@
 
 #![deny(unused_crate_dependencies)]
 
-use tier0_common_code as t0;
-
-use tier2_library_for_web_app as t2;
-
+use lazy_static::lazy_static;
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 
@@ -20,6 +17,13 @@ use t2::app_state_mod::AppState;
 use t2::deadpool_mod::deadpool_start_and_check;
 use t2::postgres_mod::get_for_cache_all_function_input_params;
 use t2::postgres_mod::get_for_cache_all_view_fields;
+use tier0_common_code as t0;
+use tier2_library_for_web_app as t2;
+
+lazy_static! {
+    static ref SERVER_PROTOCOL: String = std::env::var("SERVER_PROTOCOL").unwrap();
+    static ref SERVER_DOMAIN_AND_PORT: String = std::env::var("SERVER_DOMAIN_AND_PORT").unwrap();
+}
 
 /// the binary executable entry point
 #[actix_web::main]
@@ -27,9 +31,15 @@ async fn main() -> std::io::Result<()> {
     let mut logger_builder = pretty_env_logger::env_logger::Builder::from_default_env();
     logger_builder.filter(None, log::LevelFilter::Info).init();
 
-    log::info!("Actix web server started on localhost:8080!");
+    dotenv::dotenv().ok();
+
+    log::info!("Actix web server started on {}!", *SERVER_DOMAIN_AND_PORT);
     log::info!("Test it with curl or browser:");
-    log::info!("http://localhost:8080/{APP_MAIN_ROUTE}/c1_webpage_hits_mod/c1_webpage_hits_list");
+    log::info!(
+        "{}://{}/{APP_MAIN_ROUTE}/c1_webpage_hits_mod/c1_webpage_hits_list",
+        *SERVER_PROTOCOL,
+        *SERVER_DOMAIN_AND_PORT
+    );
 
     // connection pool for postgres to reuse connections for better performance
     let db_pool = deadpool_start_and_check().await;

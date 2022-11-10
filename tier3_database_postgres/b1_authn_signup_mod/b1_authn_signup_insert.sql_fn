@@ -5,9 +5,10 @@ $source_code$
 
 create function  b1_authn_signup_insert(
 _user_email varchar(100),
-_password_hash varchar(100),
+_password_hash varchar(200),
+_verification_uuid varchar(100),
 _verified bool)
-returns table(user_email varchar(100), hit_count varchar(100), verified bool, created_at timestamp) 
+returns table(user_email varchar(100), verified bool, created_at timestamp) 
 language plpgsql as
 $$
 declare
@@ -20,11 +21,11 @@ if exists (select * from b1_authn_signup a where a.user_email=_user_email) then
     where a.user_email=_user_email;
 end if;
 
-insert into b1_authn_signup(user_email, password_hash, verified)
-values(_user_email,_password_hash, _verified);
+insert into b1_authn_signup(user_email, password_hash, verification_uuid, verified)
+values(_user_email,_password_hash,_verification_uuid, _verified);
 
 return query 
-select a.user_email, a.password_hash, a.verified, a.created_at
+select a.user_email, a.verified, a.created_at
 from b1_authn_signup a
 where a.user_email=_user_email;
 

@@ -2,6 +2,8 @@
 
 use std::collections::HashMap;
 
+use crate::postgres_type_mod::PostgresUdtType;
+
 use super::actix_mod::DataAppState;
 use super::postgres_mod::{FunctionName, SqlParamsForPostgres};
 use super::postgres_type_mod::PostgresValueMultiType as PosType;
@@ -38,20 +40,25 @@ impl SqlParams {
             // dbg!(&name);
 
             // dbg!(param_input_type.as_ref());
-            match param_input_type.as_ref() {
-                "character" => {
+            match param_input_type {
+                PostgresUdtType::Name | &PostgresUdtType::Text | &PostgresUdtType::Varchar => {
                     sql_params.insert(
                         &param_name.0,
                         PosType::String(web_params.get_str(name_wo_prefix).unwrap().to_string()),
                     );
                 }
-                "integer" => {
+                PostgresUdtType::Int4 => {
                     sql_params.insert(
                         &param_name.0,
                         PosType::I32(web_params.get_i32(name_wo_prefix).unwrap()),
                     );
                 }
-                _ => panic!("param_input_type is unknown: {:?}", param_input_type),
+                PostgresUdtType::Bool => {
+                    sql_params.insert(
+                        &param_name.0,
+                        PosType::Bool(web_params.get_bool(name_wo_prefix).unwrap()),
+                    );
+                }
             }
         }
         sql_params

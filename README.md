@@ -75,12 +75,15 @@ This session cookie will be attached to every request sent from this client. The
 ## Sending email
 
 It is not easy to send emails over SMTP anymore because of spam. There is so much spam, that big email providers invented the "email deliverability reputation" system, which makes it difficult for smaller senders to not be flagged as spam. So the solution is to use some free email providers like MailGun, MailJet, Mailersend or Sendgrid. The email communication between a web app and its user is called "transactional email" and is specific because it needs to be fast and reliable. A "transactional email" is a type of email message that’s triggered by a specific action on a website or mobile app. Some common examples of transactional emails include password resets, order confirmations, automated abandoned cart emails, account notifications, social media updates, welcome emails, and any other confirmation emails that are sent via automation. These automated emails are typically sent programmatically through an email API or SMTP server.  
-I will try Twilio Sendgrid free plan with 100 emails per day forever. Enough for developers. Integrate using our Web API v3. There is no official Rust library, but the unofficial is on <https://crates.io/crates/sendgrid>. Create an API key with restricted permissions just to send emails. Create a single sender identity.  
+I will try Twilio Sendgrid free plan with 100 emails per day forever. Enough for developing web apps. I will be using Web API v3. There is no official Rust library, but the unofficial is on <https://crates.io/crates/sendgrid>.It looks too complicated. I will create the json in code and send to the API point.  
+First, create an API key with restricted permissions just to send emails.  
+This secret will be stored in my env variables and available to my web app:
 
+```bash
  export SENDGRID_API_KEY="SG.my.api.key"
- Simple single verification is not really helpful. When I send the email it is marked as spam.
- Now I try with the domain verification. I added 3 CNAME records to my domain dns.
- I will send a simple POST request with reqwest to send simple transactional emails.
+```
+
+The verification of my "single sender identity" was not really helpful. When I send an email it is marked as spam. Now I will try with the better "domain verification". I added the 3 CNAME records from Sendgrid to my domain dns on porkbun. I then used <https://mxtoolbox.com> to check the CNAME records. It is not enough to write just "bestia.dev", I needed to write the whole CNAME host "s1._domainkey.bestia.dev" or "s2._domainkey.bestia.dev". The most interesting is "em4619.bestia.dev" because the number changes for every attempt to "domain verification". Now I have verified my domain. Good. It works perfectly !
 
 ## Login
 

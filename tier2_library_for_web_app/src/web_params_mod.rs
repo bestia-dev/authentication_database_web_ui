@@ -73,4 +73,17 @@ impl WebParams {
         })?;
         Ok(value)
     }
+
+    /// data from WebParams as bool  
+    #[track_caller]
+    pub fn get_bool(&self, param_name: &str) -> Result<bool, LibError> {
+        let value = self.get_str(param_name)?.parse::<bool>().map_err(|_err| {
+            LibError::GetI32FromWebParams {
+                user_friendly: param_name.to_string(),
+                developer_friendly: format!("{:?}", self.0),
+                source_line_column: file_line_column(&std::panic::Location::caller()),
+            }
+        })?;
+        Ok(value)
+    }
 }

@@ -1,5 +1,7 @@
 // tier2_webpage_hits_admin/src/b1_authn_signup_mod.rs
 
+use reqwest::StatusCode;
+use t2::server_side_single_row_mod::ServerSideSingleRow;
 use tier0_common_code as t0;
 use tier2_library_for_web_app as t2;
 
@@ -23,6 +25,7 @@ pub fn config_route_authn(cfg: &mut actix_web::web::ServiceConfig) {
         .service(resource("/b1_authn_signup").route(to(b1_authn_signup)))
         .service(resource("/b1_authn_signup_process_email").route(to(b1_authn_signup_process_email)))
         .service(resource("/b1_authn_signup_insert").route(to(b1_authn_signup_insert)))
+        .service(resource("/b1_authn_signup_email_verification").route(to(b1_authn_signup_email_verification)))
     ;
 }
 
@@ -53,12 +56,17 @@ pub async fn b1_authn_signup_insert(
     app_state: DataAppState,
     data_req: actix_web::web::Json<t0::DataReqAuthnSignupInsert>,
 ) -> ResultResponse {
+    let verification_uuid = uuid::Uuid::new_v4().simple().to_string();
     let mut sql_params = t2::sql_params_mod::SqlParams::new();
     sql_params.insert(
         "_user_email",
         PosType::String(data_req.user_email.to_string()),
     );
     sql_params.insert("_password_hash", PosType::String(data_req.hash.to_string()));
+    sql_params.insert(
+        "_verification_uuid",
+        PosType::String(verification_uuid.to_string()),
+    );
     sql_params.insert("_verified", PosType::Bool(false));
 
     let mut pg_func = t2::postgres_function_mod::PostgresFunction::new_with_sql_params(
@@ -68,8 +76,8 @@ pub async fn b1_authn_signup_insert(
     );
     let _single_row = pg_func.run_sql_function_return_single_row().await?;
 
-    // TODO: send verification mail.
-    // It must be async and not blocking, because of reqwest!
+    // Send verification mail with async reqwest. Just a json POST to the API.
+    // The secret API key must be in env variables.
     let api_key_check = std::env::vars().find(|var| var.0 == "SENDGRID_API_KEY");
     let Some(key) = api_key_check
     else{
@@ -86,7 +94,7 @@ pub async fn b1_authn_signup_insert(
             {
                 "to": [
                     {
-                        "email": "luciano.bestia@gmail.com"
+                        "email": &data_req.user_email
                     }
                 ]
             }
@@ -94,25 +102,39 @@ pub async fn b1_authn_signup_insert(
         "from": {
             "email": "info@bestia.dev"
         },
-        "subject": "Hello, World!",
+        "subject": "webpage_hits_admin - Email verification!",
         "content": [
             {
                 "type": "text/plain",
-                "value": "Hey!"
+                "value": format!("Signup to webpage_hits_admin!
+        Please verify your email, so that we know it's you.
+        {}://{}/{}/{}/b1_authn_signup_email_verification?uuid={}
+        ",*crate::SERVER_PROTOCOL, *crate::SERVER_DOMAIN_AND_PORT,t0::APP_MAIN_ROUTE,SCOPE, verification_uuid)
             }
             ]
         }));
-    /*
-        .json::<std::collections::HashMap<String, String>>()
-    .await.unwrap()
-    */
     match req.send().await {
-        Err(err) => println!("Error: {}", err),
-        Ok(body) => println!("Response: {:#?}", body),
+        Err(err) => log::error!("Error: {}", err),
+        Ok(body) => {
+            if body.status() == StatusCode::ACCEPTED {
+                log::info!("Email sent ok!");
+            } else {
+                log::error!("ERROR Response: {:#?}", body);
+            }
+        }
     };
 
     let data_resp = t0::DataRespAuthnSignupInsert {
         signup_success: true,
     };
     t2::actix_mod::return_json_resp_from_object(data_resp)
+}
+
+/// email verification link
+#[function_name::named]
+pub async fn b1_authn_signup_email_verification(
+    mut req_payload: t2::actix_mod::RequestAndPayload,
+) -> ResultResponse {
+    let mut sssr = ServerSideSingleRow::new(SCOPE, function_name!(), &mut req_payload).await;
+    sssr.run_sql_and_process_html().await
 }

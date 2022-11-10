@@ -1618,14 +1618,14 @@ dependencies = [
 
 [[package]]
 name = "tier0_common_code"
-version = "2022.1109.923"
+version = "2022.1109.2242"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "tier2_library_for_web_app"
-version = "2022.1109.925"
+version = "2022.1110.1033"
 dependencies = [
  "actix-utils",
  "actix-web",
@@ -1945,12 +1945,14 @@ dependencies = [
 
 [[package]]
 name = "webpage_hits_admin"
-version = "2022.1109.925"
+version = "2022.1110.1033"
 dependencies = [
  "actix-files",
  "actix-web",
+ "dotenv",
  "function_name",
  "futures",
+ "lazy_static",
  "log",
  "password-hash",
  "pretty_env_logger",

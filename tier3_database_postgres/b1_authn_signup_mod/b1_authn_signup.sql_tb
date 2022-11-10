@@ -1,6 +1,8 @@
 -- tier3_database_postgres/b1_authn_signup_mod/b1_authn_signup.sql_tb
 -- create table but column by column, so I can extend it later with new columns and constraints
 
+-- select * from b1_authn_signup
+
 select a2_migrate_table('b1_authn_signup',
 $source_code$
 
@@ -13,5 +15,6 @@ create table b1_authn_signup
 $source_code$);
 
 select a2_migrate_column('b1_authn_signup','password_hash','varchar(200)','', 'not null');
+select a2_migrate_column('b1_authn_signup','verification_uuid','varchar(100)','', 'not null');
 select a2_migrate_column('b1_authn_signup','verified','bool','false','not null');
 select a2_migrate_column('b1_authn_signup','created_at','timestamp','now()','not null');

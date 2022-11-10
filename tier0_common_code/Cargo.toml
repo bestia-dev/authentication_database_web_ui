@@ -1,6 +1,6 @@
 [package]
 name = "tier0_common_code"
-version = "2022.1109.923"
+version = "2022.1109.2242"
 description = "common code"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"
