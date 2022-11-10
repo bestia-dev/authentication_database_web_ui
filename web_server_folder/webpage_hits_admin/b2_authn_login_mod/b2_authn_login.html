@@ -35,11 +35,11 @@
     </form>
      <!-- import and init the wasm code -->
      <script type="module">
-        import init, {authn_login_on_start} from "/webpage_hits_admin/pkg/tier1_browser_wasm.js";
+        import init, {b2_authn_login_on_start} from "/webpage_hits_admin/pkg/tier1_browser_wasm.js";
         // This init() is needed to start the wasm code and is the same for every html page.
         await init();
         // But this function is special only for this html page.
-        authn_login_on_start();
+        b2_authn_login_on_start();
         // So I can have more different html pages with the same wasm. 
         // So it is downloaded only once and then cached by the browser.
   </script>
