@@ -1,6 +1,6 @@
 [package]
 name = "webpage_hits_admin"
-version = "2022.1110.1058"
+version = "2022.1110.1637"
 description = "09. Tutorial to code authentication for database_web_ui (2022-10)"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"
@@ -24,7 +24,5 @@ function_name = "0.3.0"
 futures = "0.3.24"
 password-hash = "0.4.2"
 uuid = {version = "1.2.1", features = ["v4","fast-rng"]}
-reqwest = { version = "0.11.12", features = ["json"] }
-serde_json = "1.0.86"
 dotenv="0.15.0"
 lazy_static="1.4.0"

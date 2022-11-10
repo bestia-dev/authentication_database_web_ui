@@ -67,6 +67,12 @@ pub enum LibError {
         developer_friendly: String,
         source_line_column: String,
     },
+    /// send email error
+    #[error("Send email error")]
+    SendEmailError { developer_friendly: String },
+    /// signup error. The emails that can signup are restricted.
+    #[error("Signup error")]
+    SignupError { developer_friendly: String },
     /*
         #[error(transparent)]
         Unknown(#[from] anyhow::Error),

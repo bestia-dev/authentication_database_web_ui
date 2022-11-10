@@ -14,6 +14,7 @@ pub mod postgres_function_mod;
 pub mod postgres_mod;
 pub mod postgres_select_query_mod;
 pub mod postgres_type_mod;
+pub mod sendgrid_mod;
 pub mod server_side_multi_row_mod;
 pub mod server_side_single_row_mod;
 pub mod sql_params_mod;

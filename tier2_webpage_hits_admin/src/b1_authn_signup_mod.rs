@@ -1,5 +1,6 @@
 // tier2_webpage_hits_admin/src/b1_authn_signup_mod.rs
 
+use t2::error_mod::LibError;
 use tier0_common_code as t0;
 use tier2_library_for_web_app as t2;
 
@@ -55,6 +56,14 @@ pub async fn b1_authn_signup_insert(
     app_state: DataAppState,
     data_req: actix_web::web::Json<t0::DataReqAuthnSignupInsert>,
 ) -> ResultResponse {
+    // I want to limit the emails that can signup. This is ok for some internal website or intranet.
+    if !data_req.user_email.contains("bestia") {
+        return Err(LibError::SignupError {
+            developer_friendly: String::from("Signup not allowed for this email."),
+        }
+        .into());
+    }
+
     let verification_uuid = uuid::Uuid::new_v4().simple().to_string();
     let mut sql_params = t2::sql_params_mod::SqlParams::new();
     sql_params.insert(
@@ -75,53 +84,20 @@ pub async fn b1_authn_signup_insert(
     );
     let _single_row = pg_func.run_sql_function_return_single_row().await?;
 
-    // Send verification mail with async reqwest. Just a json POST to the API.
-    // The secret API key must be in env variables.
-    let api_key_check = std::env::vars().find(|var| var.0 == "SENDGRID_API_KEY");
-    let Some(key) = api_key_check
-    else{
-        panic!("Must supply SENDGRID_API_KEY in environment variables to use sendgrid!")
-    };
-    let api_key = key.1;
+    let email_subject = "webpage_hits_admin - Email verification!";
+    let email_body = format!(
+        "Signup to webpage_hits_admin!
+Please verify your email, so that we know it's you.
+{}://{}/{}/{}/b1_authn_signup_email_verification?uuid={}
+",
+        *crate::SERVER_PROTOCOL,
+        *crate::SERVER_DOMAIN_AND_PORT,
+        t0::APP_MAIN_ROUTE,
+        SCOPE,
+        verification_uuid
+    );
 
-    let req = reqwest::Client::new()
-        .post("https://api.sendgrid.com/v3/mail/send")
-        .header("Authorization", &format!("Bearer {api_key}"))
-        .header("Content-Type", "application/json")
-        .json(&serde_json::json!({
-        "personalizations": [
-            {
-                "to": [
-                    {
-                        "email": &data_req.user_email
-                    }
-                ]
-            }
-        ],
-        "from": {
-            "email": "info@bestia.dev"
-        },
-        "subject": "webpage_hits_admin - Email verification!",
-        "content": [
-            {
-                "type": "text/plain",
-                "value": format!("Signup to webpage_hits_admin!
-        Please verify your email, so that we know it's you.
-        {}://{}/{}/{}/b1_authn_signup_email_verification?uuid={}
-        ",*crate::SERVER_PROTOCOL, *crate::SERVER_DOMAIN_AND_PORT,t0::APP_MAIN_ROUTE,SCOPE, verification_uuid)
-            }
-            ]
-        }));
-    match req.send().await {
-        Err(err) => log::error!("Error: {}", err),
-        Ok(body) => {
-            if body.status() == reqwest::StatusCode::ACCEPTED {
-                log::info!("Email sent ok!");
-            } else {
-                log::error!("ERROR Response: {:#?}", body);
-            }
-        }
-    };
+    t2::sendgrid_mod::send_email(&data_req.user_email, email_subject, email_body).await?;
 
     let data_resp = t0::DataRespAuthnSignupInsert {
         signup_success: true,

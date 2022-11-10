@@ -15,13 +15,35 @@ declare
 
 begin
 
-if exists (select * from b1_authn_signup a where a.verification_uuid=_uuid) then
-    update b1_authn_signup 
-    set verified=true
-    where verification_uuid=_uuid;
+if exists (select * from b1_authn_signup a 
+    where a.verification_uuid=_uuid) then
+
+    if not exists(select * from b2_authn_login a 
+        join b1_authn_signup b on b.user_email=a.user_email
+        where b.verification_uuid=_uuid) then
+
+        update b1_authn_signup 
+        set verified=true
+        where verification_uuid=_uuid;
+
+        -- some web apps need a manual process to grant access
+        -- In this particular case, I will grant access immediatelly.
+        -- move the signup user into the login table with minimal authorization
+        insert into b2_authn_login(user_email,password_hash,failed_attempts,blocked)
+        select user_email, password_hash,0,false        
+        from b1_authn_signup a 
+        where a.verification_uuid=_uuid;
+
+        delete from b1_authn_signup
+        where verification_uuid=_uuid;
+
+    else
+        return query select 'Verification of your email failed' as verification_h1, 
+        'User email already exists.' as verification_p;
+    end if;
 
     return query select 'Verification of your email successful' as verification_h1, 
-    'Please, wait for an email of our administrators to grant you access to the web app.' as verification_p;
+    'You can now login into the web app.' as verification_p;
 else
     return query select 'Verification of your email failed' as verification_h1, 
     '' as verification_p;
