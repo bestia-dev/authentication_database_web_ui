@@ -4,8 +4,7 @@
 
 #![deny(unused_crate_dependencies)]
 
-use serde::Deserialize;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 pub const APP_MAIN_ROUTE: &'static str = "webpage_hits_admin";
 

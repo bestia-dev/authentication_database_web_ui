@@ -1,7 +1,6 @@
 // tier2_library_for_web_app/src/web_params_mod.rs
 
-use std::collections::HashMap;
-
+// to enable the trait FromRequest for actix_web::web::Form and actix_web::web::Query
 use actix_web::FromRequest;
 
 use super::{
@@ -13,12 +12,12 @@ use super::{
 type WebForm = actix_web::web::Form<Vec<(String, String)>>;
 type WebQuery = actix_web::web::Query<Vec<(String, String)>>;
 
-/// WebParams are just a key-value collection: HashMap(String,String)  
+/// WebParams are just a key-value collection: std::collections::HashMap(String,String)  
 /// A similar collection is found inside POST(form) and GET(web query)  
 /// But I want a collection independent of the POST/GET method  
 /// [("id", "496953237"), ("webpage", "webpage short url"), ("hit_count", "0")]  
 #[derive(Debug)]
-pub struct WebParams(pub HashMap<String, String>);
+pub struct WebParams(pub std::collections::HashMap<String, String>);
 
 impl WebParams {
     /// get WebParams from POST(web form) if exists or else GET(web query)  

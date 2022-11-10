@@ -3,7 +3,6 @@
 
 #![deny(unused_crate_dependencies)]
 
-use std::env;
 //use unwrap::unwrap;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsValue;
@@ -25,7 +24,7 @@ pub use b2_authn_login_mod::b2_authn_login_on_start;
 pub fn wasm_bindgen_start() -> Result<(), JsValue> {
     debug_write(&format!(
         "--- start tier1_browser_wasm ver. {} ---",
-        env!("CARGO_PKG_VERSION")
+        std::env!("CARGO_PKG_VERSION")
     ));
 
     // Initialize debugging for when/if something goes wrong.

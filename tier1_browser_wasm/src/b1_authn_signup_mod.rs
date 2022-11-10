@@ -1,13 +1,15 @@
 // tier1_browser_wasm/src/b1_authn_signup_mod.rs
 
+use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
+
+use tier0_common_code as t0;
+
 // For the on_click macro, I must use crate::on_click and wasm_bindgen::JsCast
 use crate::on_click;
 use crate::on_input;
 use crate::web_sys_mod::*;
 // use t0::APP_MAIN_ROUTE;
-use tier0_common_code as t0;
-use wasm_bindgen::prelude::*;
-use wasm_bindgen::JsCast;
 
 const SCOPE: &'static str = "b1_authn_signup_mod";
 

@@ -1,7 +1,8 @@
 // tier2_library_for_web_app/src/html_templating_mod.rs
 
-use t0::APP_MAIN_ROUTE;
 use tier0_common_code as t0;
+
+use t0::APP_MAIN_ROUTE;
 
 /// struct fields scope and function name are used as the folder and file name for the template
 pub fn read_template(scope: &str, name: &str) -> String {

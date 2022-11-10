@@ -1,7 +1,5 @@
 // tier2_library_for_web_app/src/deadpool_mod.rs
 
-use super::error_mod::LibError;
-
 /// create and start the connection pool
 pub async fn deadpool_postgres_start() -> deadpool_postgres::Pool {
     // this loads our .env file and includes the values in std::env
@@ -35,7 +33,7 @@ pub async fn deadpool_start_and_check() -> deadpool_postgres::Pool {
 /// get postgres_client from pool
 pub async fn get_postgres_client_from_pool(
     db_pool: &deadpool_postgres::Pool,
-) -> Result<deadpool_postgres::Object, LibError> {
+) -> Result<deadpool_postgres::Object, super::error_mod::LibError> {
     db_pool
         .get()
         .await

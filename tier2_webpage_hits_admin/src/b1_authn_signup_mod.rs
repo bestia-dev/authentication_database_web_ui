@@ -1,13 +1,12 @@
 // tier2_webpage_hits_admin/src/b1_authn_signup_mod.rs
 
-use reqwest::StatusCode;
-use t2::server_side_single_row_mod::ServerSideSingleRow;
 use tier0_common_code as t0;
 use tier2_library_for_web_app as t2;
 
 //use t0::APP_MAIN_ROUTE;
 use t2::actix_mod::DataAppState;
 use t2::actix_mod::ResultResponse;
+use t2::server_side_single_row_mod::ServerSideSingleRow;
 //use t2::error_mod::LibError;
 //use t2::postgres_function_mod::PostgresFunction;
 //use t2::postgres_mod::get_string_from_row;
@@ -116,7 +115,7 @@ pub async fn b1_authn_signup_insert(
     match req.send().await {
         Err(err) => log::error!("Error: {}", err),
         Ok(body) => {
-            if body.status() == StatusCode::ACCEPTED {
+            if body.status() == reqwest::StatusCode::ACCEPTED {
                 log::info!("Email sent ok!");
             } else {
                 log::error!("ERROR Response: {:#?}", body);

@@ -1,5 +1,13 @@
 // tier2_library_for_web_app/src/postgres_mod.rs
 
+use std::collections::HashMap;
+use tokio_postgres::error::SqlState;
+
+use super::{
+    error_mod::{file_line_column, LibError},
+    postgres_type_mod::PostgresUdtType,
+};
+
 // type alias to make it more concise, precise and readable
 /// params are mostly searched by param name
 pub type ParamsNameType = HashMap<ParamName, PostgresUdtType>;
@@ -23,13 +31,6 @@ pub struct ParamName(pub String);
 pub struct ViewName(pub String);
 #[derive(Eq, Hash, PartialEq)]
 pub struct FieldName(pub String);
-
-use super::{
-    error_mod::{file_line_column, LibError},
-    postgres_type_mod::PostgresUdtType,
-};
-use std::collections::HashMap;
-use tokio_postgres::error::SqlState;
 
 /// run the query and catch the many different sql errors
 #[track_caller]

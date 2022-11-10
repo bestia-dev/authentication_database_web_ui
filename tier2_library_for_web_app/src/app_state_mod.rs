@@ -1,10 +1,11 @@
 // tier2_library_for_web_app/src/app_state_mod.rs
 
-use super::postgres_mod::{SqlFunctionInputParams, SqlFunctionInputParamsOrder, SqlViewFields};
 use std::{
     collections::HashMap,
     sync::{Arc, Mutex},
 };
+
+use super::postgres_mod::{SqlFunctionInputParams, SqlFunctionInputParamsOrder, SqlViewFields};
 
 /// This struct represents state
 /// Every function can extract this simply with an input parameter

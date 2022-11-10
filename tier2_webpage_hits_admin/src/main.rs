@@ -2,13 +2,12 @@
 
 #![deny(unused_crate_dependencies)]
 
-use lazy_static::lazy_static;
-use std::collections::HashMap;
-use std::sync::{Arc, Mutex};
-
 mod b1_authn_signup_mod;
 mod b2_authn_login_mod;
 mod c1_webpage_hits_mod;
+
+use tier0_common_code as t0;
+use tier2_library_for_web_app as t2;
 
 use t0::APP_MAIN_ROUTE;
 use t2::actix_mod::on_request_received_is_session_cookie_ok;
@@ -17,10 +16,8 @@ use t2::app_state_mod::AppState;
 use t2::deadpool_mod::deadpool_start_and_check;
 use t2::postgres_mod::get_for_cache_all_function_input_params;
 use t2::postgres_mod::get_for_cache_all_view_fields;
-use tier0_common_code as t0;
-use tier2_library_for_web_app as t2;
 
-lazy_static! {
+lazy_static::lazy_static! {
     static ref SERVER_PROTOCOL: String = std::env::var("SERVER_PROTOCOL").unwrap();
     static ref SERVER_DOMAIN_AND_PORT: String = std::env::var("SERVER_DOMAIN_AND_PORT").unwrap();
 }
@@ -58,7 +55,9 @@ async fn main() -> std::io::Result<()> {
         all_sql_function_input_params,
         all_sql_function_input_params_order,
         sql_view_fields,
-        active_sessions: Arc::new(Mutex::new(HashMap::new())),
+        active_sessions: std::sync::Arc::new(std::sync::Mutex::new(
+            std::collections::HashMap::new(),
+        )),
     });
 
     let http_server_result = actix_web::HttpServer::new(move || {

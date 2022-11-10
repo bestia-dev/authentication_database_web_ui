@@ -14,17 +14,14 @@
 // TODO: dynamically construct a where clause only for the used filters for efficiency 2022-10-21
 // TODO: dynamically construct the fields list only for fields used in the html (for efficiency) 2022-10-21
 
-use lazy_static::lazy_static;
-use regex::Regex;
-
 use super::actix_mod::{DataAppState, RequestAndPayload, ResultResponse};
 use super::postgres_mod::{FieldName, SqlParamsForPostgres, ViewName};
 use super::postgres_type_mod::PostgresValueMultiType as PosType;
 use super::sql_params_mod::SqlParams;
 use super::web_params_mod::WebParams;
 
-lazy_static! {
-    static ref RGX_01: Regex = Regex::new(r###"\{(.+?)}"###).unwrap();
+lazy_static::lazy_static! {
+    static ref RGX_01: regex::Regex = regex::Regex::new(r###"\{(.+?)}"###).unwrap();
 }
 
 /// the main ServerSideMultiRow object (struct with implementation)
