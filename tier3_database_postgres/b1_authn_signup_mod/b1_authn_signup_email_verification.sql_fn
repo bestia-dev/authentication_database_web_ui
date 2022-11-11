@@ -43,9 +43,10 @@ if exists (select * from b1_authn_signup a
     end if;
 
     return query select 'Verification of your email successful' as verification_h1, 
-    'You can now login into the web app.' as verification_p;
+    'You can now login into the web app: /webpage_hits_admin/b1_authn_login_mod/b1_authn_login
+' as verification_p;
 else
-    return query select 'Verification of your email failed' as verification_h1, 
+    return query select 'Verification of your email failed.' as verification_h1, 
     '' as verification_p;
 end if;
 

@@ -4,4 +4,7 @@ select *
 -- delete
 from b1_authn_signup;
 
-select * from b2_authn_login;
+select * 
+-- delete
+from b2_authn_login
+where user_email = 'luciano.bestia@gmail.com';

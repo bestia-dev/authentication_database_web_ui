@@ -22,7 +22,7 @@ from b1_authn_signup_process_email(_user_email) a;
 
 if _is_allowed = false then
     return query 
-    select _is_allowed as is_allowed, '' as user_email;
+    select _is_allowed as is_allowed, ''::varchar(100) as user_email;
 end if;
 -- endregion: I want to limit the emails that can signup. This is ok for some internal website or intranet.
 
