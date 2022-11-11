@@ -39,11 +39,13 @@ pub async fn b1_authn_signup_btn_submit() {
     let password_2 = get_input_element_value_string_by_id("password_2");
     if user_email.is_empty()
         || !user_email.contains("@")
+        || !user_email.contains(".")
         || password_1.is_empty()
         || password_2.is_empty()
         || password_1 != password_2
+        || password_1.len()<8
     {
-        msg_div_alert_and_debug("Signup failed !", "email or password empty or incorrect");
+        msg_div_alert_and_debug("Signup failed ! Email incorrect or password less then 8 characters.", "email or password empty or incorrect");
         return ();
     }
 

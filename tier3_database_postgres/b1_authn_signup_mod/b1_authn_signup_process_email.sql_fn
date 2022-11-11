@@ -9,15 +9,16 @@ _user_email varchar(100)
 returns table(is_allowed bool) 
 language plpgsql as
 $$
--- I want to limit the emails that can signup. This is ok for some internal website or intranet.
 declare
     _is_allowed bool := true;
 begin
 
-if _is_allowed is true and _user_email not like 'luciano.bestia@gmail.com' then
+-- I want to limit the emails that can signup. This is ok for some internal website or intranet.
+if _is_allowed is true and _user_email not like '%@bestia.dev' then
     _is_allowed = false;
 end if;
 
+-- The email must not be already a Login
 if _is_allowed is true and exists(select * from b2_authn_login t where t.user_email = _user_email) then
     _is_allowed = false;
 end if;
