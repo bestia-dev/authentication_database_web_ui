@@ -2,11 +2,11 @@
 
 // type aliases: for less verbose types and better readability of the code
 
-use tier2_library_for_web_app as t2;
+use tier2_library_for_web_app as T_2;
 
-use t2::actix_mod::{RequestAndPayload, ResultResponse};
-use t2::server_side_multi_row_mod::ServerSideMultiRow;
-use t2::server_side_single_row_mod::ServerSideSingleRow;
+use T_2::actix_mod::{RequestAndPayload, ResultResponse};
+use T_2::server_side_multi_row_mod::ServerSideMultiRow;
+use T_2::server_side_single_row_mod::ServerSideSingleRow;
 
 const SCOPE: &'static str = "c1_webpage_hits_mod";
 

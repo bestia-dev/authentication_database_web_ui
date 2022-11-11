@@ -1,8 +1,8 @@
 // tier2_library_for_web_app/src/actix_mod.rs
 
-use tier0_common_code as t0;
+use tier0_common_code as T_0;
 
-use t0::APP_MAIN_ROUTE;
+use T_0::APP_MAIN_ROUTE;
 
 use super::error_mod::time_epoch_as_millis;
 

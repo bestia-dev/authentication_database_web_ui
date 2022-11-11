@@ -20,7 +20,8 @@ pub type FieldsNameType = HashMap<FieldName, PostgresUdtType>;
 /// views are always searched by view name
 pub type SqlViewFields = HashMap<ViewName, FieldsNameType>;
 /// this type is used to give parameters to postgres run command
-pub type SqlParamsForPostgres<'a> = Vec<&'a (dyn tokio_postgres::types::ToSql + Sync)>;
+pub type SqlParamForPostgres<'a> = &'a (dyn tokio_postgres::types::ToSql + Sync);
+pub type SqlParamsForPostgres<'a> = Vec<SqlParamForPostgres<'a>>;
 
 // newtypes : forces unambiguous intent
 #[derive(Eq, Hash, PartialEq, Clone)]

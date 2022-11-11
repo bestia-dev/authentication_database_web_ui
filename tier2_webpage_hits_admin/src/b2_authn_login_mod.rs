@@ -1,15 +1,15 @@
 // tier2_webpage_hits_admin/src/b2_authn_login_mod.rs
 
-use tier0_common_code as t0;
-use tier2_library_for_web_app as t2;
+use tier0_common_code as T_0;
+use tier2_library_for_web_app as T_2;
 
-use t0::APP_MAIN_ROUTE;
-use t2::actix_mod::DataAppState;
-use t2::actix_mod::ResultResponse;
-use t2::error_mod::LibError;
-use t2::postgres_function_mod::PostgresFunction;
-use t2::postgres_mod::get_string_from_row;
-use t2::postgres_type_mod::PostgresValueMultiType as PosType;
+use T_0::APP_MAIN_ROUTE;
+use T_2::actix_mod::DataAppState;
+use T_2::actix_mod::ResultResponse;
+use T_2::error_mod::LibError;
+use T_2::postgres_function_mod::PostgresFunction;
+use T_2::postgres_mod::get_string_from_row;
+use T_2::postgres_type_mod::PostgresValueMultiType as PosType;
 
 const SCOPE: &'static str = "b2_authn_login_mod";
 
@@ -29,8 +29,8 @@ use actix_web::web::to;
 /// Show the input form. I choose the short name because the url looks nice in the address bar.
 #[function_name::named]
 pub async fn b2_authn_login() -> ResultResponse {
-    let body = t2::html_templating_mod::read_template(SCOPE, function_name!());
-    Ok(t2::actix_mod::return_html_response_no_cache(body))
+    let body = T_2::html_templating_mod::read_template(SCOPE, function_name!());
+    Ok(T_2::actix_mod::return_html_response_no_cache(body))
 }
 
 /// read data from postgres database table b2_authn_login for email_user
@@ -38,9 +38,9 @@ async fn call_pg_func_auth_login_show(
     user_email: &str,
     app_state: DataAppState,
 ) -> Result<tokio_postgres::Row, LibError> {
-    let mut sql_params = t2::sql_params_mod::SqlParams::new();
+    let mut sql_params = T_2::sql_params_mod::SqlParams::new();
     sql_params.insert("_user_email", PosType::String(user_email.to_string()));
-    let mut pg_func =
+    let pg_func =
         PostgresFunction::new_with_sql_params(app_state, "b2_authn_login_show", sql_params);
     let single_row = pg_func.run_sql_function_return_single_row().await?;
     Ok(single_row)
@@ -52,7 +52,7 @@ async fn call_pg_func_auth_login_show(
 /// If email does not exist return a random salt.
 pub async fn b2_authn_login_process_email(
     app_state: DataAppState,
-    data_req: actix_web::web::Json<t0::DataReqAuthnLoginProcessEmail>,
+    data_req: actix_web::web::Json<T_0::DataReqAuthnLoginProcessEmail>,
 ) -> ResultResponse {
     let salt = match call_pg_func_auth_login_show(&data_req.user_email, app_state).await {
         Err(_err) => {
@@ -65,7 +65,7 @@ pub async fn b2_authn_login_process_email(
             let password_hash = get_string_from_row(&single_row, "password_hash")?;
             // extract salt
             let password_hash = password_hash::PasswordHash::new(&password_hash)
-                .map_err(|_| t2::error_mod::LibError::PasswordHash)?;
+                .map_err(|_| T_2::error_mod::LibError::PasswordHash)?;
 
             let salt = password_hash
                 .salt
@@ -76,14 +76,14 @@ pub async fn b2_authn_login_process_email(
         }
     };
 
-    let data_resp = t0::DataRespAuthnLoginProcessEmail { salt };
-    t2::actix_mod::return_json_resp_from_object(data_resp)
+    let data_resp = T_0::DataRespAuthnLoginProcessEmail { salt };
+    T_2::actix_mod::return_json_resp_from_object(data_resp)
 }
 
 /// b2_authn_login_process_hash
 pub async fn b2_authn_login_process_hash(
     app_state: DataAppState,
-    data_req: actix_web::web::Json<t0::DataReqAuthnLoginProcessHash>,
+    data_req: actix_web::web::Json<T_0::DataReqAuthnLoginProcessHash>,
 ) -> ResultResponse {
     // check data_req.hash   in database
     let single_row = call_pg_func_auth_login_show(&data_req.user_email, app_state.clone()).await?;
@@ -104,7 +104,7 @@ pub async fn b2_authn_login_process_hash(
                 uuid.clone(),
                 (
                     data_req.user_email.clone(),
-                    t2::error_mod::time_epoch_as_millis(),
+                    T_2::error_mod::time_epoch_as_millis(),
                 ),
             );
         // endregion: add random session_id as UUID into app_state active_sessions
@@ -131,9 +131,9 @@ pub async fn b2_authn_login_process_hash(
         // endregion: create cookie to add to response
 
         // if successful return response with new session cookie
-        let data_resp = t0::DataRespAuthnLoginProcessHash {
+        let data_resp = T_0::DataRespAuthnLoginProcessHash {
             login_success: is_login_success,
         };
-        t2::actix_mod::return_json_resp_from_object_with_cookie(data_resp, cookie)
+        T_2::actix_mod::return_json_resp_from_object_with_cookie(data_resp, cookie)
     }
 }

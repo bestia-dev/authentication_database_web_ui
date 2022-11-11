@@ -3,13 +3,13 @@
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
-use tier0_common_code as t0;
+use tier0_common_code as T_0;
 
 // For the on_click macro, I must use crate::on_click and wasm_bindgen::JsCast
 use crate::on_click;
 use crate::on_input;
 use crate::web_sys_mod::*;
-use t0::APP_MAIN_ROUTE;
+use T_0::APP_MAIN_ROUTE;
 
 const SCOPE: &'static str = "b2_authn_login_mod";
 
@@ -44,10 +44,10 @@ pub async fn b2_authn_login_btn_submit() {
         return ();
     }
 
-    let Ok(resp1_obj) = send_obj_get_obj::<t0::DataRespAuthnLoginProcessEmail>(
+    let Ok(resp1_obj) = send_obj_get_obj::<T_0::DataRespAuthnLoginProcessEmail>(
         SCOPE,
         "b2_authn_login_process_email",
-        t0::DataReqAuthnLoginProcessEmail {
+        T_0::DataReqAuthnLoginProcessEmail {
             user_email: user_email.clone(),
         },
     )
@@ -59,10 +59,10 @@ pub async fn b2_authn_login_btn_submit() {
 
     let hash = calculate_hash(user_email.clone(), password, resp1_obj.salt);
 
-    let Ok(resp2_obj) = send_obj_get_obj::<t0::DataRespAuthnLoginProcessHash>(
+    let Ok(resp2_obj) = send_obj_get_obj::<T_0::DataRespAuthnLoginProcessHash>(
         SCOPE,
         "b2_authn_login_process_hash",
-        t0::DataReqAuthnLoginProcessHash {
+        T_0::DataReqAuthnLoginProcessHash {
             user_email: user_email.clone(),
             hash,
         },

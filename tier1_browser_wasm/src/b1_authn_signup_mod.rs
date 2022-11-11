@@ -3,13 +3,13 @@
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
-use tier0_common_code as t0;
+use tier0_common_code as T_0;
 
 // For the on_click macro, I must use crate::on_click and wasm_bindgen::JsCast
 use crate::on_click;
 use crate::on_input;
 use crate::web_sys_mod::*;
-// use t0::APP_MAIN_ROUTE;
+// use T_0::APP_MAIN_ROUTE;
 
 const SCOPE: &'static str = "b1_authn_signup_mod";
 
@@ -47,10 +47,10 @@ pub async fn b1_authn_signup_btn_submit() {
         return ();
     }
 
-    let Ok(resp1_obj) = send_obj_get_obj::<t0::DataRespAuthnSignupProcessEmail>(
+    let Ok(resp1_obj) = send_obj_get_obj::<T_0::DataRespAuthnSignupProcessEmail>(
         SCOPE,
         "b1_authn_signup_process_email",
-        t0::DataReqAuthnSignupProcessEmail {
+        T_0::DataReqAuthnSignupProcessEmail {
             user_email: user_email.clone(),
         },
     ).await
@@ -62,10 +62,10 @@ pub async fn b1_authn_signup_btn_submit() {
     let hash =
         crate::b2_authn_login_mod::calculate_hash(user_email.clone(), password_1, resp1_obj.salt);
 
-    let Ok(resp2_obj) = send_obj_get_obj::<t0::DataRespAuthnSignupInsert>(
+    let Ok(resp2_obj) = send_obj_get_obj::<T_0::DataRespAuthnSignupInsert>(
         SCOPE,
         "b1_authn_signup_insert",
-        t0::DataReqAuthnSignupInsert {
+        T_0::DataReqAuthnSignupInsert {
             user_email: user_email.clone(),
             hash: hash,
         },

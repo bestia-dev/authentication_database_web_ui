@@ -1,5 +1,8 @@
 // tier2_library_for_web_app/src/postgres_function_mod.rs
 
+use crate::postgres_mod::SqlParamsForPostgres;
+use crate::rust_named_params_for_sql_mod::RustNamedParamsForSql;
+
 use super::actix_mod::DataAppState;
 use super::error_mod::LibError;
 use super::postgres_mod::FunctionName;
@@ -65,10 +68,22 @@ impl PostgresFunction {
     /// run sql function and return multi row (zero or more)
     /// 3. and 4. create reference to sql_params_in_order and run sql function
     pub async fn run_sql_function_return_multi_row(
-        &mut self,
+        &self,
     ) -> core::result::Result<Vec<tokio_postgres::Row>, LibError> {
         // region: 3. create reference to sql_params_in_order, because postgres_client need this format
         let ref_to_sql_params = SqlParams::ref_to_function_params(&self.sql_params_in_order);
+        // endregion
+        // 4. run sql function from ref_to_sql_params in order and get single row
+        self.run_sql_function_return_multi_row_ref_to_sql_params(ref_to_sql_params)
+            .await
+    }
+
+    /// run sql function and return multi row (zero or more)
+    /// 4. run sql function
+    async fn run_sql_function_return_multi_row_ref_to_sql_params<'a>(
+        &self,
+        ref_to_sql_params: SqlParamsForPostgres<'a>,
+    ) -> core::result::Result<Vec<tokio_postgres::Row>, LibError> {
         // endregion
         // 4. run sql function from ref_to_sql_params in order and get single row
         let query = format!(
@@ -90,9 +105,30 @@ impl PostgresFunction {
 
     /// return exactly single row from function or error
     pub async fn run_sql_function_return_single_row(
-        &mut self,
+        &self,
     ) -> core::result::Result<tokio_postgres::Row, LibError> {
-        let mut multi_row = self.run_sql_function_return_multi_row().await?;
+        let multi_row = self.run_sql_function_return_multi_row().await?;
+        self.run_sql_function_return_single_row_process(multi_row)
+            .await
+    }
+
+    /// return exactly single row from function or error
+    async fn run_sql_function_return_single_row_ref_to_sql_params<'a>(
+        &self,
+        ref_to_sql_params: SqlParamsForPostgres<'a>,
+    ) -> core::result::Result<tokio_postgres::Row, LibError> {
+        let multi_row = self
+            .run_sql_function_return_multi_row_ref_to_sql_params(ref_to_sql_params)
+            .await?;
+        self.run_sql_function_return_single_row_process(multi_row)
+            .await
+    }
+
+    /// return exactly single row from function or error
+    async fn run_sql_function_return_single_row_process(
+        &self,
+        mut multi_row: Vec<tokio_postgres::Row>,
+    ) -> core::result::Result<tokio_postgres::Row, LibError> {
         if multi_row.len() == 0 {
             Err(LibError::QueryReturnZeroRow {
                 developer_friendly: format!(
@@ -114,4 +150,59 @@ impl PostgresFunction {
             Ok(single_row)
         }
     }
+
+    pub async fn run_sql_function_named_params_return_single_row<'a>(
+        app_state: DataAppState,
+        function_name: &'static str,
+        rust_named_params: &'a mut RustNamedParamsForSql<'a>,
+    ) -> core::result::Result<tokio_postgres::Row, LibError> {
+        let function_name_obj = FunctionName(function_name.to_string());
+        let (ref_to_sql_params, placeholders) = get_sql_params_in_order_and_placeholders(
+            app_state.clone(),
+            function_name,
+            rust_named_params,
+        );
+        let pf = PostgresFunction {
+            app_state,
+            function_name: function_name_obj,
+            sql_params_in_order: vec![],
+            placeholders,
+        };
+
+        pf.run_sql_function_return_single_row_ref_to_sql_params(ref_to_sql_params)
+            .await
+    }
+}
+
+/// the param order is important to call postgres functions
+fn get_sql_params_in_order_and_placeholders<'a>(
+    app_state: DataAppState,
+    function_name: &'static str,
+    rust_named_params: &'a mut RustNamedParamsForSql<'a>,
+) -> (SqlParamsForPostgres<'a>, String) {
+    let function_name_obj = FunctionName(function_name.to_string());
+    let mut sql_params_in_order: SqlParamsForPostgres = vec![];
+
+    let param_name_order = app_state
+        .all_sql_function_input_params_order
+        .get(&function_name_obj)
+        .unwrap();
+
+    // params must be in the correct order
+    let mut placeholders = String::new();
+    let mut delimiter = String::new();
+
+    for (i, param_name) in param_name_order.iter().enumerate() {
+        let pn = param_name.0.clone();
+        // I cannot use remove() here, because in a loop it creates multiple mutable reference.
+        // I must use clone, but it is not performant.
+        sql_params_in_order.push(rust_named_params.0.get(&pn).unwrap().clone());
+        // placeholders start with $1, not zero
+        placeholders.push_str(&format!("{delimiter}${}", i + 1));
+        if delimiter.is_empty() {
+            delimiter.push_str(", ");
+        }
+    }
+
+    (sql_params_in_order, placeholders)
 }

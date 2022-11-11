@@ -6,16 +6,16 @@ mod b1_authn_signup_mod;
 mod b2_authn_login_mod;
 mod c1_webpage_hits_mod;
 
-use tier0_common_code as t0;
-use tier2_library_for_web_app as t2;
+use tier0_common_code as T_0;
+use tier2_library_for_web_app as T_2;
 
-use t0::APP_MAIN_ROUTE;
-use t2::actix_mod::on_request_received_is_session_cookie_ok;
-use t2::actix_mod::redirect_to_login_page;
-use t2::app_state_mod::AppState;
-use t2::deadpool_mod::deadpool_start_and_check;
-use t2::postgres_mod::get_for_cache_all_function_input_params;
-use t2::postgres_mod::get_for_cache_all_view_fields;
+use T_0::APP_MAIN_ROUTE;
+use T_2::actix_mod::on_request_received_is_session_cookie_ok;
+use T_2::actix_mod::redirect_to_login_page;
+use T_2::app_state_mod::AppState;
+use T_2::deadpool_mod::deadpool_start_and_check;
+use T_2::postgres_mod::get_for_cache_all_function_input_params;
+use T_2::postgres_mod::get_for_cache_all_view_fields;
 
 lazy_static::lazy_static! {
     static ref SERVER_PROTOCOL: String = std::env::var("SERVER_PROTOCOL").unwrap();

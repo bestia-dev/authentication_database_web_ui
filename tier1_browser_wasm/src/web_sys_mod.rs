@@ -15,9 +15,9 @@ use wasm_bindgen_futures::JsFuture;
 use web_sys::console;
 use web_sys::{Request, RequestInit, Response};
 
-use tier0_common_code as t0;
+use tier0_common_code as T_0;
 
-use t0::APP_MAIN_ROUTE;
+use T_0::APP_MAIN_ROUTE;
 // endregion: use
 
 /// Simple macro to set listener of onclick events to an element_id to an async function.
