@@ -11,13 +11,16 @@ language plpgsql as
 $$
 -- I want to limit the emails that can signup. This is ok for some internal website or intranet.
 declare
-    _is_allowed bool := false;
+    _is_allowed bool := true;
 begin
 
-if email like '%luciano.bestia@gmail.com%' then
-    _is_allowed = true;
+if _is_allowed is true and email not like 'luciano.bestia@gmail.com' then
+    _is_allowed = false;
 end if;
 
+if _is_allowed is true and exists(select * from b2_authn_login t where t.user_email = _user_email) then
+    _is_allowed = false;
+end if;
 
 return query 
 select _is_allowed as is_allowed;

@@ -108,7 +108,7 @@ pub async fn get_for_cache_all_function_input_params(
     let mut hm_name_type: ParamsNameType = HashMap::new();
     let mut params_order = vec![];
     for row in vec_row.iter() {
-        function_name = FunctionName(row.get(0));
+        function_name = FunctionName(row.get("routine_name"));
         if function_name != old_function_name {
             if !old_function_name.0.is_empty() {
                 all_function_input_params.insert(old_function_name.clone(), hm_name_type);
@@ -118,9 +118,9 @@ pub async fn get_for_cache_all_function_input_params(
             hm_name_type = HashMap::new();
             params_order = vec![];
         }
-        let param_name = ParamName(row.get(1));
+        let param_name = ParamName(row.get("parameter_name"));
         use std::str::FromStr;
-        let udt_name = row.get(2);
+        let udt_name = row.get("udt_name");
         //dbg!(&udt_name);
         let arg_type = PostgresUdtType::from_str(udt_name).unwrap();
         hm_name_type.insert(param_name.clone(), arg_type);
@@ -153,7 +153,7 @@ pub async fn get_for_cache_all_view_fields(db_pool: &deadpool_postgres::Pool) ->
     let mut old_view_name = ViewName(String::new());
     let mut view_name: ViewName;
     for row in vec_row.iter() {
-        view_name = ViewName(row.get(0));
+        view_name = ViewName(row.get("view_name"));
         if view_name != old_view_name {
             if !old_view_name.0.is_empty() {
                 //dbg!(&vec_name_type);
@@ -163,8 +163,8 @@ pub async fn get_for_cache_all_view_fields(db_pool: &deadpool_postgres::Pool) ->
             old_view_name = view_name;
         }
         //dbg!(&row);
-        let column_name = FieldName(row.get(1));
-        let udt_name: String = row.get(2);
+        let column_name = FieldName(row.get("column_name"));
+        let udt_name: String = row.get("udt_name");
         //dbg!(&udt_name);
         use std::str::FromStr;
         let arg_type = PostgresUdtType::from_str(&udt_name).unwrap();

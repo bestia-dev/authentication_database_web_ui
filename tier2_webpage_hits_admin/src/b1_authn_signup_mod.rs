@@ -1,9 +1,9 @@
 // tier2_webpage_hits_admin/src/b1_authn_signup_mod.rs
 
-use T_2::error_mod::LibError;
-use T_2::postgres_function_mod::PostgresFunction as P_Func;
 use tier0_common_code as T_0;
 use tier2_library_for_web_app as T_2;
+use T_2::error_mod::LibError;
+use T_2::postgres_function_mod::PostgresFunction as P_Func;
 
 //use T_0::APP_MAIN_ROUTE;
 use T_2::actix_mod::DataAppState;
@@ -56,16 +56,28 @@ pub async fn b1_authn_signup_insert(
     app_state: DataAppState,
     data_req: actix_web::web::Json<T_0::DataReqAuthnSignupInsert>,
 ) -> ResultResponse {
-    // I want to limit the emails that can signup. This is ok for some internal website or intranet.
+    
+    // region: I want to limit the emails that can signup. This is ok for some internal website or intranet.
 
-    // TODO: b1_authn_signup_allowed_email
+    let mut rust_named_params = T_2::rust_named_params_for_sql_mod::RustNamedParamsForSql::new();
+    rust_named_params
+        .insert("_user_email", &data_req.user_email);
 
-    if !data_req.user_email.contains("bestia") {
+    let single_row = P_Func::run_sql_function_named_params_return_single_row(
+        app_state.clone(),
+        "b1_authn_signup_allowed_email",
+        &mut rust_named_params,
+    )
+    .await?;
+    
+    let is_allowed:bool = single_row.get("is_allowed");
+    if is_allowed == false {
         return Err(LibError::SignupError {
             developer_friendly: String::from("Signup not allowed for this email."),
         }
         .into());
     }
+    // endregion: I want to limit the emails that can signup. This is ok for some internal website or intranet.
 
     let verification_uuid = uuid::Uuid::new_v4().simple().to_string();
     let verified = false;

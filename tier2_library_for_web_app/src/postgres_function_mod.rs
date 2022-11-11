@@ -194,9 +194,9 @@ fn get_sql_params_in_order_and_placeholders<'a>(
 
     for (i, param_name) in param_name_order.iter().enumerate() {
         let pn = param_name.0.clone();
-        // I cannot use remove() here, because in a loop it creates multiple mutable reference.
-        // I must use clone, but it is not performant.
-        sql_params_in_order.push(rust_named_params.0.get(&pn).unwrap().clone());
+        // remove() will consume the hashmap and move the references to the vector in the correct order
+        let p = rust_named_params.0.remove(&pn).unwrap();
+        sql_params_in_order.push(p);
         // placeholders start with $1, not zero
         placeholders.push_str(&format!("{delimiter}${}", i + 1));
         if delimiter.is_empty() {
