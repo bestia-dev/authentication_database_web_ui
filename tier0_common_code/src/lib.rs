@@ -24,7 +24,7 @@ pub struct DataRespAuthnLoginProcessEmail {
 #[derive(Serialize, Deserialize)]
 pub struct DataReqAuthnLoginProcessHash {
     pub user_email: String,
-    pub hash: String,
+    pub password_hash: String,
 }
 
 /// json response data for b2_authn_login_process_hash()
@@ -42,6 +42,7 @@ pub struct DataReqAuthnSignupProcessEmail {
 /// json response data for b1_authn_signup_process_email()
 #[derive(Serialize, Deserialize)]
 pub struct DataRespAuthnSignupProcessEmail {
+    pub is_allowed: bool,
     pub salt: String,
 }
 
@@ -49,7 +50,7 @@ pub struct DataRespAuthnSignupProcessEmail {
 #[derive(Serialize, Deserialize)]
 pub struct DataReqAuthnSignupInsert {
     pub user_email: String,
-    pub hash: String,
+    pub password_hash: String,
 }
 
 /// json response data for b1_authn_signup_insert()

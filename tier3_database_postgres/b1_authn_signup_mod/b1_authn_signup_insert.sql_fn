@@ -8,12 +8,23 @@ _user_email varchar(100),
 _password_hash varchar(200),
 _verification_uuid varchar(100),
 _verified bool)
-returns table(user_email varchar(100), verified bool, created_at timestamp) 
+returns table(is_allowed bool, user_email varchar(100)) 
 language plpgsql as
 $$
 declare
-
+    _is_allowed bool;
 begin
+
+-- region: I want to limit the emails that can signup. This is ok for some internal website or intranet.
+select a.is_allowed
+into _is_allowed
+from b1_authn_signup_process_email(_user_email) a;
+
+if _is_allowed = false then
+    return query 
+    select _is_allowed as is_allowed, '' as user_email;
+end if;
+-- endregion: I want to limit the emails that can signup. This is ok for some internal website or intranet.
 
 -- delete if already exists. Only the last attempt may be succesful.
 if exists (select * from b1_authn_signup a where a.user_email=_user_email) then
@@ -25,7 +36,7 @@ insert into b1_authn_signup(user_email, password_hash, verification_uuid, verifi
 values(_user_email,_password_hash,_verification_uuid, _verified);
 
 return query 
-select a.user_email, a.verified, a.created_at
+select _is_allowed as is_allowed, a.user_email
 from b1_authn_signup a
 where a.user_email=_user_email;
 

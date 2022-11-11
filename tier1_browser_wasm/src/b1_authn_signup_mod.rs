@@ -59,7 +59,7 @@ pub async fn b1_authn_signup_btn_submit() {
             return ();
     };
 
-    let hash =
+    let password_hash =
         crate::b2_authn_login_mod::calculate_hash(user_email.clone(), password_1, resp1_obj.salt);
 
     let Ok(resp2_obj) = send_obj_get_obj::<T_0::DataRespAuthnSignupInsert>(
@@ -67,7 +67,7 @@ pub async fn b1_authn_signup_btn_submit() {
         "b1_authn_signup_insert",
         T_0::DataReqAuthnSignupInsert {
             user_email: user_email.clone(),
-            hash: hash,
+            password_hash,
         },
     ).await
     else {

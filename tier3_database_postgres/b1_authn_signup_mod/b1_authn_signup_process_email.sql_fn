@@ -1,12 +1,12 @@
--- tier3_database_postgres/b1_authn_signup_mod/b1_authn_signup_allowed_email.sql_fn
+-- tier3_database_postgres/b1_authn_signup_mod/b1_authn_signup_process_email.sql_fn
 
-select a2_migrate_function('b1_authn_signup_allowed_email',
+select a2_migrate_function('b1_authn_signup_process_email',
 $source_code$
 
-create function  b1_authn_signup_allowed_email(
+create function  b1_authn_signup_process_email(
 _user_email varchar(100)
 )
-returns table(allowed bool) 
+returns table(is_allowed bool) 
 language plpgsql as
 $$
 -- I want to limit the emails that can signup. This is ok for some internal website or intranet.
@@ -14,7 +14,7 @@ declare
     _is_allowed bool := true;
 begin
 
-if _is_allowed is true and email not like 'luciano.bestia@gmail.com' then
+if _is_allowed is true and _user_email not like 'luciano.bestia@gmail.com' then
     _is_allowed = false;
 end if;
 

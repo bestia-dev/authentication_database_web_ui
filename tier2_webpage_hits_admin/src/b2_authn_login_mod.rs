@@ -85,10 +85,10 @@ pub async fn b2_authn_login_process_hash(
     app_state: DataAppState,
     data_req: actix_web::web::Json<T_0::DataReqAuthnLoginProcessHash>,
 ) -> ResultResponse {
-    // check data_req.hash   in database
+    // check data_req.password_hash   in database
     let single_row = call_pg_func_auth_login_show(&data_req.user_email, app_state.clone()).await?;
     let password_hash: String = get_string_from_row(&single_row, "password_hash")?;
-    let is_login_success = { password_hash == data_req.hash };
+    let is_login_success = { password_hash == data_req.password_hash };
     if !is_login_success {
         Err(LibError::AuthenticationFailed.into())
     } else {

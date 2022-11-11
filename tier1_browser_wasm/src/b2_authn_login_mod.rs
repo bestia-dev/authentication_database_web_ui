@@ -36,7 +36,11 @@ pub async fn b2_authn_login_btn_submit() {
     debug_write("b2_authn_login_btn_submit");
     let user_email = get_input_element_value_string_by_id("user_email");
     let password = get_input_element_value_string_by_id("password");
-    if user_email.is_empty() || !user_email.contains("@") || password.is_empty() {
+    if user_email.is_empty()
+        || !user_email.contains("@")
+        || !user_email.contains(".")
+        || password.is_empty()
+    {
         msg_div_alert_and_debug(
             "Authentication failed !",
             "email or password empty or incorrect",
@@ -57,14 +61,14 @@ pub async fn b2_authn_login_btn_submit() {
             return ();
     };
 
-    let hash = calculate_hash(user_email.clone(), password, resp1_obj.salt);
+    let password_hash = calculate_hash(user_email.clone(), password, resp1_obj.salt);
 
     let Ok(resp2_obj) = send_obj_get_obj::<T_0::DataRespAuthnLoginProcessHash>(
         SCOPE,
         "b2_authn_login_process_hash",
         T_0::DataReqAuthnLoginProcessHash {
             user_email: user_email.clone(),
-            hash,
+            password_hash,
         },
     )
     .await else
@@ -88,8 +92,9 @@ pub async fn b2_authn_login_btn_submit() {
 pub fn calculate_hash(user_email: String, password: String, salt: String) -> String {
     let input_password = format!("{user_email}_{password}");
     let argon2 = argon2::Argon2::default();
-    let hash = argon2::PasswordHasher::hash_password(&argon2, &input_password.as_bytes(), &salt)
-        .unwrap()
-        .to_string();
-    hash
+    let password_hash =
+        argon2::PasswordHasher::hash_password(&argon2, &input_password.as_bytes(), &salt)
+            .unwrap()
+            .to_string();
+    password_hash
 }
