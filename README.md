@@ -19,7 +19,7 @@
 
 [//]: # (auto_lines_of_code end)
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bestia-dev/authentication_database_web_ui/blob/main/LICENSE) [![Rust](https://github.com/bestia-dev/authentication_database_web_ui/workflows/RustAction/badge.svg)](https://github.com/bestia-dev/authentication_database_web_ui/) ![Hits](https://bestia.dev/webpage_hit_counter/get_svg_image/0.svg)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bestia-dev/authentication_database_web_ui/blob/main/LICENSE) ![Hits](https://bestia.dev/webpage_hit_counter/get_svg_image/0.svg)
 
 Hashtags: #rust #rustlang #tutorial  
 My projects on Github are more like a tutorial than a finished product: [bestia-dev tutorials](https://github.com/bestia-dev/tutorials_rust_wasm).
@@ -60,6 +60,40 @@ If successful, the server inserts a new random session_id into the table user_se
 ## Check session cookie
 
 This session cookie will be attached to every request sent from this client. The server will check in the table user_session that the session_id is alive and grant access. The session_id has an expiration date_time and this is updated on every request. If the session_id expires it is deleted from the table and subsequent requests will fail. The user will need to login again. Session_id does not need to be saved in a persistent table for now. I will use some kind of cache in memory for performance. Alternatively, we could use [Redis distributed cache](https://redis.io/), which is faster than database access.
+
+## Authorization
+
+The main goal of authentication is authorization. We can give different users different permissions/authorizations.  
+Any request from application must be authorized to ensure that the current user has appropriate permissions to make the request.
+The authorization is based on the `a2_authorization_role`. Every login must be in one or more roles. The basic role is `user`.
+
+[//]: # (auto_plantuml start)
+
+<details><summary>plantuml code:</summary>
+
+```plantuml
+@startuml name = "plantuml_authorization"
+
+b2_authn_login ||--o{ b2_authn_login_role
+b2_authn_role ||--o{ b2_authn_login_role
+
+note bottom
+  many-to-many relations
+end note
+
+b2_authn_role ||--o{ b2_authn_role_permission
+b2_authn_permission ||--o{ b2_authn_role_permission
+
+note bottom
+  many-to-many relations
+end note
+
+@enduml
+```
+
+![plantuml_authorization](https://github.com/bestia-dev/authentication_database_web_ui-/raw/main/images/plantuml_authorization.png)
+
+[//]: # (auto_plantuml end)
 
 ## Webassembly/WASM for client code execution
 
@@ -180,12 +214,13 @@ It is short-sighted to treat all the database as a monolith.
 Usually real life is complicated and we have different modules in the database that are developed by different teams and are loosely-coupled together. Inside one module things are very interconnected, but between different modules we try to connect them as little as possible.  
 It is wise to have a strict hierarchy where higher level modules can call lower levels, but not reverse. Maybe there is some clever way to separate objects with schemas, but I will do it the old-school way. I will add a namespace prefix. It is absolutely ugly as hell, but effective. And no surprises here.  
 It is also very handy for search the same name in the entire workspace with many different languages and modules. The name becomes so specific that there cannot be false positives at all.  
-The lowest objects will be level "a", then "b", "c" and so on.
+The lowest objects will be level "a", then "b", "c" and so on. Inside the levels the components are numbered example: a1, a2, a3...
 
+[//]: # (auto_plantuml start)
 <details><summary>plantuml code:</summary>
 
 ```plantuml
-@startuml
+@startuml name = "plantuml_database_objects"
 top to bottom direction
 skinparam componentStyle rectangle
 
@@ -234,10 +269,13 @@ a -d-> p
 
 ![plantuml_database_objects](https://github.com/bestia-dev/authentication_database_web_ui-/raw/main/images/plantuml_database_objects.png)
 
+[//]: # (auto_plantuml end)
+
 ## html templates
 
 The html files are saved in the "web_server_folder" with the same hierarchy as the Rust modules or SQL files. Again, the crucial point is to have the same unique name everywhere. Without it, we would be just lost in the sea of code.  
 The html files must be saved in UTF-8 encoding without the byte-order mark (BOM).  
+A lot of the html files are very similar with just a few differences. This could be optimized deduplicating the code somehow.
 
 ## Other observations
 
