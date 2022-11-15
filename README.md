@@ -91,6 +91,8 @@ end note
 @enduml
 ```
 
+</details>
+
 ![plantuml_authorization](https://github.com/bestia-dev/authentication_database_web_ui-/raw/main/images/plantuml_authorization.png)
 
 [//]: # (auto_plantuml end)
