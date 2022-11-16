@@ -68,8 +68,9 @@ Any request from application must be authorized to ensure that the current user 
 The authorization is based on the `a2_authorization_role`. Every login must be in one or more roles. The basic role is `user`.
 
 [//]: # (auto_plantuml start)
-
+<!-- markdownlint-disable MD033 -->
 <details><summary>plantuml code:</summary>
+<!-- markdownlint-enable MD033 -->
 
 ```plantuml
 @startuml name = "plantuml_authorization"
@@ -219,7 +220,9 @@ It is also very handy for search the same name in the entire workspace with many
 The lowest objects will be level "a", then "b", "c" and so on. Inside the levels the components are numbered example: a1, a2, a3...
 
 [//]: # (auto_plantuml start)
+<!-- markdownlint-disable MD033 -->
 <details><summary>plantuml code:</summary>
+<!-- markdownlint-enable MD033 -->
 
 ```plantuml
 @startuml name = "plantuml_database_objects"
