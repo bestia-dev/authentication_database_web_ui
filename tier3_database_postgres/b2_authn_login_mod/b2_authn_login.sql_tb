@@ -6,8 +6,8 @@ $source_code$
 
 create table b2_authn_login
 (
-    authn_login_id serial,
-    constraint authn_login_pkey primary key (authn_login_id)
+    b2_authn_login_id serial,
+    constraint b2_authn_login_pkey primary key (b2_authn_login_id)
 );
 
 $source_code$);
@@ -16,6 +16,4 @@ select a2_migrate_column('b2_authn_login','user_email','varchar(100)','','not nu
 select a2_migrate_constraint_unique('b2_authn_login', 'user_email');
 
 select a2_migrate_column('b2_authn_login','password_hash','varchar(200)','','not null');
-select a2_migrate_column('b2_authn_login','failed_attempts','int4','0', 'not null');
-select a2_migrate_column('b2_authn_login','blocked','bool','FALSE', 'not null');
  

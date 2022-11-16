@@ -1,0 +1,28 @@
+-- tier3_database_postgres/b4_authn_operation_mod/b4_authn_operation_insert.sql_fn
+
+select a2_migrate_function('b4_authn_operation_insert',
+$source_code$
+
+create function  b4_authn_operation_insert(
+_b4_authn_operation_id int4,    
+_url_path varchar(100),
+_description text,
+_is_readonly bool)
+returns table(b4_authn_operation_id int4, url_path varchar(100), description text, is_readonly bool) 
+language plpgsql as
+$$
+declare
+begin
+
+insert into b4_authn_operation(b4_authn_operation_id,url_path, description, is_readonly)
+values(_b4_authn_operation_id, _url_path,_description, _is_readonly);
+
+return query 
+select a.b4_authn_operation_id, a.url_path, a.description, a.is_readonly
+from b4_authn_operation a
+where a.b4_authn_operation_id=_b4_authn_operation_id;
+
+end; 
+$$;
+
+$source_code$);

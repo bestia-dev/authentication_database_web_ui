@@ -12,30 +12,29 @@ returns table(verification_h1 text, verification_p text)
 language plpgsql as
 $$
 declare
-
+    _user_email varchar(100);
+    _password_hash varchar(200);
 begin
 
 if exists (select * from b1_authn_signup a 
     where a.verification_uuid=_uuid) then
 
+    select b.user_email, b.password_hash 
+    into _user_email, _password_hash
+    from b1_authn_signup b 
+    where b.verification_uuid=_uuid;
+
     if not exists(select * from b2_authn_login a 
-        join b1_authn_signup b on b.user_email=a.user_email
-        where b.verification_uuid=_uuid) then
+        where a.user_email = _user_email) then
 
-        update b1_authn_signup 
-        set verified=true
-        where verification_uuid=_uuid;
-
-        -- some web apps need a manual process to grant access
+        -- some web apps need a manual process to grant access. 
+        -- This is not difficult to implement, but for a tutorial let's not complicate much.
         -- In this particular case, I will grant access immediatelly.
         -- move the signup user into the login table with minimal authorization
-        insert into b2_authn_login(user_email,password_hash,failed_attempts,blocked)
-        select user_email, password_hash,0,false        
-        from b1_authn_signup a 
-        where a.verification_uuid=_uuid;
 
-        delete from b1_authn_signup
-        where verification_uuid=_uuid;
+        select * from b2_authn_login_insert(_user_email, _password_hash);
+
+        select * from b1_authn_signup_delete(_user_email);        
 
     else
         return query select 'Verification of your email failed' as verification_h1, 

@@ -67,15 +67,13 @@ pub async fn b1_authn_signup_insert(
     data_req: actix_web::web::Json<T_0::DataReqAuthnSignupInsert>,
 ) -> ResultResponse {
     let verification_uuid = uuid::Uuid::new_v4().simple().to_string();
-    let verified = false;
     // I already have all the params as values. I could give the references to the sql function in the correct params order.
     // But I want to give it as named parameters. Then the function will find out the correct order.
     let mut rust_named_params = T_2::rust_named_params_for_sql_mod::RustNamedParamsForSql::new();
     rust_named_params
         .insert("_user_email", &data_req.user_email)
         .insert("_password_hash", &data_req.password_hash)
-        .insert("_verification_uuid", &verification_uuid)
-        .insert("_verified", &verified);
+        .insert("_verification_uuid", &verification_uuid);
 
     // I want to limit the emails that can signup. This is ok for some internal website or intranet. The code is in the sql function.
     let _single_row = P_Func::run_sql_function_named_params_return_single_row(

@@ -6,8 +6,7 @@ $source_code$
 create function  b1_authn_signup_insert(
 _user_email varchar(100),
 _password_hash varchar(200),
-_verification_uuid varchar(100),
-_verified bool)
+_verification_uuid varchar(100))
 returns table(is_allowed bool, user_email varchar(100)) 
 language plpgsql as
 $$
@@ -32,8 +31,8 @@ if exists (select * from b1_authn_signup a where a.user_email=_user_email) then
     where a.user_email=_user_email;
 end if;
 
-insert into b1_authn_signup(user_email, password_hash, verification_uuid, verified)
-values(_user_email,_password_hash,_verification_uuid, _verified);
+insert into b1_authn_signup(user_email, password_hash, verification_uuid)
+values(_user_email,_password_hash,_verification_uuid);
 
 return query 
 select _is_allowed as is_allowed, a.user_email

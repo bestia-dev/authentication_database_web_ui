@@ -20,6 +20,8 @@ sh tier3_database_postgres/a4_system_mod/a4_migrate_update_database.sh >> tier3_
 
 sh tier3_database_postgres/b1_authn_signup_mod/b1_migrate_update_database.sh >> tier3_database_postgres/tmp_migration_result.txt
 sh tier3_database_postgres/b2_authn_login_mod/b2_migrate_update_database.sh >> tier3_database_postgres/tmp_migration_result.txt
+sh tier3_database_postgres/b3_authn_role_mod/b3_migrate_update_database.sh >> tier3_database_postgres/tmp_migration_result.txt
+sh tier3_database_postgres/b4_authn_operation_mod/b4_migrate_update_database.sh >> tier3_database_postgres/tmp_migration_result.txt
 
 sh tier3_database_postgres/c1_webpage_hits_mod/c1_migrate_update_database.sh >> tier3_database_postgres/tmp_migration_result.txt
 

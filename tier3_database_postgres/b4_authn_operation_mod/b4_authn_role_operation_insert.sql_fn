@@ -1,0 +1,28 @@
+-- tier3_database_postgres/b3_authn_role_mod/b4_authn_role_operation_insert.sql_fn
+
+select a2_migrate_function('b4_authn_role_operation_insert',
+$source_code$
+
+create function  b4_authn_role_operation_insert(
+_b3_authn_role_id int4,
+_b4_authn_operation_id int4)
+returns table(b4_authn_role_operation_id int4, b3_authn_role_id int4, b4_authn_operation_id int4) 
+language plpgsql as
+$$
+declare
+ _b4_authn_role_operation_id int4;
+begin
+
+insert into b4_authn_role_operation(b3_authn_role_id, b4_authn_operation_id)
+values(_b3_authn_role_id, _b4_authn_operation_id)
+returning b4_authn_role_operation.b4_authn_role_operation_id into _b4_authn_role_operation_id ;
+
+return query 
+select a.b4_authn_role_operation_id, a.b3_authn_role_id, a.b4_authn_operation_id
+from b4_authn_role_operation a
+where a.b4_authn_role_operation_id=_b4_authn_role_operation_id;
+
+end; 
+$$;
+
+$source_code$);

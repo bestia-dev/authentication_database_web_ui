@@ -74,15 +74,15 @@ The authorization is based on the `a2_authorization_role`. Every login must be i
 ```plantuml
 @startuml name = "plantuml_authorization"
 
-b2_authn_login ||--o{ b2_authn_login_role
-b2_authn_role ||--o{ b2_authn_login_role
+b2_authn_login ||--o{ b3_authn_login_role
+b3_authn_role ||--o{ b3_authn_login_role
 
 note bottom
   many-to-many relations
 end note
 
-b2_authn_role ||--o{ b2_authn_role_permission
-b2_authn_permission ||--o{ b2_authn_role_permission
+b3_authn_role ||--o{ b3_authn_role_permission
+b2_authn_permission ||--o{ b3_authn_role_permission
 
 note bottom
   many-to-many relations
@@ -272,6 +272,16 @@ a -d-> p
 ![plantuml_database_objects](https://github.com/bestia-dev/authentication_database_web_ui-/raw/main/images/plantuml_database_objects.png)
 
 [//]: # (auto_plantuml end)
+
+## VSCode SqlTools
+
+In VSCode SqlTools the shortcut to "Run Selected Query" is Ctrl+EE (yes two times E). This is not great.  
+I want to have `F5` as I am used to it. But it is now used for debugging. In VSCode shortcuts it is possible to define when a shortcut is used for what.  
+I opened File-Preferences-Keyboard Shortcuts and search for "Run selected query". Right click and choose "Change when expression". Here I added that
+it must be in editorLangId=='sql'. It now looks like this:  
+`editorHasSelection && editorTextFocus && !config.sqltools.disableChordKeybindings && editorLangId == 'sql'`  
+Now right-click "Change key bindings" and press `F5` and then Enter. It will say it is already in use, but with different "when".  
+Now I can select a query and press `F5` like I am used to.  
 
 ## html templates
 

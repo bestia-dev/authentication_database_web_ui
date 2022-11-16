@@ -1,0 +1,19 @@
+-- tier3_database_postgres/b2_authn_login_mod/b3_authn_login_role.sql_tb
+-- create table but column by column, so I can extend it later with new columns and constraints
+
+select a2_migrate_table('b3_authn_login_role',
+$source_code$
+
+create table b3_authn_login_role
+(
+    b2_authn_login_role_id serial,
+    constraint b2_authn_login_role_pkey primary key (b2_authn_login_role_id)
+);
+
+$source_code$);
+
+select a2_migrate_column('b3_authn_login_role','b2_authn_login_id','int4','','not null');
+select a2_migrate_constraint_foreign('b3_authn_login_role','b2_authn_login_id','b2_authn_login', 'b2_authn_login_id');
+
+select a2_migrate_column('b3_authn_login_role','b3_authn_role_id','int4','','not null');
+select a2_migrate_constraint_foreign('b3_authn_login_role','b3_authn_role_id','b3_authn_role', 'b3_authn_role_id');

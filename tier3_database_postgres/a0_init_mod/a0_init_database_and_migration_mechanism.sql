@@ -120,3 +120,52 @@ begin
 return format('Up to date Function: %I', _object_name);
 end;
 $$ language plpgsql;
+
+
+create function a2_migrate_view(_object_name name, _definition text)
+returns text 
+AS
+-- checks in the a2_source_code if the view is already installed
+-- if is equal, nothing happens
+-- else drop the old and install the new view
+-- finally insert/update into a2_source_code  
+$$
+declare
+   _old_definition text;
+   _x_void text;
+begin
+
+   if not exists(select * from a2_source_code a where a.object_name = _object_name) then
+      if exists(select * from a1_list_all_views v where v.view_name=_object_name) then
+         execute format('DROP VIEW %I CASCADE', _object_name);
+      end if;
+
+      execute _definition;
+
+      insert into a2_source_code (object_name, definition)
+      values (_object_name, _definition);
+      return format('Inserted view: %I', _object_name);
+   else
+      select a.definition 
+      into _old_definition
+      from a2_source_code a
+      where a.object_name = _object_name;
+
+      if _definition <> _old_definition then
+         if exists(select * from a1_list_all_views v where v.view_name=_object_name) then
+            execute format('DROP VIEW %I CASCADE', _object_name);
+         end if;
+         
+         execute _definition;
+
+         update a2_source_code
+         set definition = _definition
+         where object_name = _object_name;
+
+         return format('Updated view: %I', _object_name);
+      end if;
+
+   end if;
+   return format('Up to date View: %I', _object_name);
+end;
+$$ language plpgsql;

@@ -1,0 +1,27 @@
+-- tier3_database_postgres/b3_authn_role_mod/b3_authn_role_insert.sql_fn
+
+select a2_migrate_function('b3_authn_role_insert',
+$source_code$
+
+create function  b3_authn_role_insert(
+_b3_authn_role_id int4,
+_role_name varchar(100),
+_description text)
+returns table(b3_authn_role_id int4, role_name varchar(100), description text) 
+language plpgsql as
+$$
+declare
+begin
+
+insert into b3_authn_role(b3_authn_role_id,role_name, description)
+values(_b3_authn_role_id, _role_name, _description);
+
+return query 
+select a.b3_authn_role_id, a.role_name, a.description
+from b3_authn_role a
+where a.b3_authn_role_id=_b3_authn_role_id;
+
+end; 
+$$;
+
+$source_code$);

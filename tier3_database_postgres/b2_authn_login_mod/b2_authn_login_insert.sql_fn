@@ -1,0 +1,28 @@
+-- tier3_database_postgres/b2_authn_login_mod/b2_authn_login_insert.sql_fn
+
+select a2_migrate_function('b2_authn_login_insert',
+$source_code$
+
+create function  b2_authn_login_insert( 
+_user_email varchar(100),
+_password_hash varchar(200))
+returns table(b2_authn_login_id int4, user_email varchar(100)) 
+language plpgsql as
+$$
+declare
+  _b2_authn_login_id int4;
+begin
+
+insert into b2_authn_login(user_email,password_hash)
+values(_user_email,_password_hash)
+returning b2_authn_login.b2_authn_login_id into _b2_authn_login_id;
+
+return query 
+select a.b2_authn_login_id, a.b2_authn_login_id, a.user_email
+from b2_authn_login a
+where a.b2_authn_login_id = _b2_authn_login_id;
+
+end; 
+$$;
+
+$source_code$);
