@@ -6,8 +6,8 @@ $source_code$
 
 create table b3_authn_login_role
 (
-    b2_authn_login_role_id serial,
-    constraint b2_authn_login_role_pkey primary key (b2_authn_login_role_id)
+    b3_authn_login_role_id serial,
+    constraint b2_authn_login_role_pkey primary key (b3_authn_login_role_id)
 );
 
 $source_code$);

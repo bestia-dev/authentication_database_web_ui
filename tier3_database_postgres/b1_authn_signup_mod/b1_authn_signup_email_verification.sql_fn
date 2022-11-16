@@ -32,7 +32,10 @@ if exists (select * from b1_authn_signup a
         -- In this particular case, I will grant access immediatelly.
         -- move the signup user into the login table with minimal authorization
 
-        select * from b2_authn_login_insert(_user_email, _password_hash);
+        -- the parameter 0 means that the insert function will choose the id number over 101
+        -- The logins under 100 are reserved to administrators, developers and special needs.
+        -- So the id can be used because is fixed.
+        select * from b2_authn_login_insert(0, _user_email, _password_hash);
 
         select * from b1_authn_signup_delete(_user_email);        
 

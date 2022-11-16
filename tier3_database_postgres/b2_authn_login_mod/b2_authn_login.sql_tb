@@ -6,7 +6,7 @@ $source_code$
 
 create table b2_authn_login
 (
-    b2_authn_login_id serial,
+    b2_authn_login_id int4,
     constraint b2_authn_login_pkey primary key (b2_authn_login_id)
 );
 

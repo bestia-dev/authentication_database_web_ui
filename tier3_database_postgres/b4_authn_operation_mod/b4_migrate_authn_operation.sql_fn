@@ -1,0 +1,45 @@
+-- tier3_database_postgres/b4_authn_operation_mod/b4_migrate_authn_operation.sql_fn
+
+select a2_migrate_function('b4_migrate_authn_operation',
+$source_code$
+
+create function  b4_migrate_authn_operation(
+_b4_authn_operation_id int4,    
+_url_path varchar(100),
+_description text,
+_is_readonly bool)
+returns text
+language plpgsql as
+$$
+declare
+begin
+
+if exists(select * 
+    from b4_authn_operation a
+    where a.b4_authn_operation_id = _b4_authn_operation_id) then
+
+    if not exists(select * 
+    from b4_authn_operation a
+    where a.b4_authn_operation_id = _b4_authn_operation_id
+    and a.url_path = _url_path and a.description=_description
+    and a.is_readonly = _is_readonly) then
+
+        update b4_authn_operation
+        set url_path = _url_path, description=_description, is_readonly = _is_readonly
+        where b4_authn_operation.b4_authn_operation_id = _b4_authn_operation_id;
+
+        return format('Updated operation: %s', _url_path);
+    end if;
+
+else
+
+    perform b4_authn_operation_insert(_b4_authn_operation_id, _url_path, _description, _is_readonly);
+    return format('Inserted operation: %s', _url_path);
+end if;
+
+return format('Up to date operation: %s', _url_path);
+
+end; 
+$$;
+
+$source_code$);

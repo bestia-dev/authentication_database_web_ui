@@ -4,21 +4,33 @@ select a2_migrate_function('b2_authn_login_insert',
 $source_code$
 
 create function  b2_authn_login_insert( 
+_b2_authn_login_id int4,
 _user_email varchar(100),
 _password_hash varchar(200))
 returns table(b2_authn_login_id int4, user_email varchar(100)) 
 language plpgsql as
 $$
 declare
-  _b2_authn_login_id int4;
 begin
 
-insert into b2_authn_login(user_email,password_hash)
-values(_user_email,_password_hash)
-returning b2_authn_login.b2_authn_login_id into _b2_authn_login_id;
+-- the parameter 0 means that the insert function will choose the id number over 101
+-- The logins under 100 are reserved to administrators, developers and special needs.
+-- So the id can be used because is fixed.
+if _b2_authn_login_id=0 then
+  select max(b2_authn_login_id)+1
+  into _b2_authn_login_id
+  from b2_authn_login;
+
+  if _b2_authn_login_id<101 then
+    _b2_authn_login_id=101;
+  end if;
+end if;
+
+insert into b2_authn_login(b2_authn_login_id,user_email,password_hash)
+values(_b2_authn_login_id,_user_email,_password_hash);
 
 return query 
-select a.b2_authn_login_id, a.b2_authn_login_id, a.user_email
+select a.b2_authn_login_id, a.user_email
 from b2_authn_login a
 where a.b2_authn_login_id = _b2_authn_login_id;
 

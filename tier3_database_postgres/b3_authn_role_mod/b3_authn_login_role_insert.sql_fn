@@ -6,21 +6,21 @@ $source_code$
 create function  b3_authn_login_role_insert( 
 _b2_authn_login_id int4,
 _b3_authn_role_id int4)
-returns table(b2_authn_login_role_id int4, user_email varchar(100)) 
+returns table(b3_authn_login_role_id int4, user_email varchar(100)) 
 language plpgsql as
 $$
 declare
-  _b2_authn_login_role_id int4;
+  _b3_authn_login_role_id int4;
 begin
 
 insert into b3_authn_login_role(b2_authn_login_id, b3_authn_role_id)
 values(_b2_authn_login_id, _b3_authn_role_id)
-returning b3_authn_login_role.b2_authn_login_role_id into _b2_authn_login_role_id;
+returning b3_authn_login_role.b3_authn_login_role_id into _b3_authn_login_role_id;
 
 return query 
-select a.b2_authn_login_role_id, a.b2_authn_login_id, a.b3_authn_role_id
+select a.b3_authn_login_role_id, a.b2_authn_login_id, a.b3_authn_role_id
 from b3_authn_login_role a
-where a.b2_authn_login_role_id = _b2_authn_login_role_id;
+where a.b3_authn_login_role_id = _b3_authn_login_role_id;
 
 end; 
 $$;

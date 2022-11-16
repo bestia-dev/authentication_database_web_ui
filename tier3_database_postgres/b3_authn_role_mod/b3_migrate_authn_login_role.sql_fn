@@ -1,0 +1,29 @@
+-- tier3_database_postgres/b3_authn_role_mod/b3_migrate_authn_login_role.sql_fn
+
+select a2_migrate_function('b3_migrate_authn_login_role',
+$source_code$
+
+create function  b3_migrate_authn_login_role( 
+_b2_authn_login_id int4,
+_b3_authn_role_id int4)
+returns text
+language plpgsql as
+$$
+declare
+  _b3_authn_login_role_id int4;
+begin
+
+if not exists(select * 
+    from b3_authn_login_role a
+    where a.b2_authn_login_id = _b2_authn_login_id and a.b3_authn_role_id=_b3_authn_role_id) then
+
+    select * from b3_authn_login_role_insert(_b2_authn_login_id, _b3_authn_role_id);
+    return format('Inserted login_role: %s %s', _b2_authn_login_id,_b3_authn_role_id);
+end if;
+
+return format('Up to date login_role: %s %s', _b2_authn_login_id,_b3_authn_role_id);
+
+end; 
+$$;
+
+$source_code$);

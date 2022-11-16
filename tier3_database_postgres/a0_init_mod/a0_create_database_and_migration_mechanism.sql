@@ -1,4 +1,4 @@
--- tier3_database_postgres/a0_init_mod/a0_init_database_and_migration_mechanism.sql
+-- tier3_database_postgres/a0_init_mod/a0_create_database_and_migration_mechanism.sql
 
 -- This sql script contains code for the creation and initialisation of the database with a minimal migration mechanism.
 -- After that we can use the installed migration mechanism to migrate/update the database forward as we develop and deploy.
@@ -7,7 +7,7 @@
 -- Connect to the default database 'postgres' to create the new database webpage_hit_counter. 
 -- Then the script will change the current database and install other database objects.
 
--- psql -U admin -h localhost -p 5432 -d postgres -f tier3_database_postgres/a0_init_mod/a0_init_database_and_migration_mechanism.sql
+-- psql -U admin -h localhost -p 5432 -d postgres -f tier3_database_postgres/a0_init_mod/a0_create_database_and_migration_mechanism.sql
 
 create database webpage_hit_counter;
 

@@ -7,7 +7,7 @@
 # The order of execution is important. 
 
 # To create the new database and initialize or bootstrap the migration mechanism use:
-# tier3_database_postgres/init/a0_init_database_and_migration_mechanism.sql
+# tier3_database_postgres/init/a0_create_database_and_migration_mechanism.sql
 # After bootstrap, all subsequent migration/update code will work, because the migration mechanism is already installed.
 echo "Started tier3_database_postgres/migrate_update_database.sh ..."
 rm tier3_database_postgres/tmp_migration_result.txt
@@ -27,7 +27,7 @@ sh tier3_database_postgres/c1_webpage_hits_mod/c1_migrate_update_database.sh >> 
 
 # The original output is horrible !!!
 # I will process this output and show only the part that show any actual change.
-grep -v "^$\|(1 row)\|Up to date.*\|a2_migrate.*\|----[-]*" tier3_database_postgres/tmp_migration_result.txt
+grep -v "^$\|(1 row)\|Up to date.*\|[ab][0-9]_migrate.*\|----[-]*" tier3_database_postgres/tmp_migration_result.txt
 
 echo "Ended tier3_database_postgres/migrate_update_database.sh"
 echo ""

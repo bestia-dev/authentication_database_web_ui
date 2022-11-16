@@ -1,0 +1,44 @@
+-- tier3_database_postgres/b2_authn_login_mod/b2_migrate_authn_login.sql
+
+select a2_migrate_function('b2_migrate_authn_login',
+$source_code$
+
+create function  b2_migrate_authn_login( 
+_b2_authn_login_id int4,
+_user_email varchar(100),
+_password_hash varchar(200))
+returns text
+language plpgsql as
+$$
+declare
+begin
+
+if exists(select * 
+    from b2_authn_login a
+    where a.b2_authn_login_id = _b2_authn_login_id) then
+
+    if not exists(select * 
+    from b2_authn_login a
+    where a.b2_authn_login_id = _b2_authn_login_id
+    and a.user_email = _user_email and a.password_hash=_password_hash) then
+
+        update b2_authn_login
+        set user_email = _user_email, password_hash=_password_hash
+        where b2_authn_login.b2_authn_login_id = _b2_authn_login_id;
+        
+        return format('UPdated login: %s', _user_email);
+    end if;
+
+else
+
+    perform b2_authn_login_insert(_b2_authn_login_id,_user_email,_password_hash);
+    return format('Inserted login: %s', _user_email);
+end if;
+
+
+return format('Up to date login: %s', _user_email);
+
+end; 
+$$;
+
+$source_code$);
