@@ -187,6 +187,7 @@ Sadly humans can never agree on anything if it is a matter of aesthetic or opini
 Uppercase letters for reserved words was a smart thing back in 1970s. But today we have all editors with color syntax highlighting and the old standard is really hard to type. I choose to just code all in lowercase also because that is anyway what postgres internally transforms the code. Different tastes, different opinions, same technical result. We will never agree.  
 I like to alias tables in sql queries with one or two letters. I would make it mandatory for all queries, including delete and update. But I cannot.  
 I don't see a reason to have the redundant words inner and outer for joins. Everything is crystal clear with join, left join and right join.  
+In PL/pgSQL there is confusion between variables and sql object names. There should be a better syntax right from the start.  
 It is not nice to have many columns listed in the same line. It is also not nice to have many columns listed each one on a separate line. The truth is somewhere in between. Maybe 5 columns per line? Maybe column of one table in one line and columns of other table in the other line? There is no answer to that.  
 After join what table column should be on the left side of the comparison. For me it is "logical" the new table is compared with the old table. But somebody thinks exactly the opposite.  
 What to use for non-equal: the standard old-school "<>" or the C influenced "!="?

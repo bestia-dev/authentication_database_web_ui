@@ -21,7 +21,7 @@ begin
             where c.table_name = _table and c.constraint_name = _constraint_name
     ) then        
         execute _ddl_statement;
-        return format('%s', _ddl_statement);
+        return format('Added constraint: %s', _constraint_name);
     end if;
     return format('Up to date Constraint: %I', _constraint_name);
 end;
