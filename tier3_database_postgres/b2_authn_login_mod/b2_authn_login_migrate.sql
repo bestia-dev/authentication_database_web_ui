@@ -7,4 +7,5 @@
 
 -- This the first admin after installation. 
 -- It can be chaned later.
-select * from b2_migrate_authn_login(1,'info@bestia.dev','hash_password');
+select b2_migrate_authn_login(1,'info@bestia.dev','$argon2id$v=19$m=4096,t=3,p=1$000000000000000000000000$gqrluzr0Q4CAJqoMxBS8XkreuHlk9M7z1kwK1k8nEW4');
+

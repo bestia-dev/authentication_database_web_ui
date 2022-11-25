@@ -7,7 +7,7 @@ create function  b4_authn_role_operation_insert(
 _b3_authn_role_id int4,
 _b4_authn_operation_id int4)
 returns table(b4_authn_role_operation_id int4, b3_authn_role_id int4, b4_authn_operation_id int4) 
-language plpgsql as
+as
 $$
 declare
  _b4_authn_role_operation_id int4;
@@ -23,6 +23,6 @@ from b4_authn_role_operation a
 where a.b4_authn_role_operation_id=_b4_authn_role_operation_id;
 
 end; 
-$$;
+$$ language plpgsql;
 
 $source_code$);

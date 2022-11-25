@@ -7,7 +7,7 @@ create function  b4_migrate_authn_role_operation(
 _b3_authn_role_id int4,
 _b4_authn_operation_id int4)
 returns text
-language plpgsql as
+as
 $$
 declare
  _b4_authn_role_operation_id int4;
@@ -25,6 +25,6 @@ end if;
 return format('Up to date role_operation: %s %s', _b3_authn_role_id,_b4_authn_operation_id);
 
 end; 
-$$;
+$$ language plpgsql;
 
 $source_code$);

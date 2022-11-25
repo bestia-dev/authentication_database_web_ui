@@ -8,7 +8,7 @@ _b2_authn_login_id int4,
 _user_email varchar(100),
 _password_hash varchar(200))
 returns text
-language plpgsql as
+as
 $$
 declare
 begin
@@ -39,6 +39,6 @@ end if;
 return format('Up to date login: %s', _user_email);
 
 end; 
-$$;
+$$ language plpgsql;
 
 $source_code$);

@@ -7,7 +7,7 @@ create function  b3_authn_login_role_insert(
 _b2_authn_login_id int4,
 _b3_authn_role_id int4)
 returns table(b3_authn_login_role_id int4, user_email varchar(100)) 
-language plpgsql as
+as
 $$
 declare
   _b3_authn_login_role_id int4;
@@ -23,6 +23,6 @@ from b3_authn_login_role a
 where a.b3_authn_login_role_id = _b3_authn_login_role_id;
 
 end; 
-$$;
+$$ language plpgsql;
 
 $source_code$);

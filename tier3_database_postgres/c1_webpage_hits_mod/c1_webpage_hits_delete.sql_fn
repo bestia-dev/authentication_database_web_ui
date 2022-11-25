@@ -6,7 +6,7 @@ $source_code$
 create function c1_webpage_hits_delete(
 _id int4)
 returns table(deleted_rows int4) 
-language plpgsql as
+as
 $$
 declare
 begin
@@ -21,6 +21,6 @@ return query
 select 1 as deleted_rows;
 
 end; 
-$$;
+$$ language plpgsql;
 
 $source_code$);

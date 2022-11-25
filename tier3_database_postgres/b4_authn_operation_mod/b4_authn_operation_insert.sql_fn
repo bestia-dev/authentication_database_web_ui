@@ -9,7 +9,7 @@ _url_path varchar(100),
 _description text,
 _is_readonly bool)
 returns table(b4_authn_operation_id int4, url_path varchar(100), description text, is_readonly bool) 
-language plpgsql as
+as
 $$
 declare
 begin
@@ -23,6 +23,6 @@ from b4_authn_operation a
 where a.b4_authn_operation_id=_b4_authn_operation_id;
 
 end; 
-$$;
+$$ language plpgsql;
 
 $source_code$);

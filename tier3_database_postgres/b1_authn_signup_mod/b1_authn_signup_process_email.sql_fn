@@ -7,7 +7,7 @@ create function  b1_authn_signup_process_email(
 _user_email varchar(100)
 )
 returns table(is_allowed bool) 
-language plpgsql as
+as
 $$
 declare
     _is_allowed bool := true;
@@ -27,6 +27,6 @@ return query
 select _is_allowed as is_allowed;
 
 end; 
-$$;
+$$ language plpgsql;
 
 $source_code$);

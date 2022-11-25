@@ -17,3 +17,7 @@ from b3_authn_role;
 
 select *
 from b4_authn_operation;
+
+
+select *
+from b4_authn_role_operation;

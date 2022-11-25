@@ -8,7 +8,7 @@ _id int,
 _webpage varchar(100),
 _hit_count int4)
 returns table(id int4, webpage varchar(100), hit_count int4) 
-language plpgsql as
+as
 $$
 declare
 begin
@@ -27,6 +27,6 @@ from c1_webpage_hits W
 where W.id=_id;
 
 end; 
-$$;
+$$ language plpgsql;
 
 $source_code$);

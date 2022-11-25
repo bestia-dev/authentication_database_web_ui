@@ -8,7 +8,7 @@ _b3_authn_role_id int4,
 _role_name varchar(100),
 _description text)
 returns table(b3_authn_role_id int4, role_name varchar(100), description text) 
-language plpgsql as
+as
 $$
 declare
 begin
@@ -22,6 +22,6 @@ from b3_authn_role a
 where a.b3_authn_role_id=_b3_authn_role_id;
 
 end; 
-$$;
+$$ language plpgsql;
 
 $source_code$);

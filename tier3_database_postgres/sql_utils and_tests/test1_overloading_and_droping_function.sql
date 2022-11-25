@@ -5,7 +5,7 @@
 
 create or replace function  test1()
 returns table(routine_name name) 
-language plpgsql as
+as
 $$
 -- just a test function so I can test how to drop it
 -- with a1_drop_function_any_param
@@ -16,11 +16,11 @@ begin
   return query 
 select p.routine_name from a1_list_all_functions p;
 end
-$$;
+$$ language plpgsql;
 ----------------------------------------------------------------------------
 create or replace function  test1(_name name)
 returns table(routine_name name) 
-language plpgsql as
+as
 $$
 -- just a test function so I can test how to drop it
 -- with a1_drop_function_any_param
@@ -31,7 +31,7 @@ begin
   return query 
 select p.routine_name from a1_list_all_functions p where p.routine_name=_name;
 end
-$$;
+$$ language plpgsql;
 ----------------------------------------------------------------------------
 
 select * from a3_check_function_overload ;

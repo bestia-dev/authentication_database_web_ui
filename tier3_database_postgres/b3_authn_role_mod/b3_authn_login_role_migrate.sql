@@ -3,4 +3,4 @@
 -- select * from b3_authn_login_role;
 
 -- Login 1 is the default administrator
-select * from b3_migrate_authn_login_role(1, 1);
+select b3_migrate_authn_login_role(1, 1)

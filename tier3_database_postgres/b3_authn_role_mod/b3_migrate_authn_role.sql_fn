@@ -8,7 +8,7 @@ _b3_authn_role_id int4,
 _role_name varchar(100),
 _description text)
 returns text
-language plpgsql as
+as
 $$
 declare
 begin
@@ -38,6 +38,6 @@ end if;
 return format('Up to date role: %s', _role_name);
 
 end; 
-$$;
+$$ language plpgsql;
 
 $source_code$);

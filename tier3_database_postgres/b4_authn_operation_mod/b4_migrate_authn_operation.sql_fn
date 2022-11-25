@@ -9,7 +9,7 @@ _url_path varchar(100),
 _description text,
 _is_readonly bool)
 returns text
-language plpgsql as
+as
 $$
 declare
 begin
@@ -40,6 +40,6 @@ end if;
 return format('Up to date operation: %s', _url_path);
 
 end; 
-$$;
+$$ language plpgsql;
 
 $source_code$);

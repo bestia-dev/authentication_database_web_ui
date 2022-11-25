@@ -8,7 +8,7 @@ _b2_authn_login_id int4,
 _user_email varchar(100),
 _password_hash varchar(200))
 returns table(b2_authn_login_id int4, user_email varchar(100)) 
-language plpgsql as
+as
 $$
 declare
 begin
@@ -35,6 +35,6 @@ from b2_authn_login a
 where a.b2_authn_login_id = _b2_authn_login_id;
 
 end; 
-$$;
+$$ language plpgsql;
 
 $source_code$);
