@@ -1,14 +1,15 @@
 # Bash script for database migration/update
 
-# sh tier3_database_postgres/migrate_update_database.sh
+# Only to create a new database and initialize or bootstrap the migration mechanism use:
+# sh tier3_database_postgres/a0_init_mod/a0_migrate_update_database.sh
+# After bootstrap, all subsequent migration/update code will work, because the migration mechanism is already installed.
 
 # Every sql file must internally check if all the criteria is met to run. 
 # Here every sql script is always run in its entirety.
 # The order of execution is important. 
 
-# To create the new database and initialize or bootstrap the migration mechanism use:
-# tier3_database_postgres/init/a0_create_database_and_migration_mechanism.sql
-# After bootstrap, all subsequent migration/update code will work, because the migration mechanism is already installed.
+# sh tier3_database_postgres/migrate_update_database.sh
+
 echo "Started tier3_database_postgres/migrate_update_database.sh ..."
 rm tier3_database_postgres/tmp_migration_result.txt
 echo "Only the actual changes are listed here. The complete output is in tier3_database_postgres/tmp_migration_result.txt."

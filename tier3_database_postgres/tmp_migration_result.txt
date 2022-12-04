@@ -1,500 +1,500 @@
-               a2_migrate_function               
--------------------------------------------------
- Up to date Function: a1_drop_function_any_param
-(1 row)
-
-                 a2_migrate_view                  
---------------------------------------------------
- Up to date View: a1_list_all_constraints_foreign
-(1 row)
-
-                 a2_migrate_view                 
--------------------------------------------------
- Up to date View: a1_list_all_constraints_unique
-(1 row)
-
-                  a2_migrate_view                   
-----------------------------------------------------
- Up to date View: a1_list_all_function_input_params
-(1 row)
-
-            a2_migrate_view             
-----------------------------------------
- Up to date View: a1_list_all_functions
-(1 row)
-
-                   a2_migrate_view                   
------------------------------------------------------
- Up to date View: a1_list_all_table_field_definition
-(1 row)
-
-           a2_migrate_view           
--------------------------------------
- Up to date View: a1_list_all_tables
-(1 row)
-
-             a2_migrate_view              
-------------------------------------------
- Up to date View: a1_list_all_view_fields
-(1 row)
-
-          a2_migrate_view           
-------------------------------------
- Up to date View: a1_list_all_views
-(1 row)
-
-          a2_migrate_function           
-----------------------------------------
- Up to date Function: a2_migrate_column
-(1 row)
-
-                a2_migrate_function                 
-----------------------------------------------------
- Up to date Function: a2_migrate_constraint_foreign
-(1 row)
-
-                a2_migrate_function                
----------------------------------------------------
- Up to date Function: a2_migrate_constraint_unique
-(1 row)
-
-           a2_migrate_function            
-------------------------------------------
- Up to date Function: a2_migrate_function
-(1 row)
-
-          a2_migrate_function          
----------------------------------------
- Up to date Function: a2_migrate_table
-(1 row)
-
-         a2_migrate_function          
---------------------------------------
- Up to date Function: a2_migrate_view
-(1 row)
-
-           a2_migrate_table            
----------------------------------------
- Up to date Table (pk): a2_source_code
-(1 row)
-
-               a2_migrate_column                
-------------------------------------------------
- Up to date Column: "a2_source_code.definition"
-(1 row)
-
-               a2_migrate_view               
----------------------------------------------
- Up to date View: a3_check_function_overload
+              a2_migrate_function              
+-----------------------------------------------
+ Inserted function: a1_drop_function_any_param
 (1 row)
 
                 a2_migrate_view                 
 ------------------------------------------------
- Up to date View: a3_check_multi_column_foreign
+ Inserted view: a1_list_all_constraints_foreign
 (1 row)
 
                 a2_migrate_view                
 -----------------------------------------------
- Up to date View: a3_check_multi_column_unique
+ Inserted view: a1_list_all_constraints_unique
 (1 row)
 
-              a2_migrate_view              
--------------------------------------------
- Up to date View: a3_check_parameter_types
+                 a2_migrate_view                  
+--------------------------------------------------
+ Inserted view: a1_list_all_function_input_params
 (1 row)
 
-              a2_migrate_view               
---------------------------------------------
- Up to date View: a3_check_table_field_type
+           a2_migrate_view            
+--------------------------------------
+ Inserted view: a1_list_all_functions
 (1 row)
 
-              a2_migrate_view              
--------------------------------------------
- Up to date View: a3_check_view_field_type
-(1 row)
-
-          a2_migrate_function           
-----------------------------------------
- Up to date Function: a4_random_between
-(1 row)
-
-            a2_migrate_table            
-----------------------------------------
- Up to date Table (pk): b1_authn_signup
-(1 row)
-
-                 a2_migrate_column                  
-----------------------------------------------------
- Up to date Column: "b1_authn_signup.password_hash"
-(1 row)
-
-                   a2_migrate_column                    
---------------------------------------------------------
- Up to date Column: "b1_authn_signup.verification_uuid"
-(1 row)
-
-                a2_migrate_column                
--------------------------------------------------
- Up to date Column: "b1_authn_signup.created_at"
-(1 row)
-
-             a2_migrate_function             
----------------------------------------------
- Up to date Function: b1_authn_signup_insert
-(1 row)
-
-             a2_migrate_function             
----------------------------------------------
- Up to date Function: b1_authn_signup_delete
-(1 row)
-
-                a2_migrate_function                 
-----------------------------------------------------
- Up to date Function: b1_authn_signup_process_email
-(1 row)
-
-                   a2_migrate_function                   
----------------------------------------------------------
- Up to date Function: b1_authn_signup_email_verification
-(1 row)
-
-           a2_migrate_table            
----------------------------------------
- Up to date Table (pk): b2_authn_login
-(1 row)
-
-               a2_migrate_column                
-------------------------------------------------
- Up to date Column: "b2_authn_login.user_email"
-(1 row)
-
-             a2_migrate_constraint_unique              
--------------------------------------------------------
- Up to date Constraint: b2_authn_login_uniq_user_email
-(1 row)
-
-                 a2_migrate_column                 
+                  a2_migrate_view                  
 ---------------------------------------------------
- Up to date Column: "b2_authn_login.password_hash"
+ Inserted view: a1_list_all_table_field_definition
 (1 row)
 
-           a2_migrate_function            
-------------------------------------------
- Up to date Function: b2_authn_login_show
-(1 row)
-
-            a2_migrate_function             
---------------------------------------------
- Up to date Function: b2_authn_login_insert
-(1 row)
-
-             a2_migrate_function             
----------------------------------------------
- Up to date Function: b2_migrate_authn_login
-(1 row)
-
-      b2_migrate_authn_login       
+          a2_migrate_view          
 -----------------------------------
- Up to date login: info@bestia.dev
+ Inserted view: a1_list_all_tables
 (1 row)
 
-           a2_migrate_table           
---------------------------------------
- Up to date Table (pk): b3_authn_role
-(1 row)
-
-              a2_migrate_column               
-----------------------------------------------
- Up to date Column: "b3_authn_role.role_name"
-(1 row)
-
-            a2_migrate_constraint_unique             
------------------------------------------------------
- Up to date Constraint: b3_authn_role_uniq_role_name
-(1 row)
-
-               a2_migrate_column                
-------------------------------------------------
- Up to date Column: "b3_authn_role.description"
-(1 row)
-
-            a2_migrate_function            
--------------------------------------------
- Up to date Function: b3_authn_role_insert
-(1 row)
-
-            a2_migrate_function             
---------------------------------------------
- Up to date Function: b3_migrate_authn_role
-(1 row)
-
-  b3_migrate_authn_role   
---------------------------
- Up to date role: 1-admin
-(1 row)
-
-    b3_migrate_authn_role     
-------------------------------
- Up to date role: 2-read-only
-(1 row)
-
-  b3_migrate_authn_role  
--------------------------
- Up to date role: 3-user
-(1 row)
-
-          b3_migrate_authn_role           
-------------------------------------------
- Up to date role: 1001-webpage_hits_admin
-(1 row)
-
-              a2_migrate_table              
---------------------------------------------
- Up to date Table (pk): b3_authn_login_role
-(1 row)
-
-                     a2_migrate_column                      
-------------------------------------------------------------
- Up to date Column: "b3_authn_login_role.b2_authn_login_id"
-(1 row)
-
-                    a2_migrate_constraint_foreign                     
-----------------------------------------------------------------------
- Up to date Constraint: b3_authn_login_role_foreign_b2_authn_login_id
-(1 row)
-
-                     a2_migrate_column                     
------------------------------------------------------------
- Up to date Column: "b3_authn_login_role.b3_authn_role_id"
-(1 row)
-
-                    a2_migrate_constraint_foreign                    
----------------------------------------------------------------------
- Up to date Constraint: b3_authn_login_role_foreign_b3_authn_role_id
-(1 row)
-
-               a2_migrate_function               
--------------------------------------------------
- Up to date Function: b3_authn_login_role_insert
-(1 row)
-
-               a2_migrate_function                
---------------------------------------------------
- Up to date Function: b3_migrate_authn_login_role
-(1 row)
-
-             a2_migrate_table              
--------------------------------------------
- Up to date Table (pk): b4_authn_operation
-(1 row)
-
-                a2_migrate_column                 
---------------------------------------------------
- Up to date Column: "b4_authn_operation.url_path"
-(1 row)
-
-              a2_migrate_constraint_unique               
----------------------------------------------------------
- Up to date Constraint: b4_authn_operation_uniq_url_path
-(1 row)
-
-                  a2_migrate_column                  
------------------------------------------------------
- Up to date Column: "b4_authn_operation.description"
-(1 row)
-
-                  a2_migrate_column                  
------------------------------------------------------
- Up to date Column: "b4_authn_operation.is_readonly"
-(1 row)
-
-              a2_migrate_function               
-------------------------------------------------
- Up to date Function: b4_authn_operation_insert
-(1 row)
-
-               a2_migrate_function               
--------------------------------------------------
- Up to date Function: b4_migrate_authn_operation
-(1 row)
-
-                             b4_migrate_authn_operation                             
-------------------------------------------------------------------------------------
- Up to date operation: /webpage_hits_admin/c1_webpage_hits_mod/c1_webpage_hits_list
-(1 row)
-
-                            b4_migrate_authn_operation                             
------------------------------------------------------------------------------------
- Up to date operation: /webpage_hits_admin/c1_webpage_hits_mod/c1_webpage_hits_new
-(1 row)
-
-                             b4_migrate_authn_operation                             
-------------------------------------------------------------------------------------
- Up to date operation: /webpage_hits_admin/c1_webpage_hits_mod/c1_webpage_hits_edit
-(1 row)
-
-                              b4_migrate_authn_operation                              
---------------------------------------------------------------------------------------
- Up to date operation: /webpage_hits_admin/c1_webpage_hits_mod/c1_webpage_hits_insert
-(1 row)
-
-                             b4_migrate_authn_operation                             
-------------------------------------------------------------------------------------
- Up to date operation: /webpage_hits_admin/c1_webpage_hits_mod/c1_webpage_hits_show
-(1 row)
-
-                              b4_migrate_authn_operation                              
---------------------------------------------------------------------------------------
- Up to date operation: /webpage_hits_admin/c1_webpage_hits_mod/c1_webpage_hits_update
-(1 row)
-
-                              b4_migrate_authn_operation                              
---------------------------------------------------------------------------------------
- Up to date operation: /webpage_hits_admin/c1_webpage_hits_mod/c1_webpage_hits_delete
-(1 row)
-
-                a2_migrate_table                
-------------------------------------------------
- Up to date Table (pk): b4_authn_role_operation
-(1 row)
-
-                       a2_migrate_column                       
----------------------------------------------------------------
- Up to date Column: "b4_authn_role_operation.b3_authn_role_id"
-(1 row)
-
-                      a2_migrate_constraint_foreign                      
--------------------------------------------------------------------------
- Up to date Constraint: b4_authn_role_operation_foreign_b3_authn_role_id
-(1 row)
-
-                         a2_migrate_column                          
---------------------------------------------------------------------
- Up to date Column: "b4_authn_role_operation.b4_authn_operation_id"
-(1 row)
-
-                        a2_migrate_constraint_foreign                         
-------------------------------------------------------------------------------
- Up to date Constraint: b4_authn_role_operation_foreign_b4_authn_operation_id
-(1 row)
-
-                 a2_migrate_function                 
------------------------------------------------------
- Up to date Function: b4_authn_role_operation_insert
-(1 row)
-
-                 a2_migrate_function                  
-------------------------------------------------------
- Up to date Function: b4_migrate_authn_role_operation
-(1 row)
-
-   b4_migrate_authn_role_operation    
---------------------------------------
- Up to date role_operation: 1001 1001
-(1 row)
-
-   b4_migrate_authn_role_operation    
---------------------------------------
- Up to date role_operation: 1001 1002
-(1 row)
-
-   b4_migrate_authn_role_operation    
---------------------------------------
- Up to date role_operation: 1001 1003
-(1 row)
-
-   b4_migrate_authn_role_operation    
---------------------------------------
- Up to date role_operation: 1001 1004
-(1 row)
-
-   b4_migrate_authn_role_operation    
---------------------------------------
- Up to date role_operation: 1001 1005
-(1 row)
-
-   b4_migrate_authn_role_operation    
---------------------------------------
- Up to date role_operation: 1001 1006
-(1 row)
-
-   b4_migrate_authn_role_operation    
---------------------------------------
- Up to date role_operation: 1001 1007
-(1 row)
-
-         a2_migrate_table          
------------------------------------
- Up to date Table (pk): c1_webpage
-(1 row)
-
-            a2_migrate_column            
------------------------------------------
- Up to date Column: "c1_webpage.webpage"
-(1 row)
-
-          a2_migrate_constraint_unique          
-------------------------------------------------
- Up to date Constraint: c1_webpage_uniq_webpage
-(1 row)
-
-           a2_migrate_table            
----------------------------------------
- Up to date Table (pk): c1_hit_counter
-(1 row)
-
-               a2_migrate_column                
-------------------------------------------------
- Up to date Column: "c1_hit_counter.webpage_id"
-(1 row)
-
-              a2_migrate_constraint_foreign               
-----------------------------------------------------------
- Up to date Constraint: c1_hit_counter_foreign_webpage_id
-(1 row)
-
-             a2_migrate_column             
--------------------------------------------
- Up to date Column: "c1_hit_counter.count"
+            a2_migrate_view             
+----------------------------------------
+ Inserted view: a1_list_all_view_fields
 (1 row)
 
          a2_migrate_view          
 ----------------------------------
- Up to date View: c1_webpage_hits
+ Inserted view: a1_list_all_views
 (1 row)
 
-            a2_migrate_view            
----------------------------------------
- Up to date View: c1_webpage_hits_list
+         a2_migrate_function          
+--------------------------------------
+ Inserted function: a2_migrate_column
+(1 row)
+
+               a2_migrate_function                
+--------------------------------------------------
+ Inserted function: a2_migrate_constraint_foreign
+(1 row)
+
+               a2_migrate_function               
+-------------------------------------------------
+ Inserted function: a2_migrate_constraint_unique
+(1 row)
+
+          a2_migrate_function           
+----------------------------------------
+ Inserted function: a2_migrate_function
+(1 row)
+
+         a2_migrate_function         
+-------------------------------------
+ Inserted function: a2_migrate_table
+(1 row)
+
+        a2_migrate_function         
+------------------------------------
+ Inserted function: a2_migrate_view
+(1 row)
+
+          a2_migrate_table           
+-------------------------------------
+ Inserted table (pk): a2_source_code
+(1 row)
+
+              a2_migrate_column               
+----------------------------------------------
+ Inserted column: "a2_source_code.definition"
+(1 row)
+
+              a2_migrate_view              
+-------------------------------------------
+ Inserted view: a3_check_function_overload
+(1 row)
+
+               a2_migrate_view                
+----------------------------------------------
+ Inserted view: a3_check_multi_column_foreign
+(1 row)
+
+               a2_migrate_view               
+---------------------------------------------
+ Inserted view: a3_check_multi_column_unique
+(1 row)
+
+             a2_migrate_view             
+-----------------------------------------
+ Inserted view: a3_check_parameter_types
+(1 row)
+
+             a2_migrate_view              
+------------------------------------------
+ Inserted view: a3_check_table_field_type
+(1 row)
+
+             a2_migrate_view             
+-----------------------------------------
+ Inserted view: a3_check_view_field_type
+(1 row)
+
+         a2_migrate_function          
+--------------------------------------
+ Inserted function: a4_random_between
+(1 row)
+
+           a2_migrate_table           
+--------------------------------------
+ Inserted table (pk): b1_authn_signup
+(1 row)
+
+                a2_migrate_column                 
+--------------------------------------------------
+ Inserted column: "b1_authn_signup.password_hash"
+(1 row)
+
+                  a2_migrate_column                   
+------------------------------------------------------
+ Inserted column: "b1_authn_signup.verification_uuid"
+(1 row)
+
+               a2_migrate_column               
+-----------------------------------------------
+ Inserted column: "b1_authn_signup.created_at"
 (1 row)
 
             a2_migrate_function            
 -------------------------------------------
- Up to date Function: c1_webpage_hits_show
+ Inserted function: b1_authn_signup_insert
+(1 row)
+
+            a2_migrate_function            
+-------------------------------------------
+ Inserted function: b1_authn_signup_delete
+(1 row)
+
+               a2_migrate_function                
+--------------------------------------------------
+ Inserted function: b1_authn_signup_process_email
+(1 row)
+
+                  a2_migrate_function                  
+-------------------------------------------------------
+ Inserted function: b1_authn_signup_email_verification
+(1 row)
+
+          a2_migrate_table           
+-------------------------------------
+ Inserted table (pk): b2_authn_login
+(1 row)
+
+              a2_migrate_column               
+----------------------------------------------
+ Inserted column: "b2_authn_login.user_email"
+(1 row)
+
+           a2_migrate_constraint_unique           
+--------------------------------------------------
+ Added constraint: b2_authn_login_uniq_user_email
+(1 row)
+
+                a2_migrate_column                
+-------------------------------------------------
+ Inserted column: "b2_authn_login.password_hash"
+(1 row)
+
+          a2_migrate_function           
+----------------------------------------
+ Inserted function: b2_authn_login_show
 (1 row)
 
            a2_migrate_function            
 ------------------------------------------
- Up to date Function: c1_webpage_hits_new
-(1 row)
-
-             a2_migrate_function             
----------------------------------------------
- Up to date Function: c1_webpage_hits_insert
+ Inserted function: b2_authn_login_insert
 (1 row)
 
             a2_migrate_function            
 -------------------------------------------
- Up to date Function: c1_webpage_hits_edit
+ Inserted function: b2_migrate_authn_login
 (1 row)
 
-             a2_migrate_function             
----------------------------------------------
- Up to date Function: c1_webpage_hits_update
+     b2_migrate_authn_login      
+---------------------------------
+ Inserted login: info@bestia.dev
 (1 row)
 
-             a2_migrate_function             
----------------------------------------------
- Up to date Function: c1_webpage_hits_delete
+          a2_migrate_table          
+------------------------------------
+ Inserted table (pk): b3_authn_role
+(1 row)
+
+             a2_migrate_column              
+--------------------------------------------
+ Inserted column: "b3_authn_role.role_name"
+(1 row)
+
+          a2_migrate_constraint_unique          
+------------------------------------------------
+ Added constraint: b3_authn_role_uniq_role_name
+(1 row)
+
+              a2_migrate_column               
+----------------------------------------------
+ Inserted column: "b3_authn_role.description"
+(1 row)
+
+           a2_migrate_function           
+-----------------------------------------
+ Inserted function: b3_authn_role_insert
+(1 row)
+
+           a2_migrate_function            
+------------------------------------------
+ Inserted function: b3_migrate_authn_role
+(1 row)
+
+ b3_migrate_authn_role  
+------------------------
+ Inserted role: 1-admin
+(1 row)
+
+   b3_migrate_authn_role    
+----------------------------
+ Inserted role: 2-read-only
+(1 row)
+
+ b3_migrate_authn_role 
+-----------------------
+ Inserted role: 3-user
+(1 row)
+
+         b3_migrate_authn_role          
+----------------------------------------
+ Inserted role: 1001-webpage_hits_admin
+(1 row)
+
+             a2_migrate_table             
+------------------------------------------
+ Inserted table (pk): b3_authn_login_role
+(1 row)
+
+                    a2_migrate_column                     
+----------------------------------------------------------
+ Inserted column: "b3_authn_login_role.b2_authn_login_id"
+(1 row)
+
+                 a2_migrate_constraint_foreign                  
+----------------------------------------------------------------
+ Added constraint b3_authn_login_role_foreign_b2_authn_login_id
+(1 row)
+
+                    a2_migrate_column                    
+---------------------------------------------------------
+ Inserted column: "b3_authn_login_role.b3_authn_role_id"
+(1 row)
+
+                 a2_migrate_constraint_foreign                 
+---------------------------------------------------------------
+ Added constraint b3_authn_login_role_foreign_b3_authn_role_id
+(1 row)
+
+              a2_migrate_function              
+-----------------------------------------------
+ Inserted function: b3_authn_login_role_insert
+(1 row)
+
+              a2_migrate_function               
+------------------------------------------------
+ Inserted function: b3_migrate_authn_login_role
+(1 row)
+
+            a2_migrate_table             
+-----------------------------------------
+ Inserted table (pk): b4_authn_operation
+(1 row)
+
+               a2_migrate_column                
+------------------------------------------------
+ Inserted column: "b4_authn_operation.url_path"
+(1 row)
+
+            a2_migrate_constraint_unique            
+----------------------------------------------------
+ Added constraint: b4_authn_operation_uniq_url_path
+(1 row)
+
+                 a2_migrate_column                 
+---------------------------------------------------
+ Inserted column: "b4_authn_operation.description"
+(1 row)
+
+                 a2_migrate_column                 
+---------------------------------------------------
+ Inserted column: "b4_authn_operation.is_readonly"
+(1 row)
+
+             a2_migrate_function              
+----------------------------------------------
+ Inserted function: b4_authn_operation_insert
+(1 row)
+
+              a2_migrate_function              
+-----------------------------------------------
+ Inserted function: b4_migrate_authn_operation
+(1 row)
+
+                            b4_migrate_authn_operation                            
+----------------------------------------------------------------------------------
+ Inserted operation: /webpage_hits_admin/c1_webpage_hits_mod/c1_webpage_hits_list
+(1 row)
+
+                           b4_migrate_authn_operation                            
+---------------------------------------------------------------------------------
+ Inserted operation: /webpage_hits_admin/c1_webpage_hits_mod/c1_webpage_hits_new
+(1 row)
+
+                            b4_migrate_authn_operation                            
+----------------------------------------------------------------------------------
+ Inserted operation: /webpage_hits_admin/c1_webpage_hits_mod/c1_webpage_hits_edit
+(1 row)
+
+                             b4_migrate_authn_operation                             
+------------------------------------------------------------------------------------
+ Inserted operation: /webpage_hits_admin/c1_webpage_hits_mod/c1_webpage_hits_insert
+(1 row)
+
+                            b4_migrate_authn_operation                            
+----------------------------------------------------------------------------------
+ Inserted operation: /webpage_hits_admin/c1_webpage_hits_mod/c1_webpage_hits_show
+(1 row)
+
+                             b4_migrate_authn_operation                             
+------------------------------------------------------------------------------------
+ Inserted operation: /webpage_hits_admin/c1_webpage_hits_mod/c1_webpage_hits_update
+(1 row)
+
+                             b4_migrate_authn_operation                             
+------------------------------------------------------------------------------------
+ Inserted operation: /webpage_hits_admin/c1_webpage_hits_mod/c1_webpage_hits_delete
+(1 row)
+
+               a2_migrate_table               
+----------------------------------------------
+ Inserted table (pk): b4_authn_role_operation
+(1 row)
+
+                      a2_migrate_column                      
+-------------------------------------------------------------
+ Inserted column: "b4_authn_role_operation.b3_authn_role_id"
+(1 row)
+
+                   a2_migrate_constraint_foreign                   
+-------------------------------------------------------------------
+ Added constraint b4_authn_role_operation_foreign_b3_authn_role_id
+(1 row)
+
+                        a2_migrate_column                         
+------------------------------------------------------------------
+ Inserted column: "b4_authn_role_operation.b4_authn_operation_id"
+(1 row)
+
+                     a2_migrate_constraint_foreign                      
+------------------------------------------------------------------------
+ Added constraint b4_authn_role_operation_foreign_b4_authn_operation_id
+(1 row)
+
+                a2_migrate_function                
+---------------------------------------------------
+ Inserted function: b4_authn_role_operation_insert
+(1 row)
+
+                a2_migrate_function                 
+----------------------------------------------------
+ Inserted function: b4_migrate_authn_role_operation
+(1 row)
+
+  b4_migrate_authn_role_operation   
+------------------------------------
+ Inserted role_operation: 1001 1001
+(1 row)
+
+  b4_migrate_authn_role_operation   
+------------------------------------
+ Inserted role_operation: 1001 1002
+(1 row)
+
+  b4_migrate_authn_role_operation   
+------------------------------------
+ Inserted role_operation: 1001 1003
+(1 row)
+
+  b4_migrate_authn_role_operation   
+------------------------------------
+ Inserted role_operation: 1001 1004
+(1 row)
+
+  b4_migrate_authn_role_operation   
+------------------------------------
+ Inserted role_operation: 1001 1005
+(1 row)
+
+  b4_migrate_authn_role_operation   
+------------------------------------
+ Inserted role_operation: 1001 1006
+(1 row)
+
+  b4_migrate_authn_role_operation   
+------------------------------------
+ Inserted role_operation: 1001 1007
+(1 row)
+
+        a2_migrate_table         
+---------------------------------
+ Inserted table (pk): c1_webpage
+(1 row)
+
+           a2_migrate_column           
+---------------------------------------
+ Inserted column: "c1_webpage.webpage"
+(1 row)
+
+       a2_migrate_constraint_unique        
+-------------------------------------------
+ Added constraint: c1_webpage_uniq_webpage
+(1 row)
+
+          a2_migrate_table           
+-------------------------------------
+ Inserted table (pk): c1_hit_counter
+(1 row)
+
+              a2_migrate_column               
+----------------------------------------------
+ Inserted column: "c1_hit_counter.webpage_id"
+(1 row)
+
+           a2_migrate_constraint_foreign            
+----------------------------------------------------
+ Added constraint c1_hit_counter_foreign_webpage_id
+(1 row)
+
+            a2_migrate_column            
+-----------------------------------------
+ Inserted column: "c1_hit_counter.count"
+(1 row)
+
+        a2_migrate_view         
+--------------------------------
+ Inserted view: c1_webpage_hits
+(1 row)
+
+           a2_migrate_view           
+-------------------------------------
+ Inserted view: c1_webpage_hits_list
+(1 row)
+
+           a2_migrate_function           
+-----------------------------------------
+ Inserted function: c1_webpage_hits_show
+(1 row)
+
+          a2_migrate_function           
+----------------------------------------
+ Inserted function: c1_webpage_hits_new
+(1 row)
+
+            a2_migrate_function            
+-------------------------------------------
+ Inserted function: c1_webpage_hits_insert
+(1 row)
+
+           a2_migrate_function           
+-----------------------------------------
+ Inserted function: c1_webpage_hits_edit
+(1 row)
+
+            a2_migrate_function            
+-------------------------------------------
+ Inserted function: c1_webpage_hits_update
+(1 row)
+
+            a2_migrate_function            
+-------------------------------------------
+ Inserted function: c1_webpage_hits_delete
 (1 row)
 

@@ -16,7 +16,7 @@ $$
 declare
    -- use only lowercase names, for later search and order as utf-8. No collation for technical strings.
    _object_name name = lower(_object_name);
-   _definition text = lower(_definition);
+    -- _definition must allow uppercase
 
    _old_definition text;
    _x_void text;
