@@ -293,6 +293,11 @@ The html files are saved in the "web_server_folder" with the same hierarchy as t
 The html files must be saved in UTF-8 encoding without the byte-order mark (BOM).  
 A lot of the html files are very similar with just a few differences. This could be optimized deduplicating the code somehow.
 
+## secrets
+
+I will encrypt/decrypt secrets (passwords, api tokens and keys) inside the `.env` file.  
+The master key will be in ~/.ssh/ directory like other private keys. The name will be webpage_hits_admin.master_key.  
+
 ## Other observations
 
 If there is the problem that cargo rebuilds a bunch of dependencies over and over again, we can debug the rebuilds with the env variable:  

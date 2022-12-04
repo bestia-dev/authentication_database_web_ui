@@ -106,6 +106,16 @@ pub fn get_input_element_value_string_by_id(element_id: &str) -> String {
     input_html_element.value()
 }
 
+/// set input element value string by id
+pub fn set_input_element_value_string_by_id(element_id: &str, value: &str) {
+    //debug_write("before get_element_by_id");
+    let input_element = get_element_by_id(element_id);
+    //debug_write("before dyn_into");
+    let input_html_element = unwrap!(input_element.dyn_into::<web_sys::HtmlInputElement>());
+    //debug_write("before value()");
+    input_html_element.set_value(value);
+}
+
 /// fetch in Rust with async await for executor spawn_local()
 /// return the response as json. Any error will panic.
 pub async fn fetch_json_response(url: String, json_jsvalue_body: String) -> String {

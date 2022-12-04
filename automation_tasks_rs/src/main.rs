@@ -176,6 +176,9 @@ fn task_build() {
 cd web_server_folder ; ../tier2_webpage_hits_admin/target/debug/{APP_MAIN_ROUTE} ; cd ..
     In the browser or in curl open 
 http://localhost:8080/{APP_MAIN_ROUTE}/b1_authn_signup_mod/b1_authn_signup
+http://localhost:8080/{APP_MAIN_ROUTE}/b2_authn_login_mod/b2_authn_login
+http://localhost:8080/{APP_MAIN_ROUTE}/a4_system_mod/a4_string_encrypt_decrypt
+http://localhost:8080/{APP_MAIN_ROUTE}/c1_webpage_hits_mod/c1_webpage_hits_list
     if ok, then
 cargo auto release
 {RESET}"#

@@ -73,6 +73,10 @@ pub enum LibError {
     /// signup error. The emails that can signup are restricted.
     #[error("Signup error")]
     SignupError { developer_friendly: String },
+
+    /// EnvVar error: {user_friendly}
+    #[error("Must supply {user_friendly} in environment variable!")]
+    EnvVarError { user_friendly: String },
     /*
         #[error(transparent)]
         Unknown(#[from] anyhow::Error),

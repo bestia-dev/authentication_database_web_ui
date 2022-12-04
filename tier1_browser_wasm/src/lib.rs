@@ -1,19 +1,23 @@
 // tier1_browser_wasm/lib.rs
 // wasm module name: tier1_browser_wasm
 
-#![deny(unused_crate_dependencies)]
+// because of getrandom for js, cannot use this:
+//#![deny(unused_crate_dependencies)]
 
 //use unwrap::unwrap;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsValue;
 use web_sys_mod::*;
 
+mod a4_system_mod;
 mod b1_authn_signup_mod;
 mod b2_authn_login_mod;
+
 mod web_sys_html_encode_mod;
 mod web_sys_mod;
 
 // I want to make this function available to javascript
+pub use a4_system_mod::a4_string_encrypt_decrypt_on_start;
 pub use b1_authn_signup_mod::b1_authn_signup_on_start;
 pub use b2_authn_login_mod::b2_authn_login_on_start;
 

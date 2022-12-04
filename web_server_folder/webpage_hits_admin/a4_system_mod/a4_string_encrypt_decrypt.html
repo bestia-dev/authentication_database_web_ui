@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../css/basic_style.css" />
+    <meta name="description" content="a4_string_encrypt_decrypt">
+    <meta name="generator" content="webpage_hits_admin.a4_string_encrypt_decrypt" />
+    <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+  </head>
+  <body>
+    <h1>String encrypt decrypt</h1>
+    <form action="authn_signup" method="post" >
+      <div style="display: grid;grid-template-columns: 250px 600px;row-gap:5px;">    
+
+        <div>      
+          
+        </div>
+        <div>
+          <button type="button" class="button" id="btn_generate_new_secret_key" >Generate new secret key</button>
+        </div>
+            
+      <div>
+        <label for="secret_key">Secret key (32 hex):</label>
+      </div>
+        <div>
+        <input type="password" style="width:100%;" id="secret_key" name="secret_key"  />
+      </div>
+      
+      <div>      
+        <label for="normal_string">Normal string:</label>
+      </div>
+      <div>
+        <input type="text" style="width:100%;" id="normal_string" name="normal_string" />
+      </div>
+
+      <div>      
+          
+      </div>
+      <div>
+        <button type="button" class="button" id="btn_encrypt" >↓ Encrypt ↓</button>
+           
+        <button type="button" class="button" id="btn_decrypt" >↑ Decrypt ↑</button>
+      </div>
+
+      <div>      
+        <label for="encrypted_string">Encrypted string:</label>
+      </div>
+      <div>
+        <input type="text" style="width:100%;" id="encrypted_string" name="encrypted_string" />
+      </div>
+
+
+      <div id="div_alert" class ="fc_alert" style="grid-column: span 2;" >
+        <!--The text node will be added from wasm when needed-->
+      </div>
+
+      <div></div>
+      <div>
+
+      
+
+  </div>
+    </form>
+     <!-- import and init the wasm code -->
+     <script type="module">
+      import init, {a4_string_encrypt_decrypt_on_start} from "/webpage_hits_admin/pkg/tier1_browser_wasm.js";
+      // This init() is needed to start the wasm code and is the same for every html page.
+      await init();
+      // But this function is special only for this html page.
+      a4_string_encrypt_decrypt_on_start();
+      // So I can have more different html pages with the same wasm. 
+      // So it is downloaded only once and then cached by the browser.
+</script>
+  </body>
+</html>
