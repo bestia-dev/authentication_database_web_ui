@@ -11,8 +11,10 @@ returns table(id int4, webpage varchar(100), hit_count int4)
 as
 $$
 declare
+    _webpage varchar(100)=lower(_webpage);
 begin
 
+-- save only lowercase webpage, for later search and order as utf-8. No collation for technical strings.
 update webpage as w
 set webpage = _webpage
 where w.id = _id;

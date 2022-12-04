@@ -14,6 +14,10 @@ as
 -- finally insert/update into a2_source_code  
 $$
 declare
+   -- use only lowercase names, for later search and order as utf-8. No collation for technical strings.
+   _object_name name = lower(_object_name);
+   _definition text = lower(_definition);
+
    _old_definition text;
    _x_void text;
 begin

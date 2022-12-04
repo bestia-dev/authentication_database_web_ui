@@ -15,6 +15,12 @@ as
 
 $$
 declare
+   -- use only lowercase names, for later search and order as utf-8. No collation for technical strings.
+   _table name = lower(_table);   
+   _column name = lower(_column);
+   _type text = lower(_type);
+   _not_null text= lower(_not_null);
+
    _default_txt text := case when _default <> '' then format(' default(%s)', _default) else '' end;
    _not_null_txt text := case when _not_null <> '' then format(' %s', _not_null) else '' end;
    _definition text := format('%s%s%s', _type, _default_txt, _not_null_txt);

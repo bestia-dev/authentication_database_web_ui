@@ -11,6 +11,12 @@ returns text
 as
 $$
 declare 
+    -- use only lowercase names, for later search and order as utf-8. No collation for technical strings.
+    _table name = lower(_table);
+    _column name = lower(_column);
+    _table_ref name=lower(_table_ref);
+    _column_ref name=lower(_column_ref);
+
     _constraint_name text := format('%I_foreign_%I', _table, _column);
     _ddl_statement text := format('alter table %I add constraint %I foreign key (%I) references %I (%I)', _table, _constraint_name, _column, _table_ref, _column_ref );
 begin

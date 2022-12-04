@@ -11,6 +11,7 @@ returns text
 as
 $$
 declare
+    _user_email varchar(100)=lower(_user_email);
 begin
 
 if exists(select * 
@@ -26,7 +27,7 @@ if exists(select *
         set user_email = _user_email, password_hash=_password_hash
         where b2_authn_login.b2_authn_login_id = _b2_authn_login_id;
         
-        return format('UPdated login: %s', _user_email);
+        return format('Updated login: %s', _user_email);
     end if;
 
 else

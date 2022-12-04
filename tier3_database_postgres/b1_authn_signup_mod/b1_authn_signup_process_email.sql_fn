@@ -10,6 +10,7 @@ returns table(is_allowed bool)
 as
 $$
 declare
+    _user_email varchar(100)=lower(_user_email);
     _is_allowed bool := true;
 begin
 

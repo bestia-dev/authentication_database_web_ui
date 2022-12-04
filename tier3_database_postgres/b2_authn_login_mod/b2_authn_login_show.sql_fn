@@ -3,15 +3,14 @@
 select a2_migrate_function('b2_authn_login_show',
 $source_code$
 
-create function b2_authn_login_show(
-_user_email varchar(100))
+create function b2_authn_login_show(_user_email varchar(100))
 returns table( authn_login_id int4,
     user_email varchar(100),
     password_hash varchar(200)) 
 as 
 $$
 declare
-
+    _user_email varchar(100) =lower(_user_email);
 begin
 
 return query 

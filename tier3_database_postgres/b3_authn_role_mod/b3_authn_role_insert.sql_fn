@@ -11,6 +11,7 @@ returns table(b3_authn_role_id int4, role_name varchar(100), description text)
 as
 $$
 declare
+    _role_name varchar(100)=lower(_role_name);
 begin
 
 insert into b3_authn_role(b3_authn_role_id,role_name, description)

@@ -12,6 +12,7 @@ returns table(b4_authn_operation_id int4, url_path varchar(100), description tex
 as
 $$
 declare
+    _url_path varchar(100)=lower(_url_path);
 begin
 
 insert into b4_authn_operation(b4_authn_operation_id,url_path, description, is_readonly)

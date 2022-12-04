@@ -11,6 +11,7 @@ returns table(b2_authn_login_id int4, user_email varchar(100))
 as
 $$
 declare
+  _user_email varchar(100)=lower(_user_email);
 begin
 
 -- the parameter 0 means that the insert function will choose the id number over 101

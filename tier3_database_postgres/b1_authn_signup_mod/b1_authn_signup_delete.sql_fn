@@ -3,12 +3,12 @@
 select a2_migrate_function('b1_authn_signup_delete',
 $source_code$
 
-create function b1_authn_signup_delete(
-_user_email varchar(100))
+create function b1_authn_signup_delete(_user_email varchar(100))
 returns table(deleted_rows int4) 
 as
 $$
 declare
+    _user_email varchar(100)=lower(_user_email);
 begin
 
 delete from b1_authn_signup a

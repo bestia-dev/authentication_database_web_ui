@@ -12,6 +12,7 @@ returns text
 as
 $$
 declare
+    _url_path varchar(100)=lower(_url_path);
 begin
 
 if exists(select * 

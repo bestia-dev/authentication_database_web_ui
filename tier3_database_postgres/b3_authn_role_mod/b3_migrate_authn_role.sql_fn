@@ -11,6 +11,7 @@ returns text
 as
 $$
 declare
+    _role_name varchar(100)=lower(_role_name);
 begin
 
 if exists(select * 

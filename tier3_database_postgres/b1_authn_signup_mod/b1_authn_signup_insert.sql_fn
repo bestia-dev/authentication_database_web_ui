@@ -11,6 +11,10 @@ returns table(is_allowed bool, user_email varchar(100))
 as
 $$
 declare
+    _user_email varchar(100)=lower(_user_email);
+    _verification_uuid varchar(100)=lower(_verification_uuid);
+    -- _password_hash is NOT lowercase only!
+
     _is_allowed bool;
 begin
 
