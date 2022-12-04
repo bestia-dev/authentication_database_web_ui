@@ -6,7 +6,7 @@ $source_code$
 create function  b3_authn_login_role_insert( 
 _b2_authn_login_id int4,
 _b3_authn_role_id int4)
-returns table(b3_authn_login_role_id int4, user_email varchar(100)) 
+returns table(b3_authn_login_role_id int4, b2_authn_login_id int4, b3_authn_role_id int4) 
 as
 $$
 declare

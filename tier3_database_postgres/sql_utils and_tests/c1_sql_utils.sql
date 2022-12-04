@@ -7,4 +7,4 @@ from b1_authn_signup;
 select * 
 -- delete
 from b2_authn_login
-where user_email = 'luciano.bestia@gmail.com';
+where user_email = 'luciano@bestia.dev';
