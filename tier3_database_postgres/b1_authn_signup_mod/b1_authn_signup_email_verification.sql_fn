@@ -36,9 +36,9 @@ if exists (select * from b1_authn_signup a
         -- the parameter 0 means that the insert function will choose the id number over 101
         -- The logins under 100 are reserved to administrators, developers and special needs.
         -- So the id can be used because is fixed.
-        select * from b2_authn_login_insert(0, _user_email, _password_hash);
+        perform b2_authn_login_insert(0, _user_email, _password_hash);
 
-        select * from b1_authn_signup_delete(_user_email);        
+        perform b1_authn_signup_delete(_user_email);        
 
     else
         return query select 'Verification of your email failed' as verification_h1, 
@@ -46,7 +46,7 @@ if exists (select * from b1_authn_signup a
     end if;
 
     return query select 'Verification of your email successful' as verification_h1, 
-    'You can now login into the web app: /webpage_hits_admin/b1_authn_login_mod/b1_authn_login
+    'You can now login into the web app: /webpage_hits_admin/b2_authn_login_mod/b2_authn_login
 ' as verification_p;
 else
     return query select 'Verification of your email failed.' as verification_h1, 

@@ -152,7 +152,12 @@ fn init_env_variables() -> Result<(), LibError> {
         });
     }
 
-    // SECRETS in env variables are encrypted
+    // SECRETS in env variables must be encrypted with the master_key
+    if std::env::vars().find(|var| var.0 == "MASTER_KEY") == None {
+        return Err(LibError::EnvVarError {
+            user_friendly: String::from("MASTER_KEY"),
+        });
+    }
     if std::env::vars().find(|var| var.0 == "SENDGRID_API_KEY") == None {
         return Err(LibError::EnvVarError {
             user_friendly: String::from("SENDGRID_API_KEY"),

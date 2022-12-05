@@ -119,12 +119,7 @@ No config exist for now for Cargo-auto.toml. Maybe one day we will add something
 It is not easy to send emails over SMTP anymore because of spam. There is so much spam, that big email providers invented the "email deliverability reputation" system, which makes it difficult for smaller senders to not be flagged as spam. So the solution is to use some free email providers like MailGun, MailJet, Mailersend or Sendgrid. The email communication between a web app and its user is called "transactional email" and is specific because it needs to be fast and reliable. A "transactional email" is a type of email message that’s triggered by a specific action on a website or mobile app. Some common examples of transactional emails include password resets, account notifications, welcome emails, and any other confirmation emails that are sent via automation. These automated emails are typically sent programmatically through an email API.  
 I will try Twilio Sendgrid free plan with 100 emails per day forever. Enough for developing web apps. I will be using Web API v3. I will create the json in code and send to the API point with [reqwest](https://docs.rs/reqwest/latest/reqwest/).  
 First, on <http://sendgrid.com> create an API key with restricted permissions just to send emails.  
-This secret will be stored in env variable and available to my web app:
-
-```bash
- export SENDGRID_API_KEY="SG.my.api.key"
-```
-
+This secret will be stored in the `.env` file, but encrypted with the master_key for this application.  
 The verification of my "single sender identity" was not really helpful. When I sent an email it was marked as spam. I then tried with the better "domain verification". I added the 3 CNAME records from Sendgrid to my domain dns on <http://porkbun.com>. I then used <https://mxtoolbox.com> to check the CNAME records. It is not enough to write just "bestia.dev", I needed to write the whole CNAME host "s1._domainkey.bestia.dev" or "s2._domainkey.bestia.dev". The most interesting is "em4619.bestia.dev" because the number changes for every attempt to "domain verification". Now I have verified my domain. Good. It works perfectly !
 
 ## Early return
@@ -297,6 +292,11 @@ A lot of the html files are very similar with just a few differences. This could
 
 I will encrypt/decrypt secrets (passwords, api tokens and keys) inside the `.env` file.  
 The master key will be in ~/.ssh/ directory like other private keys. The name will be webpage_hits_admin.master_key.  
+
+```bash
+nano ~/.ssh/webpage_hits_admin.master_key
+chmod 600 ~/.ssh/webpage_hits_admin.master_key
+```
 
 ## Other observations
 

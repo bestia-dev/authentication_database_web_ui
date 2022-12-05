@@ -11,4 +11,4 @@
 **/*.rs.bk
 
 /pkg/
-web_server_folder/.env
+**/.env

@@ -18,9 +18,9 @@ begin
 -- The logins under 100 are reserved to administrators, developers and special needs.
 -- So the id can be used because is fixed.
 if _b2_authn_login_id=0 then
-  select max(b2_authn_login_id)+1
+  select max(a.b2_authn_login_id)+1
   into _b2_authn_login_id
-  from b2_authn_login;
+  from b2_authn_login a;
 
   if _b2_authn_login_id<101 then
     _b2_authn_login_id=101;
