@@ -83,7 +83,7 @@ pub async fn b2_authn_login_btn_submit() {
     }
     window()
         .open_with_url_and_target(
-            &format!("/{APP_MAIN_ROUTE}/c1_webpage_hits_mod/c1_webpage_hits_list"),
+            &format!("/{APP_MAIN_ROUTE}/b5_start_page_mod/b5_start_page"),
             "_self",
         )
         .unwrap();

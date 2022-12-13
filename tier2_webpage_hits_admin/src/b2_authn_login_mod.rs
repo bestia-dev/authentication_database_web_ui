@@ -57,7 +57,7 @@ pub async fn b2_authn_login_process_email(
     let salt = match call_pg_func_auth_login_show(&data_req.user_email, app_state).await {
         Err(_err) => {
             // return a random salt, so the client cannot know that the email does not exist in the database. Never trust the client.
-            let uuid = uuid::Uuid::new_v4().to_string();
+            let uuid = uuid::Uuid::new_v4().simple().to_string();
             let salt = uuid.as_str().to_string();
             salt
         }
@@ -95,7 +95,7 @@ pub async fn b2_authn_login_process_hash(
         log::info!("The user is authenticated successfully. Returning session_id cookie.");
 
         // region: add random session_id as UUID into app_state active_sessions
-        let uuid = uuid::Uuid::new_v4().to_string();
+        let uuid = uuid::Uuid::new_v4().simple().to_string();
         app_state
             .active_sessions
             .lock()

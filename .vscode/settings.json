@@ -87,5 +87,21 @@
             "database": "webpage_hit_counter",
             "username": "admin"
         }
+    ],
+    "saveEditorLayout.list": [
+        {
+            "name": "layout_1",
+            "orientation": 0,
+            "documents": [
+                {
+                    "fsPath": "/home/rustdevuser/rustprojects/authentication_database_web_ui/tier3_database_postgres/sql_utils and_tests/b0_sql_utils.sql",
+                    "column": 1
+                },
+                {
+                    "fsPath": "/home/rustdevuser/rustprojects/authentication_database_web_ui/tier2_webpage_hits_admin/Cargo.toml",
+                    "column": 2
+                }
+            ]
+        }
     ]
 }

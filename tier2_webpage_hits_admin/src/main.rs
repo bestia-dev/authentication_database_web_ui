@@ -5,6 +5,7 @@
 mod a4_system_mod;
 mod b1_authn_signup_mod;
 mod b2_authn_login_mod;
+mod b5_start_page_mod;
 mod c1_webpage_hits_mod;
 
 use tier0_common_code as T_0;
@@ -211,6 +212,10 @@ fn config_route_main(cfg: &mut actix_web::web::ServiceConfig) {
         .service(
             actix_web::web::scope(&format!("/{APP_MAIN_ROUTE}/b2_authn_login_mod"))
                 .configure(crate::b2_authn_login_mod::config_route_authn),
+        )
+        .service(
+            actix_web::web::scope(&format!("/{APP_MAIN_ROUTE}/b5_start_page_mod"))
+                .configure(crate::b5_start_page_mod::config_route_authn),
         )
         .service(
             actix_web::web::scope(&format!("/{APP_MAIN_ROUTE}/c1_webpage_hits_mod"))

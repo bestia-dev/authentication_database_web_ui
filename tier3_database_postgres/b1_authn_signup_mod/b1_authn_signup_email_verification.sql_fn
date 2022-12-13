@@ -15,6 +15,7 @@ declare
 
     _user_email varchar(100);
     _password_hash varchar(200);
+    _b2_authn_login_id int4;
 begin
 
 if exists (select * from b1_authn_signup a 
@@ -36,7 +37,12 @@ if exists (select * from b1_authn_signup a
         -- the parameter 0 means that the insert function will choose the id number over 101
         -- The logins under 100 are reserved to administrators, developers and special needs.
         -- So the id can be used because is fixed.
-        perform b2_authn_login_insert(0, _user_email, _password_hash);
+        select b2_authn_login_id 
+        into _b2_authn_login_id
+        from b2_authn_login_insert(0, _user_email, _password_hash);
+
+        -- role 3-user
+        perform b3_authn_login_role_insert(_b2_authn_login_id,3);
 
         perform b1_authn_signup_delete(_user_email);        
 

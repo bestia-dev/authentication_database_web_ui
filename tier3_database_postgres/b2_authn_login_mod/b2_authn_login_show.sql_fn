@@ -1,10 +1,13 @@
 --tier3_database_postgres/b2_authn_login_mod/b2_authn_login_show.sql_fn
 
+-- test:
+-- select * from b2_authn_login_show('luciano@bestia.dev')
+
 select a2_migrate_function('b2_authn_login_show',
 $source_code$
 
 create function b2_authn_login_show(_user_email varchar(100))
-returns table( authn_login_id int4,
+returns table( b2_authn_login_id int4,
     user_email varchar(100),
     password_hash varchar(200)) 
 as 
@@ -14,7 +17,7 @@ declare
 begin
 
 return query 
-select  t.authn_login_id,
+select  t.b2_authn_login_id,
     t.user_email,
     t.password_hash
 from b2_authn_login t
