@@ -11,7 +11,6 @@
 
  ![work-in-progress](https://img.shields.io/badge/work_in_progress-yellow)
  ![tutorial](https://img.shields.io/badge/tutorial-yellow)
- ![authentication_database_web_ui](https://bestia.dev/webpage_hit_counter/get_svg_image/12164623.svg)
 
 [//]: # (auto_lines_of_code start)
 
@@ -23,7 +22,8 @@
 
 [//]: # (auto_lines_of_code end)
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bestia-dev/authentication_database_web_ui/blob/main/LICENSE) ![Hits](https://bestia.dev/webpage_hit_counter/get_svg_image/0.svg)
+ [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bestia-dev/authentication_database_web_ui/blob/main/LICENSE)
+ ![authentication_database_web_ui](https://bestia.dev/webpage_hit_counter/get_svg_image/12164623.svg)
 
 Hashtags: #rust #rustlang #tutorial  
 My projects on Github are more like a tutorial than a finished product: [bestia-dev tutorials](https://github.com/bestia-dev/tutorials_rust_wasm).
