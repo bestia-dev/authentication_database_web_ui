@@ -9,8 +9,9 @@
 
 [//]: # (auto_cargo_toml_to_md end)
 
-![status](https://img.shields.io/badge/work_in_progress-yellow) 
-![status](https://img.shields.io/badge/tutorial-yellow) 
+ ![work-in-progress](https://img.shields.io/badge/work_in_progress-yellow)
+ ![tutorial](https://img.shields.io/badge/tutorial-yellow)
+ ![authentication_database_web_ui](https://bestia.dev/webpage_hit_counter/get_svg_image/12164623.svg)
 
 [//]: # (auto_lines_of_code start)
 
