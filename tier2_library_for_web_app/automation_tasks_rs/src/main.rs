@@ -61,12 +61,13 @@ fn print_help() {
     {YELLOW}Welcome to cargo-auto !
     This program automates your custom tasks when developing a Rust project.{RESET}
 
-    User defined tasks in automation_tasks_rs:{RESET}{GREEN}
-    cargo auto build{RESET}{YELLOW} - builds the crate in debug mode, fmt, increment version{RESET}{GREEN}
-    cargo auto release{RESET}{YELLOW} - builds the crate in release mode, fmt, increment version{RESET}{GREEN}
-    cargo auto doc{RESET}{YELLOW} - builds the docs, copy to docs directory{RESET}{GREEN}
-    cargo auto test{RESET}{YELLOW} - runs all the tests{RESET}
-    © 2022 bestia.dev  MIT License github.com/bestia-dev/cargo-auto
+    User defined tasks in automation_tasks_rs:{RESET}
+{GREEN}cargo auto build{RESET} - {YELLOW}builds the crate in debug mode, fmt, increment version{RESET}
+{GREEN}cargo auto release{RESET} - {YELLOW}builds the crate in release mode, fmt, increment version{RESET}
+{GREEN}cargo auto doc{RESET} - {YELLOW}builds the docs, copy to docs directory{RESET}
+{GREEN}cargo auto test{RESET} - {YELLOW}runs all the tests{RESET}
+
+    {YELLOW}© 2022 bestia.dev  MIT License github.com/bestia-dev/cargo-auto{RESET}
 "#
 /*
 cargo auto publish_to_crates_io - publish to crates.io, git tag
@@ -80,8 +81,8 @@ cargo auto publish_to_crates_io - publish to crates.io, git tag
 /// all example commands in one place
 fn print_examples_cmd(){
 /*
-    println!(r#"{YELLOW}run examples:{RESET}{GREEN}
-cargo run --example example1{RESET}
+    println!(r#"{YELLOW}run examples:{RESET}
+{GREEN}cargo run --example example1{RESET}
 "#);
 */
 }
@@ -119,9 +120,9 @@ fn task_build() {
     println!(
         r#"{YELLOW}
     After `cargo auto build`, run the compiled binary, examples and/or tests
-    if ok, then,{RESET}{GREEN}
-cargo auto release{RESET}{YELLOW}
-{RESET}"#
+    if ok then{RESET}
+{GREEN}cargo auto release{RESET}
+"#
     );
     print_examples_cmd();
 }
@@ -138,9 +139,9 @@ fn task_release() {
     println!(
         r#"{YELLOW}
     After `cargo auto release`, run the compiled binary, examples and/or tests
-    if ok, then,{RESET}{GREEN}
-cargo auto doc{RESET}{YELLOW}
-{RESET}"#
+    if ok then{RESET}
+{GREEN}cargo auto doc{RESET}
+"#
     );
     print_examples_cmd();
 }
@@ -165,9 +166,9 @@ fn task_doc() {
     // message to help user with next move
     println!(
         r#"{YELLOW}
-    After `cargo auto doc`, check `docs/index.html`. If ok, then test the documentation code examples{RESET}{GREEN}
-cargo auto test{RESET}{YELLOW}
-{RESET}"#
+    After `cargo auto doc`, check `docs/index.html`. If ok then test the documentation code examples{RESET}
+{GREEN}cargo auto test{RESET}
+"#
     );
 }
 
@@ -176,7 +177,7 @@ fn task_test() {
     run_shell_command("cargo test");
     println!(
         r#"{YELLOW}
-    After `cargo auto test`. If ok, then 
+    After `cargo auto test`. If ok then 
     Repeat for other workspace members.
 {RESET}"#
     );

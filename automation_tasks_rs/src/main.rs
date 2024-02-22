@@ -113,19 +113,20 @@ fn print_help() {
     {YELLOW}Welcome to cargo-auto !
     This program automates your custom tasks when developing a Rust project.{RESET}
 
-    User defined tasks in automation_tasks_rs:{RESET}{GREEN}
-cargo auto{RESET}{YELLOW} - builds the automation_tasks_rs for every member{RESET}{GREEN}
-cargo auto build{RESET}{YELLOW} - builds the crate in debug mode, fmt, increment version{RESET}{GREEN}
-    © 2022 bestia.dev  MIT License github.com/bestia-dev/cargo-auto
+    User defined tasks in automation_tasks_rs:{RESET}
+{GREEN}cargo auto{RESET} - {YELLOW}builds the automation_tasks_rs for every member{RESET}
+{GREEN}cargo auto build{RESET} - {YELLOW}builds the crate in debug mode, fmt, increment version{RESET}
+
+    {YELLOW}© 2022 bestia.dev  MIT License github.com/bestia-dev/cargo-auto{RESET}
 "#
     );
     /*
-    cargo auto release{RESET}{YELLOW} - builds the crate in release mode, fmt, increment version{RESET}{GREEN}
-cargo auto doc{RESET}{YELLOW} - builds the docs, copy to docs directory{RESET}{GREEN}
-cargo auto test{RESET}{YELLOW} - runs all the tests{RESET}{GREEN}
-cargo auto commit_and_push "message"{RESET}{YELLOW} - commits with message and push with mandatory message
-    (If you use SSH, it is easy to start the ssh-agent in the background and ssh-add your credentials for git.){RESET}{GREEN}
-cargo auto publish_to_web{RESET}{YELLOW} - publish to my google VM, git tag
+    cargo auto release{RESET} - {YELLOW}builds the crate in release mode, fmt, increment version{RESET}
+{GREEN}cargo auto doc{RESET} - {YELLOW}builds the docs, copy to docs directory{RESET}
+{GREEN}cargo auto test{RESET} - {YELLOW}runs all the tests{RESET}
+{GREEN}cargo auto commit_and_push "message"{RESET} - {YELLOW}commits with message and push with mandatory message
+    (If you use SSH, it is easy to start the ssh-agent in the background and ssh-add your credentials for git.){RESET}
+{GREEN}cargo auto publish_to_web{RESET} - {YELLOW}publish to my google VM, git tag
     (You need credentials for publishing. I use ssh-agent and ssh-add to store my credentials for SSH.){RESET} */
 }
 
@@ -179,7 +180,7 @@ http://localhost:8080/{APP_MAIN_ROUTE}/b1_authn_signup_mod/b1_authn_signup
 http://localhost:8080/{APP_MAIN_ROUTE}/b2_authn_login_mod/b2_authn_login
 http://localhost:8080/{APP_MAIN_ROUTE}/a4_system_mod/a4_string_encrypt_decrypt
 http://localhost:8080/{APP_MAIN_ROUTE}/c1_webpage_hits_mod/c1_webpage_hits_list
-    if ok, then
+    If ok then
 cargo auto release
 {RESET}"#
     );
@@ -216,7 +217,7 @@ fn task_release() {
 cd web_server_folder ; ../target/release/{APP_MAIN_ROUTE}; cd ..
     In the browser or in curl open 
 http://localhost:8080/{APP_MAIN_ROUTE}/c1_webpage_hits_mod/c1_webpage_hits_list
-    if ok, then
+    If ok then
 cargo auto doc
 {RESET}"#,
     );
@@ -241,7 +242,7 @@ fn task_doc() {
     // message to help user with next task
     println!(
         r#"{YELLOW}
-    After `cargo auto doc`, check `docs/index.html`. If ok, then test the documentation code examples
+    After `cargo auto doc`, check `docs/index.html`. If ok then test the documentation code examples
 cargo auto test
 {RESET}"#
     );
@@ -252,9 +253,9 @@ fn task_test() {
     run_shell_command("cargo test");
     println!(
         r#"{YELLOW}
-    After `cargo auto test`. If ok, then commit with mandatory commit message{RESET}{GREEN}
-cargo auto commit_and_push "message"{RESET}{YELLOW}
-{RESET}"#
+    After `cargo auto test`. If ok then commit with mandatory commit message{RESET}
+{GREEN}cargo auto commit_and_push "message"{RESET}
+"#
     );
 }
 
