@@ -112,7 +112,7 @@ fn completion() {
 
 /// cargo build
 fn task_build() {
-    // let cargo_toml = CargoToml::read();
+    // let cargo_toml = cl::CargoToml::read();
     cl::auto_version_increment_semver_or_date();
     cl::run_shell_command("cargo fmt");
     // wasm-pack changes something in the folder target, so the next build unnecessarily rebuilds dependencies
@@ -130,7 +130,7 @@ fn task_build() {
 
 /// cargo build --release
 fn task_release() {
-    // let cargo_toml = CargoToml::read();
+    // let cargo_toml = cl::CargoToml::read();
     cl::auto_version_increment_semver_or_date();
     cl::auto_cargo_toml_to_md();
     cl::auto_lines_of_code("");
