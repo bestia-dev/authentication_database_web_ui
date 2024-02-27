@@ -7,8 +7,12 @@
 
 [//]: # (auto_cargo_toml_to_md end)
 
+[//]: # (auto_github_topics start)
+
  ![work-in-progress](https://img.shields.io/badge/work_in_progress-yellow)
  ![tutorial](https://img.shields.io/badge/tutorial-yellow)
+
+[//]: # (auto_github_topics end)
 
 [//]: # (auto_lines_of_code start)
 
@@ -113,8 +117,7 @@ Because of one WASM project I cannot use the profile `panic="abort"` on all the 
 There is no workaround as of 2022-10.  
 We can use cargo-auto to automate the tasks for every member individually.
 Then we code the `automation_tasks_rs` on the workspace level to call all members tasks together.
-The presence of Cargo-auto.toml or Cargo.toml is used by cargo-auto to recognize project folders.
-No config exist for now for Cargo-auto.toml. Maybe one day we will add something.
+The presence of Cargo.toml is used by cargo-auto to recognize project folders.
 
 ## Sending email
 

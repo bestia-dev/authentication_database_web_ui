@@ -5,8 +5,7 @@
 // There is no workaround as of 2022-10-20.
 // We can use cargo-auto to automate the tasks for every member individually.
 // Then we code the automation_tasks_rs on the workspace level to call all members tasks together.
-// The presence of Cargo-auto.toml or Cargo.toml is used by cargo-auto to recognize project folders.
-// No config exist for now for Cargo-auto.toml. Maybe one day we will need to add something.
+// The presence of Cargo.toml is used by cargo-auto to recognize project folders.
 // The workspace contains 4 members: tier0_common_code, tier1_browser_wasm, tier2_library_for_web_app, tier2_webpage_hits_admin
 // Every member has its own automation_tasks_rs. This workspace automation just calls the automation of the members.
 // I am not using the original cargo workspace functionality. The automation task will take care of all members.
@@ -26,7 +25,7 @@ use cargo_auto_lib::YELLOW;
 // the server executable binary is called "webpage_hits_admin"
 // and it is also the main url route
 const APP_MAIN_ROUTE: &'static str = "webpage_hits_admin";
-// TODO: this could be read from Cargo-auto.toml in the future
+
 const MEMBERS:&'static [&'static str] =&[
     "tier0_common_code", 
     "tier1_browser_wasm",
