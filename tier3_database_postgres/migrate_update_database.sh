@@ -10,9 +10,9 @@
 
 # sh tier3_database_postgres/migrate_update_database.sh
 
-echo "Started tier3_database_postgres/migrate_update_database.sh ..."
+printf "Started tier3_database_postgres/migrate_update_database.sh ...\n"
 rm tier3_database_postgres/tmp_migration_result.txt
-echo "Only the actual changes are listed here. The complete output is in tier3_database_postgres/tmp_migration_result.txt."
+printf "Only the actual changes are listed here. The complete output is in tier3_database_postgres/tmp_migration_result.txt.\n"
 
 sh tier3_database_postgres/a1_list_mod/a1_migrate_update_database.sh >> tier3_database_postgres/tmp_migration_result.txt
 sh tier3_database_postgres/a2_migrate_mod/a2_migrate_update_database.sh >> tier3_database_postgres/tmp_migration_result.txt
@@ -30,15 +30,15 @@ sh tier3_database_postgres/c1_webpage_hits_mod/c1_migrate_update_database.sh >> 
 # I will process this output and show only the part that show any actual change.
 grep -v "^$\|(1 row)\|Up to date.*\|[ab][0-9]_migrate.*\|----[-]*" tier3_database_postgres/tmp_migration_result.txt
 
-echo "Ended tier3_database_postgres/migrate_update_database.sh"
-echo ""
+printf "Ended tier3_database_postgres/migrate_update_database.sh\n"
+printf "\n"
 
 # run checks
-echo "Started tier3_database_postgres/migrate_check.sh ..."
-echo "Only the actual found problems are listed here. The complete output is in tier3_database_postgres/tmp_migration_check.txt."
+printf "Started tier3_database_postgres/migrate_check.sh ...\n"
+printf "Only the actual found problems are listed here. The complete output is in tier3_database_postgres/tmp_migration_check.txt.\n"
 rm tier3_database_postgres/tmp_migration_check.txt
 psql -U admin -h localhost -p 5432 -d webpage_hit_counter -f tier3_database_postgres/migrate_check.sql >> tier3_database_postgres/tmp_migration_check.txt
 # I will process this output and show only the part that show any actual change.
 grep -v "^$\|(0 rows)\|a3_check.*\|----[-]*" tier3_database_postgres/tmp_migration_check.txt
-echo "Ended tier3_database_postgres/migrate_check.sh"
-echo ""
+printf "Ended tier3_database_postgres/migrate_check.sh\n"
+printf "\n"
