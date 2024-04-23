@@ -297,7 +297,7 @@ A lot of the html files are very similar with just a few differences. This could
 
 ## secrets
 
-I will encrypt/decrypt secrets (passwords, api tokens and keys) inside the `.env` file.  
+I will encrypt/decrypt secrets (passwords, API secret_tokens and keys) inside the `.env` file.  
 The master key will be in ~/.ssh/ directory like other private keys. The name will be webpage_hits_admin.master_key.  
 
 ```bash
