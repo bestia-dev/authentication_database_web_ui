@@ -11,7 +11,7 @@
 
 [//]: # (auto_github_topics start)
 
- ![work-in-progress](https://img.shields.io/badge/work_in_progress-yellow)
+ ![obsolete](https://img.shields.io/badge/obsolete-red)
  ![tutorial](https://img.shields.io/badge/tutorial-yellow)
 
 [//]: # (auto_github_topics end)
@@ -31,6 +31,10 @@
 
 Hashtags: #rust #rustlang #tutorial  
 My projects on Github are more like a tutorial than a finished product: [bestia-dev tutorials](https://github.com/bestia-dev/tutorials_rust_wasm).
+
+## OBSOLETE
+
+This topic is far too large for a single repository. The coding is continued in the Github organization <https://github.com/orgs/liporuwcha>
 
 ## Intro
 
