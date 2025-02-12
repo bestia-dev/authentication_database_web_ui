@@ -41,11 +41,6 @@ This topic is far too large for a single repository. The coding is continued in 
 In [previous tutorials](https://github.com/bestia-dev/refactoring_database_web_ui_server_side_rendering), we created a working prototype for a web application that can create, read, update and delete (CRUD) data in a Postgres database.  
 We will continue to develop this project in the 9th part of the [Rust tutorial series](https://www.youtube.com/channel/UCitt3zFHK2jDetDh6ezI05A). Today, we will add some code for user authentication.  
 
-This project has also a youtube video tutorial. Watch it:
-<!-- markdownlint-disable MD033 -->
-[<img src="https://bestia.dev/youtube/authentication_database_web_ui.png" width="400px">](https://bestia.dev/youtube/authentication_database_web_ui.html)
-<!-- markdownlint-enable MD033 -->
-
 ## Motivation
 
 If a web application manipulates data in a database it needs some kind of authentication. You can not leave it completely open to the internet. All kinds of nasty things can occur. It is a World Wild West out there!
