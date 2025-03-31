@@ -115,7 +115,7 @@ fn print_help() {
 {GREEN}cargo auto{RESET} - {YELLOW}builds the automation_tasks_rs for every member{RESET}
 {GREEN}cargo auto build{RESET} - {YELLOW}builds the crate in debug mode, fmt, increment version{RESET}
 
-    {YELLOW}© 2024 bestia.dev  MIT License github.com/automation-tasks-rs/cargo-auto{RESET}
+    {YELLOW}© 2025 bestia.dev  MIT License github.com/automation-tasks-rs/cargo-auto{RESET}
 "#
     );
     /*

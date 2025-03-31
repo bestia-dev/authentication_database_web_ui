@@ -65,7 +65,7 @@ fn print_help() {
 {GREEN}cargo auto doc{RESET} - {YELLOW}builds the docs, copy to docs directory{RESET}
 {GREEN}cargo auto test{RESET} - {YELLOW}runs all the tests{RESET}
 
-    {YELLOW}© 2024 bestia.dev  MIT License github.com/automation-tasks-rs/cargo-auto{RESET}
+    {YELLOW}© 2025 bestia.dev  MIT License github.com/automation-tasks-rs/cargo-auto{RESET}
 "#
 /*
 cargo auto publish_to_crates_io - publish to crates.io, git tag
